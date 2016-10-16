@@ -35,14 +35,14 @@ public class SerialInner implements Externalizable {
 
 	@Override
 	public boolean equals(Object o) {
-		if (o == null || !(o instanceof Serial))
+		if (o == null || !(o instanceof SerialInner))
 			return false;
 		final SerialInner s = (SerialInner) o;
 		return Objects.equals(key, s.key) && Objects.equals(value, s.value);
 	}
 
 	// The serialization part
-	
+
 	private final static Externalizor<SerialInner> externalizor = Externalizor.of(SerialInner.class);
 
 	@Override

@@ -53,6 +53,8 @@ interface CollectionExternalizer<T, V> extends Externalizer<T, V> {
 
 		@Override
 		final public Collection readObject(final ObjectInput in) throws IOException, ReflectiveOperationException {
+			if (!in.readBoolean())
+				return null;
 			final Collection collection = constructor.newInstance();
 			int size = in.readInt();
 			while (size-- > 0)
@@ -85,6 +87,8 @@ interface CollectionExternalizer<T, V> extends Externalizer<T, V> {
 
 		@Override
 		final public Map<?, ?> readObject(final ObjectInput in) throws IOException, ReflectiveOperationException {
+			if (!in.readBoolean())
+				return null;
 			final Map map = constructor.newInstance();
 			int size = in.readInt();
 			while (size-- > 0)

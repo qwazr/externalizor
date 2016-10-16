@@ -88,8 +88,6 @@ public class Serial implements Externalizable {
 
 	@Override
 	public boolean equals(Object o) {
-		if (!super.equals(o))
-			return false;
 		if (o == null || !(o instanceof Serial))
 			return false;
 		final Serial s = (Serial) o;

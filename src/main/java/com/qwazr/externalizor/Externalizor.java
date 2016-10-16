@@ -25,7 +25,7 @@ public class Externalizor<T> {
 	private final Externalizer<T, T> externalizer;
 
 	private Externalizor(final Class<T> clazz) {
-		externalizer = new ClassExternalizer<>(clazz);
+		externalizer = new ClassExternalizer.RootExternalizer(clazz);
 	}
 
 	public void writeExternal(final T object, final ObjectOutput out) throws IOException {

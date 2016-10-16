@@ -43,8 +43,10 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 				return new FieldArrayCharExternalizer(field);
 		}
 		Externalizer externalizer = Externalizer.of(componentType);
-		if (externalizer != null)
-			return new FieldArrayObjectExternalizer(field, externalizer);
+		if (externalizer != null) {
+			if (String.class.isAssignableFrom(componentType))
+				return new FieldArrayLangStringExternalizer(field, externalizer);
+		}
 		return null;
 	}
 
@@ -250,29 +252,29 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 		}
 	}
 
-	final class FieldArrayObjectExternalizer<T> extends FieldArrayPrimitiveExternalizer<T, Object[]> {
+	final class FieldArrayLangStringExternalizer<T> extends FieldArrayPrimitiveExternalizer<T, String[]> {
 
 		private final Externalizer componentExternalizer;
 
-		FieldArrayObjectExternalizer(final Field field, final Externalizer componentExternalizer) {
+		FieldArrayLangStringExternalizer(final Field field, final Externalizer componentExternalizer) {
 			super(field);
 			this.componentExternalizer = componentExternalizer;
 		}
 
 		@Override
-		final public Object[] readArray(final int size, final ObjectInput in)
+		final public String[] readArray(final int size, final ObjectInput in)
 				throws IOException, ReflectiveOperationException {
-			final Object[] array = new Object[size];
+			final String[] array = new String[size];
 			for (int i = 0; i < array.length; i++)
-				array[i] = componentExternalizer.readObject(in);
+				array[i] = (String) componentExternalizer.readObject(in);
 			return array;
 		}
 
 		@Override
-		protected void writeValue(final Object[] value, final ObjectOutput out)
+		protected void writeValue(final String[] value, final ObjectOutput out)
 				throws IOException, ReflectiveOperationException {
 			out.writeInt(value.length);
-			for (Object item : value)
+			for (String item : value)
 				componentExternalizer.writeExternal(item, out);
 		}
 	}

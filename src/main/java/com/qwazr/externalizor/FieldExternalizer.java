@@ -42,8 +42,6 @@ abstract class FieldExternalizer<T, V> implements Externalizer<T, V> {
 		@Override
 		final public void readExternal(final T object, final ObjectInput in)
 				throws IOException, ReflectiveOperationException {
-			if (!in.readBoolean())
-				return;
 			field.set(object, readObject(in));
 		}
 

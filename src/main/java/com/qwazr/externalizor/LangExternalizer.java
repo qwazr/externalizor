@@ -88,7 +88,7 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 
 		@Override
 		final public String readObject(final ObjectInput in) throws IOException, ClassNotFoundException {
-			return in.readUTF();
+			return in.readBoolean() ? in.readUTF() : null;
 		}
 	}
 
@@ -105,7 +105,7 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 
 		@Override
 		final public Long readObject(final ObjectInput in) throws IOException, ClassNotFoundException {
-			return in.readLong();
+			return in.readBoolean() ? in.readLong() : null;
 		}
 	}
 
@@ -122,7 +122,7 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 
 		@Override
 		final public Integer readObject(final ObjectInput in) throws IOException, ClassNotFoundException {
-			return in.readInt();
+			return in.readBoolean() ? in.readInt() : null;
 		}
 	}
 
@@ -139,7 +139,7 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 
 		@Override
 		final public Short readObject(final ObjectInput in) throws IOException, ClassNotFoundException {
-			return in.readShort();
+			return in.readBoolean() ? in.readShort() : null;
 		}
 	}
 
@@ -156,7 +156,7 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 
 		@Override
 		final public Double readObject(final ObjectInput in) throws IOException, ClassNotFoundException {
-			return in.readDouble();
+			return in.readBoolean() ? in.readDouble() : null;
 		}
 	}
 
@@ -173,7 +173,7 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 
 		@Override
 		final public Float readObject(final ObjectInput in) throws IOException, ClassNotFoundException {
-			return in.readFloat();
+			return in.readBoolean() ? in.readFloat() : null;
 		}
 	}
 
@@ -190,7 +190,7 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 
 		@Override
 		final public Byte readObject(final ObjectInput in) throws IOException, ClassNotFoundException {
-			return in.readByte();
+			return in.readBoolean() ? in.readByte() : null;
 		}
 	}
 
@@ -207,7 +207,7 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 
 		@Override
 		final public Character readObject(final ObjectInput in) throws IOException, ClassNotFoundException {
-			return in.readChar();
+			return in.readBoolean() ? in.readChar() : null;
 		}
 	}
 
@@ -233,7 +233,7 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 
 		@Override
 		final public String readObject(final ObjectInput in) throws IOException {
-			return in.readUTF();
+			return in.readBoolean() ? in.readUTF() : null;
 		}
 	}
 
@@ -250,7 +250,7 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 
 		@Override
 		final public Long readObject(final ObjectInput in) throws IOException {
-			return in.readLong();
+			return in.readBoolean() ? in.readLong() : null;
 		}
 	}
 
@@ -267,7 +267,7 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 
 		@Override
 		final public Integer readObject(final ObjectInput in) throws IOException {
-			return in.readInt();
+			return in.readBoolean() ? in.readInt() : null;
 		}
 	}
 
@@ -284,7 +284,7 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 
 		@Override
 		final public Short readObject(final ObjectInput in) throws IOException {
-			return in.readShort();
+			return in.readBoolean() ? in.readShort() : null;
 		}
 	}
 
@@ -301,7 +301,7 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 
 		@Override
 		final public Double readObject(final ObjectInput in) throws IOException {
-			return in.readDouble();
+			return in.readBoolean() ? in.readDouble() : null;
 		}
 	}
 
@@ -318,7 +318,7 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 
 		@Override
 		final public Float readObject(final ObjectInput in) throws IOException {
-			return in.readFloat();
+			return in.readBoolean() ? in.readFloat() : null;
 		}
 	}
 
@@ -335,7 +335,7 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 
 		@Override
 		final public Character readObject(final ObjectInput in) throws IOException {
-			return in.readChar();
+			return in.readBoolean() ? in.readChar() : null;
 		}
 	}
 
@@ -352,7 +352,7 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 
 		@Override
 		final public Byte readObject(final ObjectInput in) throws IOException {
-			return in.readByte();
+			return in.readBoolean() ? in.readByte() : null;
 		}
 	}
 }

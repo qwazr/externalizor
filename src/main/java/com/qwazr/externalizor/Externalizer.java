@@ -15,6 +15,7 @@
  */
 package com.qwazr.externalizor;
 
+import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
@@ -44,6 +45,8 @@ interface Externalizer<T, V> {
 			return externalizer;
 		if ((externalizer = (Externalizer<T, V>) LangExternalizer.lang(field, clazz)) != null)
 			return externalizer;
+		if (Externalizable.class.isAssignableFrom(clazz))
+			return new ClassExternalizer.AbleExternalizer(field, clazz);
 		throw new ExternalizorException(
 				"Type not supported: " + clazz + " - This class should implements Externalizable.");
 	}

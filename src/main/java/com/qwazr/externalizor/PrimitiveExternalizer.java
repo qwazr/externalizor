@@ -63,7 +63,7 @@ interface PrimitiveExternalizer<T, V> extends Externalizer<T, V> {
 	}
 
 	@Override
-	default void readExternal(final T object, final ObjectInput in) {
+	default void readExternal(final T object, final ObjectInput in) throws IOException, ReflectiveOperationException {
 		throw new ExternalizorException("Not implemented");
 	}
 
@@ -201,6 +201,12 @@ interface PrimitiveExternalizer<T, V> extends Externalizer<T, V> {
 		}
 
 		@Override
+		final public void readExternal(final T object, final ObjectInput in)
+				throws IOException, ReflectiveOperationException {
+			field.setInt(object, in.readInt());
+		}
+
+		@Override
 		final public Integer readObject(final ObjectInput in) throws IOException {
 			return in.readInt();
 		}
@@ -216,6 +222,12 @@ interface PrimitiveExternalizer<T, V> extends Externalizer<T, V> {
 		final public void writeExternal(final T object, final ObjectOutput out)
 				throws IOException, ReflectiveOperationException {
 			out.writeLong(field.getLong(object));
+		}
+
+		@Override
+		final public void readExternal(final T object, final ObjectInput in)
+				throws IOException, ReflectiveOperationException {
+			field.setLong(object, in.readLong());
 		}
 
 		@Override
@@ -237,6 +249,12 @@ interface PrimitiveExternalizer<T, V> extends Externalizer<T, V> {
 		}
 
 		@Override
+		final public void readExternal(final T object, final ObjectInput in)
+				throws IOException, ReflectiveOperationException {
+			field.setShort(object, in.readShort());
+		}
+
+		@Override
 		final public Short readObject(final ObjectInput in) throws IOException {
 			return in.readShort();
 		}
@@ -252,6 +270,12 @@ interface PrimitiveExternalizer<T, V> extends Externalizer<T, V> {
 		final public void writeExternal(final T object, final ObjectOutput out)
 				throws IOException, ReflectiveOperationException {
 			out.writeFloat(field.getFloat(object));
+		}
+
+		@Override
+		final public void readExternal(final T object, final ObjectInput in)
+				throws IOException, ReflectiveOperationException {
+			field.setFloat(object, in.readFloat());
 		}
 
 		@Override
@@ -273,6 +297,12 @@ interface PrimitiveExternalizer<T, V> extends Externalizer<T, V> {
 		}
 
 		@Override
+		final public void readExternal(final T object, final ObjectInput in)
+				throws IOException, ReflectiveOperationException {
+			field.setDouble(object, in.readDouble());
+		}
+
+		@Override
 		final public Double readObject(final ObjectInput in) throws IOException {
 			return in.readDouble();
 		}
@@ -288,6 +318,12 @@ interface PrimitiveExternalizer<T, V> extends Externalizer<T, V> {
 		final public void writeExternal(final T object, final ObjectOutput out)
 				throws IOException, ReflectiveOperationException {
 			out.writeByte(field.getByte(object));
+		}
+
+		@Override
+		final public void readExternal(final T object, final ObjectInput in)
+				throws IOException, ReflectiveOperationException {
+			field.setByte(object, in.readByte());
 		}
 
 		@Override
@@ -309,6 +345,12 @@ interface PrimitiveExternalizer<T, V> extends Externalizer<T, V> {
 		}
 
 		@Override
+		final public void readExternal(final T object, final ObjectInput in)
+				throws IOException, ReflectiveOperationException {
+			field.setChar(object, in.readChar());
+		}
+
+		@Override
 		final public Character readObject(final ObjectInput in) throws IOException {
 			return in.readChar();
 		}
@@ -324,6 +366,12 @@ interface PrimitiveExternalizer<T, V> extends Externalizer<T, V> {
 		final public void writeExternal(final T object, final ObjectOutput out)
 				throws IOException, ReflectiveOperationException {
 			out.writeBoolean(field.getBoolean(object));
+		}
+
+		@Override
+		final public void readExternal(final T object, final ObjectInput in)
+				throws IOException, ReflectiveOperationException {
+			field.setBoolean(object, in.readBoolean());
 		}
 
 		@Override

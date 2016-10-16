@@ -46,16 +46,32 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 		if (externalizer != null) {
 			if (String.class.isAssignableFrom(componentType))
 				return new FieldArrayLangStringExternalizer(field, externalizer);
+			if (Double.class.isAssignableFrom(componentType))
+				return new FieldArrayLangDoubleExternalizer(field, externalizer);
+			if (Float.class.isAssignableFrom(componentType))
+				return new FieldArrayLangFloatExternalizer(field, externalizer);
+			if (Long.class.isAssignableFrom(componentType))
+				return new FieldArrayLangLongExternalizer(field, externalizer);
+			if (Short.class.isAssignableFrom(componentType))
+				return new FieldArrayLangShortExternalizer(field, externalizer);
+			if (Integer.class.isAssignableFrom(componentType))
+				return new FieldArrayLangIntExternalizer(field, externalizer);
+			if (Boolean.class.isAssignableFrom(componentType))
+				return new FieldArrayLangBooleanExternalizer(field, externalizer);
+			if (Character.class.isAssignableFrom(componentType))
+				return new FieldArrayLangCharExternalizer(field, externalizer);
+			if (Byte.class.isAssignableFrom(componentType))
+				return new FieldArrayLangByteExternalizer(field, externalizer);
 		}
 		return null;
 	}
 
 	V readArray(final int size, final ObjectInput in) throws IOException, ReflectiveOperationException;
 
-	abstract class FieldArrayPrimitiveExternalizer<T, V> extends FieldExternalizer.FieldObjectExternalizer<T, V>
+	abstract class FieldArrayExternalizer<T, V> extends FieldExternalizer.FieldObjectExternalizer<T, V>
 			implements ArrayExternalizer<T, V> {
 
-		protected FieldArrayPrimitiveExternalizer(final Field field) {
+		protected FieldArrayExternalizer(final Field field) {
 			super(field);
 		}
 
@@ -68,7 +84,7 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 
 	}
 
-	final class FieldArrayIntegerExternalizer<T> extends FieldArrayPrimitiveExternalizer<T, int[]> {
+	final class FieldArrayIntegerExternalizer<T> extends FieldArrayExternalizer<T, int[]> {
 
 		private FieldArrayIntegerExternalizer(final Field field) {
 			super(field);
@@ -91,7 +107,7 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 		}
 	}
 
-	final class FieldArrayLongExternalizer<T> extends FieldArrayPrimitiveExternalizer<T, long[]> {
+	final class FieldArrayLongExternalizer<T> extends FieldArrayExternalizer<T, long[]> {
 
 		private FieldArrayLongExternalizer(final Field field) {
 			super(field);
@@ -114,7 +130,7 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 		}
 	}
 
-	final class FieldArrayShortExternalizer<T> extends FieldArrayPrimitiveExternalizer<T, short[]> {
+	final class FieldArrayShortExternalizer<T> extends FieldArrayExternalizer<T, short[]> {
 
 		private FieldArrayShortExternalizer(final Field field) {
 			super(field);
@@ -137,7 +153,7 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 		}
 	}
 
-	final class FieldArrayDoubleExternalizer<T> extends FieldArrayPrimitiveExternalizer<T, double[]> {
+	final class FieldArrayDoubleExternalizer<T> extends FieldArrayExternalizer<T, double[]> {
 
 		private FieldArrayDoubleExternalizer(final Field field) {
 			super(field);
@@ -160,7 +176,7 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 		}
 	}
 
-	final class FieldArrayFloatExternalizer<T> extends FieldArrayPrimitiveExternalizer<T, float[]> {
+	final class FieldArrayFloatExternalizer<T> extends FieldArrayExternalizer<T, float[]> {
 
 		private FieldArrayFloatExternalizer(final Field field) {
 			super(field);
@@ -183,7 +199,7 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 		}
 	}
 
-	final class FieldArrayByteExternalizer<T> extends FieldArrayPrimitiveExternalizer<T, byte[]> {
+	final class FieldArrayByteExternalizer<T> extends FieldArrayExternalizer<T, byte[]> {
 
 		private FieldArrayByteExternalizer(final Field field) {
 			super(field);
@@ -206,7 +222,7 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 		}
 	}
 
-	final class FieldArrayCharExternalizer<T> extends FieldArrayPrimitiveExternalizer<T, char[]> {
+	final class FieldArrayCharExternalizer<T> extends FieldArrayExternalizer<T, char[]> {
 
 		private FieldArrayCharExternalizer(final Field field) {
 			super(field);
@@ -229,7 +245,7 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 		}
 	}
 
-	final class FieldArrayBooleanExternalizer<T> extends FieldArrayPrimitiveExternalizer<T, boolean[]> {
+	final class FieldArrayBooleanExternalizer<T> extends FieldArrayExternalizer<T, boolean[]> {
 
 		private FieldArrayBooleanExternalizer(final Field field) {
 			super(field);
@@ -252,13 +268,22 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 		}
 	}
 
-	final class FieldArrayLangStringExternalizer<T> extends FieldArrayPrimitiveExternalizer<T, String[]> {
+	abstract class FieldArrayObjectExternalizer<T, V> extends FieldArrayExternalizer<T, V>
+			implements ArrayExternalizer<T, V> {
 
-		private final Externalizer componentExternalizer;
+		protected final Externalizer componentExternalizer;
 
-		FieldArrayLangStringExternalizer(final Field field, final Externalizer componentExternalizer) {
+		protected FieldArrayObjectExternalizer(final Field field, final Externalizer componentExternalizer) {
 			super(field);
 			this.componentExternalizer = componentExternalizer;
+		}
+
+	}
+
+	final class FieldArrayLangStringExternalizer<T> extends FieldArrayObjectExternalizer<T, String[]> {
+
+		FieldArrayLangStringExternalizer(final Field field, final Externalizer componentExternalizer) {
+			super(field, componentExternalizer);
 		}
 
 		@Override
@@ -279,4 +304,195 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 		}
 	}
 
+	final class FieldArrayLangDoubleExternalizer<T> extends FieldArrayObjectExternalizer<T, Double[]> {
+
+		FieldArrayLangDoubleExternalizer(final Field field, final Externalizer componentExternalizer) {
+			super(field, componentExternalizer);
+		}
+
+		@Override
+		final public Double[] readArray(final int size, final ObjectInput in)
+				throws IOException, ReflectiveOperationException {
+			final Double[] array = new Double[size];
+			for (int i = 0; i < array.length; i++)
+				array[i] = (Double) componentExternalizer.readObject(in);
+			return array;
+		}
+
+		@Override
+		protected void writeValue(final Double[] value, final ObjectOutput out)
+				throws IOException, ReflectiveOperationException {
+			out.writeInt(value.length);
+			for (Double item : value)
+				componentExternalizer.writeExternal(item, out);
+		}
+	}
+
+	final class FieldArrayLangFloatExternalizer<T> extends FieldArrayObjectExternalizer<T, Float[]> {
+
+		FieldArrayLangFloatExternalizer(final Field field, final Externalizer componentExternalizer) {
+			super(field, componentExternalizer);
+		}
+
+		@Override
+		final public Float[] readArray(final int size, final ObjectInput in)
+				throws IOException, ReflectiveOperationException {
+			final Float[] array = new Float[size];
+			for (int i = 0; i < array.length; i++)
+				array[i] = (Float) componentExternalizer.readObject(in);
+			return array;
+		}
+
+		@Override
+		protected void writeValue(final Float[] value, final ObjectOutput out)
+				throws IOException, ReflectiveOperationException {
+			out.writeInt(value.length);
+			for (Float item : value)
+				componentExternalizer.writeExternal(item, out);
+		}
+	}
+
+	final class FieldArrayLangLongExternalizer<T> extends FieldArrayObjectExternalizer<T, Long[]> {
+
+		FieldArrayLangLongExternalizer(final Field field, final Externalizer componentExternalizer) {
+			super(field, componentExternalizer);
+		}
+
+		@Override
+		final public Long[] readArray(final int size, final ObjectInput in)
+				throws IOException, ReflectiveOperationException {
+			final Long[] array = new Long[size];
+			for (int i = 0; i < array.length; i++)
+				array[i] = (Long) componentExternalizer.readObject(in);
+			return array;
+		}
+
+		@Override
+		protected void writeValue(final Long[] value, final ObjectOutput out)
+				throws IOException, ReflectiveOperationException {
+			out.writeInt(value.length);
+			for (Long item : value)
+				componentExternalizer.writeExternal(item, out);
+		}
+	}
+
+	final class FieldArrayLangIntExternalizer<T> extends FieldArrayObjectExternalizer<T, Integer[]> {
+
+		FieldArrayLangIntExternalizer(final Field field, final Externalizer componentExternalizer) {
+			super(field, componentExternalizer);
+		}
+
+		@Override
+		final public Integer[] readArray(final int size, final ObjectInput in)
+				throws IOException, ReflectiveOperationException {
+			final Integer[] array = new Integer[size];
+			for (int i = 0; i < array.length; i++)
+				array[i] = (Integer) componentExternalizer.readObject(in);
+			return array;
+		}
+
+		@Override
+		protected void writeValue(final Integer[] value, final ObjectOutput out)
+				throws IOException, ReflectiveOperationException {
+			out.writeInt(value.length);
+			for (Integer item : value)
+				componentExternalizer.writeExternal(item, out);
+		}
+	}
+
+	final class FieldArrayLangShortExternalizer<T> extends FieldArrayObjectExternalizer<T, Short[]> {
+
+		FieldArrayLangShortExternalizer(final Field field, final Externalizer componentExternalizer) {
+			super(field, componentExternalizer);
+		}
+
+		@Override
+		final public Short[] readArray(final int size, final ObjectInput in)
+				throws IOException, ReflectiveOperationException {
+			final Short[] array = new Short[size];
+			for (int i = 0; i < array.length; i++)
+				array[i] = (Short) componentExternalizer.readObject(in);
+			return array;
+		}
+
+		@Override
+		protected void writeValue(final Short[] value, final ObjectOutput out)
+				throws IOException, ReflectiveOperationException {
+			out.writeInt(value.length);
+			for (Short item : value)
+				componentExternalizer.writeExternal(item, out);
+		}
+	}
+
+	final class FieldArrayLangCharExternalizer<T> extends FieldArrayObjectExternalizer<T, Character[]> {
+
+		FieldArrayLangCharExternalizer(final Field field, final Externalizer componentExternalizer) {
+			super(field, componentExternalizer);
+		}
+
+		@Override
+		final public Character[] readArray(final int size, final ObjectInput in)
+				throws IOException, ReflectiveOperationException {
+			final Character[] array = new Character[size];
+			for (int i = 0; i < array.length; i++)
+				array[i] = (Character) componentExternalizer.readObject(in);
+			return array;
+		}
+
+		@Override
+		protected void writeValue(final Character[] value, final ObjectOutput out)
+				throws IOException, ReflectiveOperationException {
+			out.writeInt(value.length);
+			for (Character item : value)
+				componentExternalizer.writeExternal(item, out);
+		}
+	}
+
+	final class FieldArrayLangByteExternalizer<T> extends FieldArrayObjectExternalizer<T, Byte[]> {
+
+		FieldArrayLangByteExternalizer(final Field field, final Externalizer componentExternalizer) {
+			super(field, componentExternalizer);
+		}
+
+		@Override
+		final public Byte[] readArray(final int size, final ObjectInput in)
+				throws IOException, ReflectiveOperationException {
+			final Byte[] array = new Byte[size];
+			for (int i = 0; i < array.length; i++)
+				array[i] = (Byte) componentExternalizer.readObject(in);
+			return array;
+		}
+
+		@Override
+		protected void writeValue(final Byte[] value, final ObjectOutput out)
+				throws IOException, ReflectiveOperationException {
+			out.writeInt(value.length);
+			for (Byte item : value)
+				componentExternalizer.writeExternal(item, out);
+		}
+	}
+
+	final class FieldArrayLangBooleanExternalizer<T> extends FieldArrayObjectExternalizer<T, Boolean[]> {
+
+		FieldArrayLangBooleanExternalizer(final Field field, final Externalizer componentExternalizer) {
+			super(field, componentExternalizer);
+		}
+
+		@Override
+		final public Boolean[] readArray(final int size, final ObjectInput in)
+				throws IOException, ReflectiveOperationException {
+			final Boolean[] array = new Boolean[size];
+			for (int i = 0; i < array.length; i++)
+				array[i] = (Boolean) componentExternalizer.readObject(in);
+			return array;
+		}
+
+		@Override
+		protected void writeValue(final Boolean[] value, final ObjectOutput out)
+				throws IOException, ReflectiveOperationException {
+			out.writeInt(value.length);
+			for (Boolean item : value)
+				componentExternalizer.writeExternal(item, out);
+		}
+	}
 }

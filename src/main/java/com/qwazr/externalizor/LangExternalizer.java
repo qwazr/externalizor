@@ -45,6 +45,8 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 			return (LangExternalizer<T, V>) new CharExternalizer();
 		if (Byte.class.isAssignableFrom(clazz))
 			return (LangExternalizer<T, V>) new ByteExternalizer();
+		if (Boolean.class.isAssignableFrom(clazz))
+			return (LangExternalizer<T, V>) new BooleanExternalizer();
 		// Can't handle this class, we return null
 		return null;
 	}
@@ -66,6 +68,8 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 			return (LangExternalizer<T, V>) new FieldCharExternalizer(field);
 		if (Byte.class.isAssignableFrom(clazz))
 			return (LangExternalizer<T, V>) new FieldByteExternalizer(field);
+		if (Boolean.class.isAssignableFrom(clazz))
+			return (LangExternalizer<T, V>) new FieldBooleanExternalizer(field);
 		// Can't handle this class, we return null
 		return null;
 	}
@@ -211,6 +215,23 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 		}
 	}
 
+	final class BooleanExternalizer implements LangExternalizer<Boolean, Boolean> {
+
+		@Override
+		final public void writeExternal(final Boolean object, final ObjectOutput out) throws IOException {
+			if (object != null) {
+				out.writeBoolean(true);
+				out.writeBoolean(object);
+			} else
+				out.writeBoolean(false);
+		}
+
+		@Override
+		final public Boolean readObject(final ObjectInput in) throws IOException, ClassNotFoundException {
+			return in.readBoolean() ? in.readBoolean() : null;
+		}
+	}
+
 	abstract class FieldLangExternalizer<T, V> extends FieldExternalizer.FieldObjectExternalizer<T, V>
 			implements LangExternalizer<T, V> {
 
@@ -353,6 +374,23 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 		@Override
 		final public Byte readObject(final ObjectInput in) throws IOException {
 			return in.readBoolean() ? in.readByte() : null;
+		}
+	}
+
+	final class FieldBooleanExternalizer<T> extends FieldLangExternalizer<T, Boolean> {
+
+		private FieldBooleanExternalizer(final Field field) {
+			super(field);
+		}
+
+		@Override
+		final protected void writeValue(final Boolean value, final ObjectOutput out) throws IOException {
+			out.writeBoolean(value);
+		}
+
+		@Override
+		final public Boolean readObject(final ObjectInput in) throws IOException {
+			return in.readBoolean() ? in.readBoolean() : null;
 		}
 	}
 }

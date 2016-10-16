@@ -25,7 +25,4 @@ public class ExternalizorException extends RuntimeException {
 		super(e);
 	}
 
-	ExternalizorException(final String message, final Throwable e) {
-		super(message, e);
-	}
 }

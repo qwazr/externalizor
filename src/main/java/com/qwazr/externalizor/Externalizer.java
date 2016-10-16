@@ -25,9 +25,6 @@ interface Externalizer<T, V> {
 
 	static <T, V> Externalizer<T, V> of(final Class<? extends T> clazz) {
 		Externalizer<T, V> externalizer;
-		if (clazz.isPrimitive())
-			if ((externalizer = (Externalizer<T, V>) PrimitiveExternalizer.primitive(clazz)) != null)
-				return externalizer;
 		if ((externalizer = LangExternalizer.lang(clazz)) != null)
 			return externalizer;
 		throw new ExternalizorException("Type not supported: " + clazz);

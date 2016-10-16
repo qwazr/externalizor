@@ -41,7 +41,11 @@ public class Serial implements Externalizable {
 	final protected Vector<Byte> byteList;
 	final public HashSet<Short> shortList;
 	final public HashSet<Character> charList;
-	final private HashMap<String, Integer> map;
+	final private HashMap<String, Integer> mapStringInteger;
+	final private HashMap<Byte, Character> mapByteChar;
+	final private HashMap<Short, Long> mapShortLong;
+	final private TreeMap<Float, Double> mapFloatDouble;
+	final private TreeMap<String, Boolean> mapStringBoolean;
 	public SerialInner inner = new SerialInner();
 	transient String transientValue;
 
@@ -80,9 +84,22 @@ public class Serial implements Externalizable {
 		charList = new HashSet<>();
 		for (int i = 0; i < RandomUtils.nextInt(5, 10); i++)
 			charList.add((char) RandomUtils.nextInt(0, Short.MAX_VALUE));
-		map = new HashMap<>();
+		mapStringInteger = new HashMap<>();
 		for (int i = 0; i < RandomUtils.nextInt(5, 10); i++)
-			map.put(RandomStringUtils.randomAscii(5), RandomUtils.nextInt(0, Short.MAX_VALUE));
+			mapStringInteger.put(RandomStringUtils.randomAscii(5), RandomUtils.nextInt(0, Integer.MAX_VALUE));
+		mapByteChar = new HashMap<>();
+		for (int i = 0; i < RandomUtils.nextInt(5, 10); i++)
+			mapByteChar.put((byte) RandomUtils.nextInt(0, Byte.MAX_VALUE),
+					(char) RandomUtils.nextInt(0, Character.MAX_VALUE));
+		mapShortLong = new HashMap<>();
+		for (int i = 0; i < RandomUtils.nextInt(5, 10); i++)
+			mapShortLong.put((short) RandomUtils.nextInt(0, Short.MAX_VALUE), RandomUtils.nextLong(0, Long.MAX_VALUE));
+		mapFloatDouble = new TreeMap<>();
+		for (int i = 0; i < RandomUtils.nextInt(5, 10); i++)
+			mapFloatDouble.put(RandomUtils.nextFloat(0, Float.MAX_VALUE), RandomUtils.nextDouble(0, Double.MAX_VALUE));
+		mapStringBoolean = new TreeMap<>();
+		for (int i = 0; i < RandomUtils.nextInt(5, 10); i++)
+			mapStringBoolean.put(RandomStringUtils.randomAscii(5), RandomUtils.nextInt(0, 1) == 1);
 		transientValue = RandomStringUtils.randomAscii(12);
 	}
 
@@ -115,7 +132,15 @@ public class Serial implements Externalizable {
 			return false;
 		if (!CollectionsUtils.equals(shortList, s.shortList))
 			return false;
-		if (!CollectionsUtils.equals(map, s.map))
+		if (!CollectionsUtils.equals(mapStringInteger, s.mapStringInteger))
+			return false;
+		if (!CollectionsUtils.equals(mapByteChar, s.mapByteChar))
+			return false;
+		if (!CollectionsUtils.equals(mapShortLong, s.mapShortLong))
+			return false;
+		if (!CollectionsUtils.equals(mapFloatDouble, s.mapFloatDouble))
+			return false;
+		if (!CollectionsUtils.equals(mapStringBoolean, s.mapStringBoolean))
 			return false;
 		if (!Objects.equals(inner, s.inner))
 			return false;

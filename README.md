@@ -11,14 +11,17 @@ Efficient (fast and small) JAVA serialization using Externalizable interface.
 - Primitive types: int, long, short, double, float, boolean, char, byte, enum
 - Primitive array: with compression based on Snappy
 
+Apache2 license.
+
 ## Usage
 
 ```java
 
 import java.io.Externalizable;
+import com.qwazr.externalizor.Externalizor;
 
 /**
-* Here is the class to serialize. It must implements Externalizable
+* The class should implement Externalizable
 */
 
 public class MyClass implements Externalizable {

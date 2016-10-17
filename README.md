@@ -1,7 +1,7 @@
 # Externalizor
 
 [![Build Status](https://travis-ci.org/qwazr/QWAZR.svg?branch=master)](https://travis-ci.org/qwazr/externalizor)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.qwazr/QWAZR/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.qwazr/externalizor)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.qwazr/externalizor/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.qwazr/externalizor)
 [![Coverage Status](https://coveralls.io/repos/github/qwazr/externalizor/badge.svg?branch=master)](https://coveralls.io/github/qwazr/externalizor?branch=master)
 
 Efficient (fast and small) JAVA serialization using Externalizable interface.
@@ -38,7 +38,6 @@ public class MyClass implements Externalizable {
 	public MyClass() {
 	}
 
-
 	// Here is the serialization part:
     // Create the serialization handler for this class. 
 	private final static Externalizor<MyClass> externalizor = Externalizor.of(MyClass.class);
@@ -69,6 +68,7 @@ try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
 }
 
 // Deserialization
+
 try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes)) {
     try (ObjectInputStream ois = new ObjectInputStream(bis)) {
         MyClass myClass = ois.readObject();

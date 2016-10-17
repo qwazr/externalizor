@@ -47,6 +47,8 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 			return (LangExternalizer<T, V>) new ByteExternalizer();
 		if (Boolean.class.isAssignableFrom(clazz))
 			return (LangExternalizer<T, V>) new BooleanExternalizer();
+		if (Enum.class.isAssignableFrom(clazz))
+			return (LangExternalizer<T, V>) new EnumExternalizer((Class<? extends Enum<?>>) clazz);
 		// Can't handle this class, we return null
 		return null;
 	}
@@ -70,6 +72,8 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 			return (LangExternalizer<T, V>) new FieldByteExternalizer(field);
 		if (Boolean.class.isAssignableFrom(clazz))
 			return (LangExternalizer<T, V>) new FieldBooleanExternalizer(field);
+		if (Enum.class.isAssignableFrom(clazz))
+			return (LangExternalizer<T, V>) new FieldEnumExternalizer(field);
 		// Can't handle this class, we return null
 		return null;
 	}
@@ -232,6 +236,29 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 		}
 	}
 
+	final class EnumExternalizer implements LangExternalizer<Enum<?>, Enum<?>> {
+
+		private final Class<? extends Enum> enumType;
+
+		private EnumExternalizer(final Class<? extends Enum<?>> enumType) {
+			this.enumType = enumType;
+		}
+
+		@Override
+		final public void writeExternal(final Enum<?> object, final ObjectOutput out) throws IOException {
+			if (object != null) {
+				out.writeBoolean(true);
+				out.writeUTF(object.name());
+			} else
+				out.writeBoolean(false);
+		}
+
+		@Override
+		final public Enum<?> readObject(final ObjectInput in) throws IOException, ClassNotFoundException {
+			return in.readBoolean() ? Enum.valueOf(enumType, in.readUTF()) : null;
+		}
+	}
+
 	abstract class FieldLangExternalizer<T, V> extends FieldExternalizer.FieldObjectExternalizer<T, V>
 			implements LangExternalizer<T, V> {
 
@@ -391,6 +418,26 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 		@Override
 		final public Boolean readObject(final ObjectInput in) throws IOException {
 			return in.readBoolean() ? in.readBoolean() : null;
+		}
+	}
+
+	final class FieldEnumExternalizer<T> extends FieldLangExternalizer<T, Enum<?>> {
+
+		private final Class<? extends Enum> enumType;
+
+		private FieldEnumExternalizer(final Field field) {
+			super(field);
+			enumType = (Class<? extends Enum>) field.getType();
+		}
+
+		@Override
+		final protected void writeValue(final Enum<?> value, final ObjectOutput out) throws IOException {
+			out.writeUTF(value.name());
+		}
+
+		@Override
+		final public Enum<?> readObject(final ObjectInput in) throws IOException {
+			return in.readBoolean() ? Enum.valueOf(enumType, in.readUTF()) : null;
 		}
 	}
 }

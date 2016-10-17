@@ -27,6 +27,8 @@ interface Externalizer<T, V> {
 		Externalizer<T, V> externalizer;
 		if ((externalizer = LangExternalizer.lang(clazz)) != null)
 			return externalizer;
+		if (Externalizable.class.isAssignableFrom(clazz))
+			return new ClassExternalizer.AbleExternalizer(clazz);
 		throw new ExternalizorException("Type not supported: " + clazz);
 	}
 
@@ -43,7 +45,7 @@ interface Externalizer<T, V> {
 		if ((externalizer = (Externalizer<T, V>) LangExternalizer.lang(field, clazz)) != null)
 			return externalizer;
 		if (Externalizable.class.isAssignableFrom(clazz))
-			return new ClassExternalizer.AbleExternalizer(field, clazz);
+			return new ClassExternalizer.AbleFieldExternalizer(field, clazz);
 		throw new ExternalizorException(
 				"Type not supported: " + clazz + " - This class should implements Externalizable.");
 	}

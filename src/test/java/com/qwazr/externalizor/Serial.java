@@ -70,6 +70,7 @@ public class Serial extends SerialInner implements Externalizable {
 	final private ArrayList<String> nullList = null;
 	final public SerialInner inner = new SerialInner();
 	final public SerialInner nullObject = null;
+	final public HashMap<String, SerialInner> mapObject;
 	transient String transientValue;
 
 	public Serial() {
@@ -167,6 +168,9 @@ public class Serial extends SerialInner implements Externalizable {
 		mapStringBoolean = new TreeMap<>();
 		for (int i = 0; i < RandomUtils.nextInt(5, 10); i++)
 			mapStringBoolean.put(RandomStringUtils.randomAscii(5), RandomUtils.nextInt(0, 1) == 1);
+		mapObject = new HashMap<>();
+		for (int i = 0; i < RandomUtils.nextInt(2, 5); i++)
+			mapObject.put(RandomStringUtils.randomAscii(5), new SerialInner());
 		transientValue = RandomStringUtils.randomAscii(12);
 	}
 
@@ -252,6 +256,8 @@ public class Serial extends SerialInner implements Externalizable {
 		if (!Objects.equals(nullObject, s.nullObject))
 			return false;
 		if (!Objects.equals(inner, s.inner))
+			return false;
+		if (!CollectionsUtils.equals(mapObject, s.mapObject))
 			return false;
 		return super.equals(s);
 	}

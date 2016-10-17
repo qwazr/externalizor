@@ -80,12 +80,48 @@ interface ClassExternalizer<T extends Externalizable> extends Externalizer<T, T>
 		}
 	}
 
-	final class AbleExternalizer<T extends Externalizable> extends FieldExternalizer.FieldObjectExternalizer<T, T>
+	final class AbleExternalizer<T extends Externalizable> implements ClassExternalizer<T> {
+
+		private final Class<T> clazz;
+
+		AbleExternalizer(final Class<T> clazz) {
+			this.clazz = clazz;
+		}
+
+		@Override
+		final public void writeExternal(final T object, final ObjectOutput out)
+				throws IOException, ReflectiveOperationException {
+			if (object == null) {
+				out.writeBoolean(false);
+				return;
+			}
+			out.writeBoolean(true);
+			object.writeExternal(out);
+		}
+
+		@Override
+		public void readExternal(final T object, final ObjectInput in)
+				throws IOException, ReflectiveOperationException {
+			if (in.readBoolean())
+				object.readExternal(in);
+		}
+
+		@Override
+		final public T readObject(final ObjectInput in) throws IOException, ReflectiveOperationException {
+			if (!in.readBoolean())
+				return null;
+			final T object = clazz.newInstance();
+			object.readExternal(in);
+			return object;
+		}
+	}
+
+	final class AbleFieldExternalizer<T extends Externalizable> extends FieldExternalizer.FieldObjectExternalizer<T, T>
 			implements ClassExternalizer<T> {
 
 		private final Class<T> clazz;
 
-		AbleExternalizer(final Field field, final Class<T> clazz) {
+		AbleFieldExternalizer(final Field field, final Class<T> clazz) {
 			super(field);
 			this.clazz = clazz;
 		}

@@ -104,7 +104,6 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 			return readByteArray(bytes);
 		}
 
-
 		protected abstract V readByteArray(final byte[] bytes) throws IOException;
 	}
 

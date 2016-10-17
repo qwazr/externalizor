@@ -15,10 +15,9 @@
  */
 package com.qwazr.externalizor;
 
-import com.qwazr.utils.CollectionsUtils;
-import com.qwazr.utils.StringUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Externalizable;
 import java.io.IOException;
@@ -77,57 +76,57 @@ public class Serial extends SerialInner implements Externalizable {
 		integerValue = RandomUtils.nextInt(0, Integer.MAX_VALUE);
 		longValue = RandomUtils.nextLong(0, Long.MAX_VALUE);
 		string = RandomStringUtils.randomAscii(64);
-		doubleArray = new double[]{RandomUtils.nextDouble(0, Double.MAX_VALUE),
+		doubleArray = new double[] { RandomUtils.nextDouble(0, Double.MAX_VALUE),
 				RandomUtils.nextDouble(0, Double.MAX_VALUE),
-				RandomUtils.nextDouble(0, Double.MAX_VALUE)};
-		doubleLangArray = new Double[]{RandomUtils.nextDouble(0, Double.MAX_VALUE),
+				RandomUtils.nextDouble(0, Double.MAX_VALUE) };
+		doubleLangArray = new Double[] { RandomUtils.nextDouble(0, Double.MAX_VALUE),
 				RandomUtils.nextDouble(0, Double.MAX_VALUE),
-				RandomUtils.nextDouble(0, Double.MAX_VALUE)};
-		floatArray = new float[]{RandomUtils.nextFloat(0, Float.MAX_VALUE),
+				RandomUtils.nextDouble(0, Double.MAX_VALUE) };
+		floatArray = new float[] { RandomUtils.nextFloat(0, Float.MAX_VALUE),
 				RandomUtils.nextFloat(0, Float.MAX_VALUE),
-				RandomUtils.nextFloat(0, Float.MAX_VALUE)};
-		floatLangArray = new Float[]{RandomUtils.nextFloat(0, Float.MAX_VALUE),
+				RandomUtils.nextFloat(0, Float.MAX_VALUE) };
+		floatLangArray = new Float[] { RandomUtils.nextFloat(0, Float.MAX_VALUE),
 				RandomUtils.nextFloat(0, Float.MAX_VALUE),
-				RandomUtils.nextFloat(0, Float.MAX_VALUE)};
-		intArray = new int[]{RandomUtils.nextInt(0, Integer.MAX_VALUE),
+				RandomUtils.nextFloat(0, Float.MAX_VALUE) };
+		intArray = new int[] { RandomUtils.nextInt(0, Integer.MAX_VALUE),
 				RandomUtils.nextInt(0, Integer.MAX_VALUE),
-				RandomUtils.nextInt(0, Integer.MAX_VALUE)};
-		intLangArray = new Integer[]{RandomUtils.nextInt(0, Integer.MAX_VALUE),
+				RandomUtils.nextInt(0, Integer.MAX_VALUE) };
+		intLangArray = new Integer[] { RandomUtils.nextInt(0, Integer.MAX_VALUE),
 				RandomUtils.nextInt(0, Integer.MAX_VALUE),
-				RandomUtils.nextInt(0, Integer.MAX_VALUE)};
-		shortArray = new short[]{(short) RandomUtils.nextInt(0, Short.MAX_VALUE),
+				RandomUtils.nextInt(0, Integer.MAX_VALUE) };
+		shortArray = new short[] { (short) RandomUtils.nextInt(0, Short.MAX_VALUE),
 				(short) RandomUtils.nextInt(0, Short.MAX_VALUE),
-				(short) RandomUtils.nextInt(0, Short.MAX_VALUE)};
-		shortLangArray = new Short[]{(short) RandomUtils.nextInt(0, Short.MAX_VALUE),
+				(short) RandomUtils.nextInt(0, Short.MAX_VALUE) };
+		shortLangArray = new Short[] { (short) RandomUtils.nextInt(0, Short.MAX_VALUE),
 				(short) RandomUtils.nextInt(0, Short.MAX_VALUE),
-				(short) RandomUtils.nextInt(0, Short.MAX_VALUE)};
-		longArray = new long[]{RandomUtils.nextLong(0, Long.MAX_VALUE),
+				(short) RandomUtils.nextInt(0, Short.MAX_VALUE) };
+		longArray = new long[] { RandomUtils.nextLong(0, Long.MAX_VALUE),
 				RandomUtils.nextLong(0, Long.MAX_VALUE),
-				RandomUtils.nextLong(0, Long.MAX_VALUE)};
-		longLangArray = new Long[]{RandomUtils.nextLong(0, Long.MAX_VALUE),
+				RandomUtils.nextLong(0, Long.MAX_VALUE) };
+		longLangArray = new Long[] { RandomUtils.nextLong(0, Long.MAX_VALUE),
 				RandomUtils.nextLong(0, Long.MAX_VALUE),
-				RandomUtils.nextLong(0, Long.MAX_VALUE)};
-		charArray = new char[]{(char) RandomUtils.nextInt(0, Character.MAX_VALUE),
+				RandomUtils.nextLong(0, Long.MAX_VALUE) };
+		charArray = new char[] { (char) RandomUtils.nextInt(0, Character.MAX_VALUE),
 				(char) RandomUtils.nextInt(0, Character.MAX_VALUE),
-				(char) RandomUtils.nextInt(0, Character.MAX_VALUE)};
-		charLangArray = new Character[]{(char) RandomUtils.nextInt(0, Character.MAX_VALUE),
+				(char) RandomUtils.nextInt(0, Character.MAX_VALUE) };
+		charLangArray = new Character[] { (char) RandomUtils.nextInt(0, Character.MAX_VALUE),
 				(char) RandomUtils.nextInt(0, Character.MAX_VALUE),
-				(char) RandomUtils.nextInt(0, Character.MAX_VALUE)};
-		byteArray = new byte[]{(byte) RandomUtils.nextInt(0, Byte.MAX_VALUE),
+				(char) RandomUtils.nextInt(0, Character.MAX_VALUE) };
+		byteArray = new byte[] { (byte) RandomUtils.nextInt(0, Byte.MAX_VALUE),
 				(byte) RandomUtils.nextInt(0, Byte.MAX_VALUE),
-				(byte) RandomUtils.nextInt(0, Byte.MAX_VALUE)};
-		byteLangArray = new Byte[]{(byte) RandomUtils.nextInt(0, Byte.MAX_VALUE),
+				(byte) RandomUtils.nextInt(0, Byte.MAX_VALUE) };
+		byteLangArray = new Byte[] { (byte) RandomUtils.nextInt(0, Byte.MAX_VALUE),
 				(byte) RandomUtils.nextInt(0, Byte.MAX_VALUE),
-				(byte) RandomUtils.nextInt(0, Byte.MAX_VALUE)};
-		booleanArray = new boolean[]{RandomUtils.nextInt(0, 2) == 1,
+				(byte) RandomUtils.nextInt(0, Byte.MAX_VALUE) };
+		booleanArray = new boolean[] { RandomUtils.nextInt(0, 2) == 1,
 				RandomUtils.nextInt(0, 2) == 1,
-				RandomUtils.nextInt(0, 2) == 1};
-		booleanLangArray = new Boolean[]{RandomUtils.nextInt(0, 2) == 1,
+				RandomUtils.nextInt(0, 2) == 1 };
+		booleanLangArray = new Boolean[] { RandomUtils.nextInt(0, 2) == 1,
 				RandomUtils.nextInt(0, 2) == 1,
-				RandomUtils.nextInt(0, 2) == 1};
-		stringArray = new String[]{RandomStringUtils.randomAscii(8),
+				RandomUtils.nextInt(0, 2) == 1 };
+		stringArray = new String[] { RandomStringUtils.randomAscii(8),
 				RandomStringUtils.randomAscii(8),
-				RandomStringUtils.randomAscii(8)};
+				RandomStringUtils.randomAscii(8) };
 		stringList = new ArrayList<>();
 		for (int i = 0; i < RandomUtils.nextInt(5, 10); i++)
 			stringList.add(RandomStringUtils.randomAscii(8));
@@ -223,41 +222,41 @@ public class Serial extends SerialInner implements Externalizable {
 			return false;
 		if (!Objects.deepEquals(charLangArray, s.charLangArray))
 			return false;
-		if (!CollectionsUtils.equals(stringList, s.stringList))
+		if (!Objects.equals(stringList, s.stringList))
 			return false;
-		if (!CollectionsUtils.equals(integerList, s.integerList))
+		if (!Objects.equals(integerList, s.integerList))
 			return false;
-		if (!CollectionsUtils.equals(longList, s.longList))
+		if (!Objects.equals(longList, s.longList))
 			return false;
-		if (!CollectionsUtils.equals(floatList, s.floatList))
+		if (!Objects.equals(floatList, s.floatList))
 			return false;
-		if (!CollectionsUtils.equals(doubleList, s.doubleList))
+		if (!Objects.equals(doubleList, s.doubleList))
 			return false;
-		if (!CollectionsUtils.equals(byteList, s.byteList))
+		if (!Objects.equals(byteList, s.byteList))
 			return false;
-		if (!CollectionsUtils.equals(charList, s.charList))
+		if (!Objects.equals(charList, s.charList))
 			return false;
-		if (!CollectionsUtils.equals(shortList, s.shortList))
+		if (!Objects.equals(shortList, s.shortList))
 			return false;
-		if (!CollectionsUtils.equals(mapStringInteger, s.mapStringInteger))
+		if (!Objects.equals(mapStringInteger, s.mapStringInteger))
 			return false;
-		if (!CollectionsUtils.equals(mapByteChar, s.mapByteChar))
+		if (!Objects.equals(mapByteChar, s.mapByteChar))
 			return false;
-		if (!CollectionsUtils.equals(mapShortLong, s.mapShortLong))
+		if (!Objects.equals(mapShortLong, s.mapShortLong))
 			return false;
-		if (!CollectionsUtils.equals(mapFloatDouble, s.mapFloatDouble))
+		if (!Objects.equals(mapFloatDouble, s.mapFloatDouble))
 			return false;
-		if (!CollectionsUtils.equals(mapStringBoolean, s.mapStringBoolean))
+		if (!Objects.equals(mapStringBoolean, s.mapStringBoolean))
 			return false;
-		if (!CollectionsUtils.equals(nullMap, s.nullMap))
+		if (!Objects.equals(nullMap, s.nullMap))
 			return false;
-		if (!CollectionsUtils.equals(nullList, s.nullList))
+		if (!Objects.equals(nullList, s.nullList))
 			return false;
 		if (!Objects.equals(nullObject, s.nullObject))
 			return false;
 		if (!Objects.equals(inner, s.inner))
 			return false;
-		if (!CollectionsUtils.equals(mapObject, s.mapObject))
+		if (!Objects.equals(mapObject, s.mapObject))
 			return false;
 		return super.equals(s);
 	}

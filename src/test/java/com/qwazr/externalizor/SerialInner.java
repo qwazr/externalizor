@@ -22,6 +22,7 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.HashSet;
 import java.util.Objects;
 
 public class SerialInner implements Externalizable {
@@ -53,6 +54,14 @@ public class SerialInner implements Externalizable {
 	private final Character charLangValue;
 	private final Character charNullValue;
 
+	public enum Status {
+		on, off
+	}
+
+	private final Status nullEnum;
+	private final Status statusEnum;
+	private final HashSet<Status> statusSet;
+
 	public SerialInner() {
 		stringValue = RandomStringUtils.randomAscii(8);
 		stringNullValue = null;
@@ -80,6 +89,12 @@ public class SerialInner implements Externalizable {
 		charValue = (char) RandomUtils.nextInt(0, Character.MAX_VALUE);
 		charLangValue = (char) RandomUtils.nextInt(0, Character.MAX_VALUE);
 		charNullValue = null;
+		nullEnum = null;
+		statusEnum = RandomUtils.nextInt(0, 1) == 0 ? Status.on : Status.off;
+		statusSet = new HashSet<>();
+		for (int i = 0; i < RandomUtils.nextInt(0, 5); i++)
+			statusSet.add(RandomUtils.nextInt(0, 1) == 0 ? Status.on : Status.off);
+
 	}
 
 	@Override
@@ -138,6 +153,12 @@ public class SerialInner implements Externalizable {
 		if (!Objects.equals(charNullValue, s.charNullValue))
 			return false;
 		if (!Objects.equals(charLangValue, s.charLangValue))
+			return false;
+		if (!Objects.equals(nullEnum, s.nullEnum))
+			return false;
+		if (!Objects.equals(statusEnum, s.statusEnum))
+			return false;
+		if (!Objects.equals(statusSet, s.statusSet))
 			return false;
 		return true;
 	}

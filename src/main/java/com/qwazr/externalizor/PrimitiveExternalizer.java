@@ -49,6 +49,10 @@ interface PrimitiveExternalizer<T, V> extends Externalizer<T, V> {
 			super(field);
 		}
 
+		@Override
+		final public V readObject(final ObjectInput in) throws IOException {
+			throw new ExternalizorException("Not available for primitive types");
+		}
 	}
 
 	final class FieldIntegerExternalizer<T> extends FieldPrimitiveExternalizer<T, Integer> {
@@ -69,10 +73,6 @@ interface PrimitiveExternalizer<T, V> extends Externalizer<T, V> {
 			field.setInt(object, in.readInt());
 		}
 
-		@Override
-		final public Integer readObject(final ObjectInput in) throws IOException {
-			return in.readInt();
-		}
 	}
 
 	final class FieldLongExternalizer<T> extends FieldPrimitiveExternalizer<T, Long> {
@@ -93,10 +93,6 @@ interface PrimitiveExternalizer<T, V> extends Externalizer<T, V> {
 			field.setLong(object, in.readLong());
 		}
 
-		@Override
-		final public Long readObject(final ObjectInput in) throws IOException {
-			return in.readLong();
-		}
 	}
 
 	final class FieldShortExternalizer<T> extends FieldPrimitiveExternalizer<T, Short> {
@@ -117,10 +113,6 @@ interface PrimitiveExternalizer<T, V> extends Externalizer<T, V> {
 			field.setShort(object, in.readShort());
 		}
 
-		@Override
-		final public Short readObject(final ObjectInput in) throws IOException {
-			return in.readShort();
-		}
 	}
 
 	final class FieldFloatExternalizer<T> extends FieldPrimitiveExternalizer<T, Float> {
@@ -141,10 +133,6 @@ interface PrimitiveExternalizer<T, V> extends Externalizer<T, V> {
 			field.setFloat(object, in.readFloat());
 		}
 
-		@Override
-		final public Float readObject(final ObjectInput in) throws IOException {
-			return in.readFloat();
-		}
 	}
 
 	final class FieldDoubleExternalizer<T> extends FieldPrimitiveExternalizer<T, Double> {
@@ -165,10 +153,6 @@ interface PrimitiveExternalizer<T, V> extends Externalizer<T, V> {
 			field.setDouble(object, in.readDouble());
 		}
 
-		@Override
-		final public Double readObject(final ObjectInput in) throws IOException {
-			return in.readDouble();
-		}
 	}
 
 	final class FieldByteExternalizer<T> extends FieldPrimitiveExternalizer<T, Byte> {
@@ -189,10 +173,6 @@ interface PrimitiveExternalizer<T, V> extends Externalizer<T, V> {
 			field.setByte(object, in.readByte());
 		}
 
-		@Override
-		final public Byte readObject(final ObjectInput in) throws IOException {
-			return in.readByte();
-		}
 	}
 
 	final class FieldCharExternalizer<T> extends FieldPrimitiveExternalizer<T, Character> {
@@ -213,10 +193,6 @@ interface PrimitiveExternalizer<T, V> extends Externalizer<T, V> {
 			field.setChar(object, in.readChar());
 		}
 
-		@Override
-		final public Character readObject(final ObjectInput in) throws IOException {
-			return in.readChar();
-		}
 	}
 
 	final class FieldBooleanExternalizer<T> extends FieldPrimitiveExternalizer<T, Boolean> {
@@ -236,11 +212,7 @@ interface PrimitiveExternalizer<T, V> extends Externalizer<T, V> {
 				throws IOException, ReflectiveOperationException {
 			field.setBoolean(object, in.readBoolean());
 		}
-
-		@Override
-		final public Boolean readObject(final ObjectInput in) throws IOException {
-			return in.readBoolean();
-		}
+		
 	}
 
 }

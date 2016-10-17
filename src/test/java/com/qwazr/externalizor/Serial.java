@@ -16,6 +16,7 @@
 package com.qwazr.externalizor;
 
 import com.qwazr.utils.CollectionsUtils;
+import com.qwazr.utils.StringUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 
@@ -25,13 +26,15 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.*;
 
-public class Serial implements Externalizable {
+public class Serial extends SerialInner implements Externalizable {
 
 	final private int integerValue;
 	public long longValue;
 	final public String string;
-	public String emptyObject;
+	final public String nullString = null;
+	final public String emptyString = StringUtils.EMPTY;
 	public double[] doubleArray;
+	public double[] emptyDoubleArray = new double[0];
 	public Double[] doubleLangArray;
 	public float[] floatArray;
 	public Float[] floatLangArray;
@@ -46,7 +49,9 @@ public class Serial implements Externalizable {
 	public char[] charArray;
 	public Character[] charLangArray;
 	public boolean[] booleanArray;
+	public boolean[] emptyBooleanArray = new boolean[0];
 	public Boolean[] booleanLangArray;
+
 	String[] stringArray;
 	final public ArrayList<String> stringList;
 	final public LinkedHashSet<Integer> integerList;
@@ -61,65 +66,67 @@ public class Serial implements Externalizable {
 	final private HashMap<Short, Long> mapShortLong;
 	final private TreeMap<Float, Double> mapFloatDouble;
 	final private TreeMap<String, Boolean> mapStringBoolean;
-	public SerialInner inner = new SerialInner();
+	final private HashMap<String, String> nullMap = null;
+	final private ArrayList<String> nullList = null;
+	final public SerialInner inner = new SerialInner();
+	final public SerialInner nullObject = null;
 	transient String transientValue;
 
 	public Serial() {
 		integerValue = RandomUtils.nextInt(0, Integer.MAX_VALUE);
 		longValue = RandomUtils.nextLong(0, Long.MAX_VALUE);
 		string = RandomStringUtils.randomAscii(64);
-		emptyObject = null;
-		doubleArray = new double[] { RandomUtils.nextDouble(0, Double.MAX_VALUE),
+		doubleArray = new double[]{RandomUtils.nextDouble(0, Double.MAX_VALUE),
 				RandomUtils.nextDouble(0, Double.MAX_VALUE),
-				RandomUtils.nextDouble(0, Double.MAX_VALUE) };
-		doubleLangArray = new Double[] { RandomUtils.nextDouble(0, Double.MAX_VALUE),
+				RandomUtils.nextDouble(0, Double.MAX_VALUE)};
+		doubleLangArray = new Double[]{RandomUtils.nextDouble(0, Double.MAX_VALUE),
 				RandomUtils.nextDouble(0, Double.MAX_VALUE),
-				RandomUtils.nextDouble(0, Double.MAX_VALUE) };
-		floatArray = new float[] { RandomUtils.nextFloat(0, Float.MAX_VALUE),
+				RandomUtils.nextDouble(0, Double.MAX_VALUE)};
+		floatArray = new float[]{RandomUtils.nextFloat(0, Float.MAX_VALUE),
 				RandomUtils.nextFloat(0, Float.MAX_VALUE),
-				RandomUtils.nextFloat(0, Float.MAX_VALUE) };
-		floatLangArray = new Float[] { RandomUtils.nextFloat(0, Float.MAX_VALUE),
+				RandomUtils.nextFloat(0, Float.MAX_VALUE)};
+		floatLangArray = new Float[]{RandomUtils.nextFloat(0, Float.MAX_VALUE),
 				RandomUtils.nextFloat(0, Float.MAX_VALUE),
-				RandomUtils.nextFloat(0, Float.MAX_VALUE) };
-		intArray = new int[] { RandomUtils.nextInt(0, Integer.MAX_VALUE),
+				RandomUtils.nextFloat(0, Float.MAX_VALUE)};
+		intArray = new int[]{RandomUtils.nextInt(0, Integer.MAX_VALUE),
 				RandomUtils.nextInt(0, Integer.MAX_VALUE),
-				RandomUtils.nextInt(0, Integer.MAX_VALUE) };
-		intLangArray = new Integer[] { RandomUtils.nextInt(0, Integer.MAX_VALUE),
+				RandomUtils.nextInt(0, Integer.MAX_VALUE)};
+		intLangArray = new Integer[]{RandomUtils.nextInt(0, Integer.MAX_VALUE),
 				RandomUtils.nextInt(0, Integer.MAX_VALUE),
-				RandomUtils.nextInt(0, Integer.MAX_VALUE) };
-		shortArray = new short[] { (short) RandomUtils.nextInt(0, Short.MAX_VALUE),
+				RandomUtils.nextInt(0, Integer.MAX_VALUE)};
+		shortArray = new short[]{(short) RandomUtils.nextInt(0, Short.MAX_VALUE),
 				(short) RandomUtils.nextInt(0, Short.MAX_VALUE),
-				(short) RandomUtils.nextInt(0, Short.MAX_VALUE) };
-		shortLangArray = new Short[] { (short) RandomUtils.nextInt(0, Short.MAX_VALUE),
+				(short) RandomUtils.nextInt(0, Short.MAX_VALUE)};
+		shortLangArray = new Short[]{(short) RandomUtils.nextInt(0, Short.MAX_VALUE),
 				(short) RandomUtils.nextInt(0, Short.MAX_VALUE),
-				(short) RandomUtils.nextInt(0, Short.MAX_VALUE) };
-		longArray = new long[] { RandomUtils.nextLong(0, Long.MAX_VALUE),
+				(short) RandomUtils.nextInt(0, Short.MAX_VALUE)};
+		longArray = new long[]{RandomUtils.nextLong(0, Long.MAX_VALUE),
 				RandomUtils.nextLong(0, Long.MAX_VALUE),
-				RandomUtils.nextLong(0, Long.MAX_VALUE) };
-		longLangArray = new Long[] { RandomUtils.nextLong(0, Long.MAX_VALUE),
+				RandomUtils.nextLong(0, Long.MAX_VALUE)};
+		longLangArray = new Long[]{RandomUtils.nextLong(0, Long.MAX_VALUE),
 				RandomUtils.nextLong(0, Long.MAX_VALUE),
-				RandomUtils.nextLong(0, Long.MAX_VALUE) };
-		charArray = new char[] { (char) RandomUtils.nextInt(0, Character.MAX_VALUE),
+				RandomUtils.nextLong(0, Long.MAX_VALUE)};
+		charArray = new char[]{(char) RandomUtils.nextInt(0, Character.MAX_VALUE),
 				(char) RandomUtils.nextInt(0, Character.MAX_VALUE),
-				(char) RandomUtils.nextInt(0, Character.MAX_VALUE) };
-		charLangArray = new Character[] { (char) RandomUtils.nextInt(0, Character.MAX_VALUE),
+				(char) RandomUtils.nextInt(0, Character.MAX_VALUE)};
+		charLangArray = new Character[]{(char) RandomUtils.nextInt(0, Character.MAX_VALUE),
 				(char) RandomUtils.nextInt(0, Character.MAX_VALUE),
-				(char) RandomUtils.nextInt(0, Character.MAX_VALUE) };
-		byteArray = new byte[] { (byte) RandomUtils.nextInt(0, Byte.MAX_VALUE),
+				(char) RandomUtils.nextInt(0, Character.MAX_VALUE)};
+		byteArray = new byte[]{(byte) RandomUtils.nextInt(0, Byte.MAX_VALUE),
 				(byte) RandomUtils.nextInt(0, Byte.MAX_VALUE),
-				(byte) RandomUtils.nextInt(0, Byte.MAX_VALUE) };
-		byteLangArray = new Byte[] { (byte) RandomUtils.nextInt(0, Byte.MAX_VALUE),
+				(byte) RandomUtils.nextInt(0, Byte.MAX_VALUE)};
+		byteLangArray = new Byte[]{(byte) RandomUtils.nextInt(0, Byte.MAX_VALUE),
 				(byte) RandomUtils.nextInt(0, Byte.MAX_VALUE),
-				(byte) RandomUtils.nextInt(0, Byte.MAX_VALUE) };
-		booleanArray = new boolean[] { RandomUtils.nextInt(0, 2) == 1,
+				(byte) RandomUtils.nextInt(0, Byte.MAX_VALUE)};
+		booleanArray = new boolean[]{RandomUtils.nextInt(0, 2) == 1,
 				RandomUtils.nextInt(0, 2) == 1,
-				RandomUtils.nextInt(0, 2) == 1 };
-		booleanLangArray = new Boolean[] { RandomUtils.nextInt(0, 2) == 1,
+				RandomUtils.nextInt(0, 2) == 1};
+		booleanLangArray = new Boolean[]{RandomUtils.nextInt(0, 2) == 1,
 				RandomUtils.nextInt(0, 2) == 1,
-				RandomUtils.nextInt(0, 2) == 1 };
-		stringArray = new String[] { RandomStringUtils.randomAscii(8),
+				RandomUtils.nextInt(0, 2) == 1};
+		stringArray = new String[]{RandomStringUtils.randomAscii(8),
 				RandomStringUtils.randomAscii(8),
-				RandomStringUtils.randomAscii(8) };
+				RandomStringUtils.randomAscii(8)};
 		stringList = new ArrayList<>();
 		for (int i = 0; i < RandomUtils.nextInt(5, 10); i++)
 			stringList.add(RandomStringUtils.randomAscii(8));
@@ -170,7 +177,9 @@ public class Serial implements Externalizable {
 		final Serial s = (Serial) o;
 		if (!Objects.equals(string, s.string))
 			return false;
-		if (!Objects.equals(emptyObject, s.emptyObject))
+		if (!Objects.equals(nullString, s.nullString))
+			return false;
+		if (!Objects.equals(emptyString, s.emptyString))
 			return false;
 		if (!Objects.deepEquals(stringArray, s.stringArray))
 			return false;
@@ -190,6 +199,8 @@ public class Serial implements Externalizable {
 			return false;
 		if (!Objects.deepEquals(floatLangArray, s.floatLangArray))
 			return false;
+		if (!Objects.deepEquals(emptyDoubleArray, s.emptyDoubleArray))
+			return false;
 		if (!Objects.deepEquals(doubleArray, s.doubleArray))
 			return false;
 		if (!Objects.deepEquals(doubleLangArray, s.doubleLangArray))
@@ -197,6 +208,8 @@ public class Serial implements Externalizable {
 		if (!Objects.deepEquals(booleanArray, s.booleanArray))
 			return false;
 		if (!Objects.deepEquals(booleanLangArray, s.booleanLangArray))
+			return false;
+		if (!Objects.deepEquals(emptyBooleanArray, s.emptyBooleanArray))
 			return false;
 		if (!Objects.deepEquals(byteArray, s.byteArray))
 			return false;
@@ -232,9 +245,15 @@ public class Serial implements Externalizable {
 			return false;
 		if (!CollectionsUtils.equals(mapStringBoolean, s.mapStringBoolean))
 			return false;
+		if (!CollectionsUtils.equals(nullMap, s.nullMap))
+			return false;
+		if (!CollectionsUtils.equals(nullList, s.nullList))
+			return false;
+		if (!Objects.equals(nullObject, s.nullObject))
+			return false;
 		if (!Objects.equals(inner, s.inner))
 			return false;
-		return true;
+		return super.equals(s);
 	}
 
 	// The serialization part

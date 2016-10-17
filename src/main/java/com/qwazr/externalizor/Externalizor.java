@@ -23,16 +23,18 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Externalizor<T> {
 
 	private final Externalizer<T, T> externalizer;
+	private final Class<T> clazz;
 
 	private Externalizor(final Class<T> clazz) {
 		externalizer = new ClassExternalizer.RootExternalizer(clazz);
+		this.clazz = clazz;
 	}
 
 	public void writeExternal(final T object, final ObjectOutput out) throws IOException {
 		try {
 			externalizer.writeExternal(object, out);
 		} catch (ReflectiveOperationException e) {
-			throw new ExternalizorException(e);
+			throw new ExternalizorException("Error while serializing the class " + clazz, e);
 		}
 	}
 
@@ -40,7 +42,7 @@ public class Externalizor<T> {
 		try {
 			externalizer.readExternal(object, in);
 		} catch (ReflectiveOperationException e) {
-			throw new ExternalizorException(e);
+			throw new ExternalizorException("Error while unserializing the class " + clazz, e);
 		}
 	}
 

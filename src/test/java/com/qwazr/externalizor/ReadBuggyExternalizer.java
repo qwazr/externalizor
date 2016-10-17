@@ -15,27 +15,20 @@
  */
 package com.qwazr.externalizor;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
-public class MissingExternalizable implements Externalizable {
+public class ReadBuggyExternalizer implements Externalizable {
 
-	private final String test;
+	private final InnerBuggy innerBuggy;
 
-	/**
-	 * This type is not externalizable
-	 */
-	private final Pair pair = Pair.of("Key", "Value");
-
-	public MissingExternalizable(String test) {
-		this.test = test;
+	public ReadBuggyExternalizer() {
+		this.innerBuggy = new InnerBuggy();
 	}
 
-	final static Externalizor<MissingExternalizable> externalizor = Externalizor.of(MissingExternalizable.class);
+	final static Externalizor<ReadBuggyExternalizer> externalizor = Externalizor.of(ReadBuggyExternalizer.class);
 
 	@Override
 	public void writeExternal(final ObjectOutput out) throws IOException {
@@ -45,5 +38,17 @@ public class MissingExternalizable implements Externalizable {
 	@Override
 	public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
 		externalizor.readExternal(this, in);
+	}
+
+	public static class InnerBuggy implements Externalizable {
+
+		@Override
+		public void writeExternal(ObjectOutput out) throws IOException {
+		}
+
+		@Override
+		public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+			throw new ClassNotFoundException("Error");
+		}
 	}
 }

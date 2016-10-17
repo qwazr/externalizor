@@ -21,21 +21,21 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.HashMap;
+import java.util.Map;
 
-public class MissingExternalizable implements Externalizable {
-
-	private final String test;
+public class WithAbstract implements Externalizable {
 
 	/**
-	 * This type is not externalizable
+	 * This type is an extract
 	 */
-	private final Pair pair = Pair.of("Key", "Value");
+	private final Map<String, String> abstractMap;
 
-	public MissingExternalizable(String test) {
-		this.test = test;
+	public WithAbstract() {
+		this.abstractMap = new HashMap<>();
 	}
 
-	final static Externalizor<MissingExternalizable> externalizor = Externalizor.of(MissingExternalizable.class);
+	final static Externalizor<WithAbstract> externalizor = Externalizor.of(WithAbstract.class);
 
 	@Override
 	public void writeExternal(final ObjectOutput out) throws IOException {

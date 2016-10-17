@@ -19,6 +19,7 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -28,13 +29,24 @@ interface ClassExternalizer<T extends Externalizable> extends Externalizer<T, T>
 
 	final class RootExternalizer<T extends Externalizable> implements ClassExternalizer<T> {
 
-		private final Class<T> clazz;
+		private final Constructor<T> constructor;
 		private final Collection<Externalizer> externalizers;
 
 		RootExternalizer(final Class<T> clazz) {
-			this.clazz = clazz;
+			try {
+				constructor = clazz.getConstructor();
+			} catch (NoSuchMethodException e) {
+				throw new ExternalizorException("The clazz does not have a public empty constructor: " + clazz, e);
+			}
 			final Field[] fields = clazz.getDeclaredFields();
 			externalizers = new ArrayList<>(fields.length);
+			detectFields(clazz);
+		}
+
+		private void detectFields(final Class<?> clazz) {
+			if (clazz == null)
+				return;
+			final Field[] fields = clazz.getDeclaredFields();
 			for (Field field : fields) {
 				final Class<?> cl = field.getType();
 				final int modifier = field.getModifiers();
@@ -43,6 +55,7 @@ interface ClassExternalizer<T extends Externalizable> extends Externalizer<T, T>
 				field.setAccessible(true);
 				externalizers.add(Externalizer.of(field, cl));
 			}
+			detectFields(clazz.getSuperclass());
 		}
 
 		@Override
@@ -61,7 +74,7 @@ interface ClassExternalizer<T extends Externalizable> extends Externalizer<T, T>
 
 		@Override
 		final public T readObject(final ObjectInput in) throws IOException, ReflectiveOperationException {
-			final T object = clazz.newInstance();
+			final T object = constructor.newInstance();
 			readExternal(object, in);
 			return object;
 		}

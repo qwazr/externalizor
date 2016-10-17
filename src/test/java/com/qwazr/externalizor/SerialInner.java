@@ -107,6 +107,10 @@ public class SerialInner implements Externalizable {
 			return false;
 		if (!Objects.equals(stringNullValue, s.stringNullValue))
 			return false;
+		if (!Objects.equals(intLangValue, s.intLangValue))
+			return false;
+		if (!Objects.equals(intNullValue, s.intNullValue))
+			return false;
 		if (!Objects.equals(shortLangValue, s.shortLangValue))
 			return false;
 		if (!Objects.equals(shortNullValue, s.shortNullValue))

@@ -40,15 +40,47 @@ public class ExternalizerTest {
 	}
 
 	@Test
-	public void errorTest() throws IOException, ClassNotFoundException {
-
+	public void errorMissingExternalizableTest() throws IOException, ClassNotFoundException {
 		try {
 			new MissingExternalizable("Test");
 			Assert.fail("The exception has not been thrown");
 		} catch (ExceptionInInitializerError e) {
 			Assert.assertTrue(e.getCause() instanceof ExternalizorException);
 		}
+	}
 
+	@Test
+	public void errorWithAbstractTest() throws IOException, ClassNotFoundException {
+		try {
+			new WithAbstract();
+			Assert.fail("The exception has not been thrown");
+		} catch (ExceptionInInitializerError e) {
+			Assert.assertTrue(e.getCause() instanceof ExternalizorException);
+		}
+	}
+
+	@Test
+	public void errorNoEmptyConstructorTest() throws IOException, ClassNotFoundException {
+		try {
+			new NoEmptyConstructor("Test");
+			Assert.fail("The exception has not been thrown");
+		} catch (ExceptionInInitializerError e) {
+			Assert.assertTrue(e.getCause() instanceof ExternalizorException);
+		}
+	}
+
+	@Test
+	public void errorReadBuggyTest() throws IOException, ClassNotFoundException {
+
+		final ReadBuggyExternalizer write = new ReadBuggyExternalizer();
+		final byte[] byteArray = write(write);
+		Assert.assertNotNull(byteArray);
+
+		try {
+			read(byteArray);
+			Assert.fail("The exception has not been thrown");
+		} catch (ExternalizorException e) {
+		}
 	}
 
 	@Test

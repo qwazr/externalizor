@@ -40,6 +40,18 @@ public class ExternalizerTest {
 	}
 
 	@Test
+	public void errorTest() throws IOException, ClassNotFoundException {
+
+		try {
+			new MissingExternalizable("Test");
+			Assert.fail("The exception has not been thrown");
+		} catch (ExceptionInInitializerError e) {
+			Assert.assertTrue(e.getCause() instanceof ExternalizorException);
+		}
+
+	}
+
+	@Test
 	public void simpleClassTest() throws IOException, ClassNotFoundException {
 
 		//Write

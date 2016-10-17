@@ -38,7 +38,7 @@ public class Externalizor<T> {
 		}
 	}
 
-	void readExternal(final T object, final ObjectInput in) throws IOException, ClassNotFoundException {
+	public void readExternal(final T object, final ObjectInput in) throws IOException, ClassNotFoundException {
 		try {
 			externalizer.readExternal(object, in);
 		} catch (ReflectiveOperationException e) {

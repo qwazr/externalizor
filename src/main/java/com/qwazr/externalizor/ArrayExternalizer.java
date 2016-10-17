@@ -15,6 +15,8 @@
  */
 package com.qwazr.externalizor;
 
+import org.xerial.snappy.Snappy;
+
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
@@ -66,14 +68,14 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 		return null;
 	}
 
-	V readArray(final int size, final ObjectInput in) throws IOException, ReflectiveOperationException;
-
 	abstract class FieldArrayExternalizer<T, V> extends FieldExternalizer.FieldObjectExternalizer<T, V>
 			implements ArrayExternalizer<T, V> {
 
 		protected FieldArrayExternalizer(final Field field) {
 			super(field);
 		}
+
+		protected abstract V readArray(int size, ObjectInput in) throws IOException, ReflectiveOperationException;
 
 		@Override
 		final public V readObject(final ObjectInput in) throws IOException, ReflectiveOperationException {
@@ -84,187 +86,176 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 
 	}
 
-	final class FieldArrayIntegerExternalizer<T> extends FieldArrayExternalizer<T, int[]> {
+	abstract class FieldArrayPrimitiveExternalizer<T, V> extends FieldArrayExternalizer<T, V> {
+
+		protected FieldArrayPrimitiveExternalizer(final Field field) {
+			super(field);
+		}
+
+		final protected void writeByteArray(final byte[] bytes, final ObjectOutput out) throws IOException {
+			out.writeInt(bytes.length);
+			if (bytes.length > 0)
+				out.write(bytes);
+		}
+
+		final protected V readArray(final int size, final ObjectInput in) throws IOException {
+			final byte[] bytes = new byte[size];
+			in.read(bytes);
+			return readByteArray(bytes);
+		}
+
+
+		protected abstract V readByteArray(final byte[] bytes) throws IOException;
+	}
+
+	final class FieldArrayIntegerExternalizer<T> extends FieldArrayPrimitiveExternalizer<T, int[]> {
 
 		private FieldArrayIntegerExternalizer(final Field field) {
 			super(field);
 		}
 
 		@Override
-		final public int[] readArray(final int size, final ObjectInput in) throws IOException {
-			final int[] array = new int[size];
-			for (int i = 0; i < array.length; i++)
-				array[i] = in.readInt();
-			return array;
+		final protected int[] readByteArray(final byte[] bytes) throws IOException {
+			return Snappy.uncompressIntArray(bytes);
 		}
 
 		@Override
 		protected void writeValue(final int[] value, final ObjectOutput out)
 				throws IOException, ReflectiveOperationException {
-			out.writeInt(value.length);
-			for (int item : value)
-				out.writeInt(item);
+			writeByteArray(Snappy.compress(value), out);
 		}
 	}
 
-	final class FieldArrayLongExternalizer<T> extends FieldArrayExternalizer<T, long[]> {
+	final class FieldArrayLongExternalizer<T> extends FieldArrayPrimitiveExternalizer<T, long[]> {
 
 		private FieldArrayLongExternalizer(final Field field) {
 			super(field);
 		}
 
 		@Override
-		final public long[] readArray(final int size, final ObjectInput in) throws IOException {
-			final long[] array = new long[size];
-			for (int i = 0; i < array.length; i++)
-				array[i] = in.readLong();
-			return array;
+		final protected long[] readByteArray(final byte[] bytes) throws IOException {
+			return Snappy.uncompressLongArray(bytes);
 		}
 
 		@Override
 		protected void writeValue(final long[] value, final ObjectOutput out)
 				throws IOException, ReflectiveOperationException {
-			out.writeInt(value.length);
-			for (long item : value)
-				out.writeLong(item);
+			writeByteArray(Snappy.compress(value), out);
 		}
 	}
 
-	final class FieldArrayShortExternalizer<T> extends FieldArrayExternalizer<T, short[]> {
+	final class FieldArrayShortExternalizer<T> extends FieldArrayPrimitiveExternalizer<T, short[]> {
 
 		private FieldArrayShortExternalizer(final Field field) {
 			super(field);
 		}
 
 		@Override
-		final public short[] readArray(final int size, final ObjectInput in) throws IOException {
-			final short[] array = new short[size];
-			for (int i = 0; i < array.length; i++)
-				array[i] = in.readShort();
-			return array;
+		final protected short[] readByteArray(final byte[] bytes) throws IOException {
+			return Snappy.uncompressShortArray(bytes);
 		}
 
 		@Override
 		protected void writeValue(final short[] value, final ObjectOutput out)
 				throws IOException, ReflectiveOperationException {
-			out.writeInt(value.length);
-			for (short item : value)
-				out.writeShort(item);
+			writeByteArray(Snappy.compress(value), out);
 		}
 	}
 
-	final class FieldArrayDoubleExternalizer<T> extends FieldArrayExternalizer<T, double[]> {
+	final class FieldArrayDoubleExternalizer<T> extends FieldArrayPrimitiveExternalizer<T, double[]> {
 
 		private FieldArrayDoubleExternalizer(final Field field) {
 			super(field);
 		}
 
 		@Override
-		final public double[] readArray(final int size, final ObjectInput in) throws IOException {
-			final double[] array = new double[size];
-			for (int i = 0; i < array.length; i++)
-				array[i] = in.readDouble();
-			return array;
+		final protected double[] readByteArray(final byte[] bytes) throws IOException {
+			return Snappy.uncompressDoubleArray(bytes);
 		}
 
 		@Override
 		protected void writeValue(final double[] value, final ObjectOutput out)
 				throws IOException, ReflectiveOperationException {
-			out.writeInt(value.length);
-			for (double item : value)
-				out.writeDouble(item);
+			writeByteArray(Snappy.compress(value), out);
 		}
 	}
 
-	final class FieldArrayFloatExternalizer<T> extends FieldArrayExternalizer<T, float[]> {
+	final class FieldArrayFloatExternalizer<T> extends FieldArrayPrimitiveExternalizer<T, float[]> {
 
 		private FieldArrayFloatExternalizer(final Field field) {
 			super(field);
 		}
 
 		@Override
-		final public float[] readArray(final int size, final ObjectInput in) throws IOException {
-			final float[] array = new float[size];
-			for (int i = 0; i < array.length; i++)
-				array[i] = in.readFloat();
-			return array;
+		final protected float[] readByteArray(final byte[] bytes) throws IOException {
+			return Snappy.uncompressFloatArray(bytes);
 		}
 
 		@Override
 		protected void writeValue(final float[] value, final ObjectOutput out)
 				throws IOException, ReflectiveOperationException {
-			out.writeInt(value.length);
-			for (float item : value)
-				out.writeFloat(item);
+			writeByteArray(Snappy.compress(value), out);
 		}
 	}
 
-	final class FieldArrayByteExternalizer<T> extends FieldArrayExternalizer<T, byte[]> {
+	final class FieldArrayByteExternalizer<T> extends FieldArrayPrimitiveExternalizer<T, byte[]> {
 
 		private FieldArrayByteExternalizer(final Field field) {
 			super(field);
 		}
 
 		@Override
-		final public byte[] readArray(final int size, final ObjectInput in) throws IOException {
-			final byte[] array = new byte[size];
-			for (int i = 0; i < array.length; i++)
-				array[i] = in.readByte();
-			return array;
+		final protected byte[] readByteArray(final byte[] bytes) throws IOException {
+			return Snappy.uncompress(bytes);
 		}
 
 		@Override
 		protected void writeValue(final byte[] value, final ObjectOutput out)
 				throws IOException, ReflectiveOperationException {
-			out.writeInt(value.length);
-			for (byte item : value)
-				out.writeByte(item);
+			writeByteArray(Snappy.compress(value), out);
 		}
 	}
 
-	final class FieldArrayCharExternalizer<T> extends FieldArrayExternalizer<T, char[]> {
+	final class FieldArrayCharExternalizer<T> extends FieldArrayPrimitiveExternalizer<T, char[]> {
 
 		private FieldArrayCharExternalizer(final Field field) {
 			super(field);
 		}
 
 		@Override
-		final public char[] readArray(final int size, final ObjectInput in) throws IOException {
-			final char[] array = new char[size];
-			for (int i = 0; i < array.length; i++)
-				array[i] = in.readChar();
-			return array;
+		final protected char[] readByteArray(final byte[] bytes) throws IOException {
+			return Snappy.uncompressCharArray(bytes);
 		}
 
 		@Override
 		protected void writeValue(final char[] value, final ObjectOutput out)
 				throws IOException, ReflectiveOperationException {
-			out.writeInt(value.length);
-			for (char item : value)
-				out.writeChar(item);
+			writeByteArray(Snappy.compress(value), out);
 		}
 	}
 
-	final class FieldArrayBooleanExternalizer<T> extends FieldArrayExternalizer<T, boolean[]> {
+	final class FieldArrayBooleanExternalizer<T> extends FieldArrayPrimitiveExternalizer<T, boolean[]> {
 
 		private FieldArrayBooleanExternalizer(final Field field) {
 			super(field);
 		}
 
 		@Override
-		final public boolean[] readArray(final int size, final ObjectInput in) throws IOException {
-			final boolean[] array = new boolean[size];
-			for (int i = 0; i < array.length; i++)
-				array[i] = in.readBoolean();
-			return array;
+		final protected boolean[] readByteArray(final byte[] bytes) throws IOException {
+			final byte[] booleanBytes = Snappy.uncompress(bytes);
+			final boolean[] booleans = new boolean[booleanBytes.length];
+			for (int i = 0; i < booleanBytes.length; i++)
+				booleans[i] = booleanBytes[i] == 1;
+			return booleans;
 		}
 
 		@Override
 		protected void writeValue(final boolean[] value, final ObjectOutput out)
 				throws IOException, ReflectiveOperationException {
-			out.writeInt(value.length);
-			for (boolean item : value)
-				out.writeBoolean(item);
+			byte[] bytes = new byte[value.length];
+			for (int i = 0; i < value.length; i++)
+				bytes[i] = (byte) (value[i] ? 1 : 0);
+			writeByteArray(Snappy.compress(bytes), out);
 		}
 	}
 
@@ -272,6 +263,9 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 			implements ArrayExternalizer<T, V> {
 
 		protected final Externalizer componentExternalizer;
+
+		protected abstract V readArray(final int size, final ObjectInput in)
+				throws IOException, ReflectiveOperationException;
 
 		protected FieldArrayObjectExternalizer(final Field field, final Externalizer componentExternalizer) {
 			super(field);

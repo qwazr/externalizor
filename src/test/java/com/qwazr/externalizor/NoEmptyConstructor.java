@@ -15,27 +15,23 @@
  */
 package com.qwazr.externalizor;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
-public class MissingExternalizable implements Externalizable {
+public class NoEmptyConstructor implements Externalizable {
 
 	private final String test;
 
 	/**
-	 * This type is not externalizable
+	 * This class don't have an empty constructor
 	 */
-	private final Pair pair = Pair.of("Key", "Value");
-
-	public MissingExternalizable(String test) {
+	public NoEmptyConstructor(String test) {
 		this.test = test;
 	}
 
-	final static Externalizor<MissingExternalizable> externalizor = Externalizor.of(MissingExternalizable.class);
+	final static Externalizor<NoEmptyConstructor> externalizor = Externalizor.of(NoEmptyConstructor.class);
 
 	@Override
 	public void writeExternal(final ObjectOutput out) throws IOException {

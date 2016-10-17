@@ -6,23 +6,21 @@
 
 Efficient (fast and small) JAVA serialization using Externalizable interface.
 
-- Support of inner Externalizable class
+- Support of inner Externalizable objects
 - Concrete Collections (Map, Set, Vector)
 - Primitive types: int, long, short, double, float, boolean, char, byte, enum
-- Primitive array: with compression based on Snappy
-
-Apache2 license.
+- Primitive array: with compression/decompression based on [Snappy](https://github.com/xerial/snappy-java)
+- Smaller by a factor from 50 to 150 compared to default JAVA serialization
 
 ## Usage
+
+The class to serialize should implements
+[Externalizable](https://docs.oracle.com/javase/8/docs/api/java/io/Externalizable.html).
 
 ```java
 
 import java.io.Externalizable;
 import com.qwazr.externalizor.Externalizor;
-
-/**
-* The class should implement Externalizable
-*/
 
 public class MyClass implements Externalizable {
 
@@ -41,7 +39,7 @@ public class MyClass implements Externalizable {
 	}
 
 
-	// The serialization part:
+	// Here is the serialization part:
     // Create the serialization handler for this class. 
 	private final static Externalizor<MyClass> externalizor = Externalizor.of(MyClass.class);
 
@@ -57,12 +55,46 @@ public class MyClass implements Externalizable {
 }
 ```
 
+The typical JAVA code for serialize and unserialize an object:
+
+```java
+
+// Serialization
+
+MyClass myClass = new MyClass();
+try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+    try (ObjectOutputStream oos = new ObjectOutputStream(bos)) {
+        oos.writeObject(myClass);
+    }
+}
+
+// Deserialization
+try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes)) {
+    try (ObjectInputStream ois = new ObjectInputStream(bis)) {
+        MyClass myClass = ois.readObject();
+    }
+}
+```
+
 ## Maven dependency
+
+Available from Maven's central repository: http://central.maven.org/maven2/com/qwazr/externalizor.
+
+Add the following dependency to your pom.xml:
 
 ```xml
 <dependency>
     <groupId>com.qwazr</groupId>
     <artifactId>externalizor</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 </dependency>
 ```
+## Issues
+
+Post bug reports or feature request to the Issue Tracker:
+https://github.com/qwazr/externalizor/issues
+
+## Open source license
+
+[Apache2 license](https://github.com/qwazr/externalizor/blob/master/LICENSE)
+

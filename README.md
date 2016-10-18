@@ -97,7 +97,7 @@ To use the last snapshot build:
 <dependency>
     <groupId>com.qwazr</groupId>
     <artifactId>externalizor</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.1-SNAPSHOT</version>
 </dependency>
 
  <distributionManagement>
@@ -105,10 +105,6 @@ To use the last snapshot build:
             <id>ossrh</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
-        <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
 </distributionManagement>
 ```
 

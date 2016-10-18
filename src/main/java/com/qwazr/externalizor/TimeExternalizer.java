@@ -59,7 +59,7 @@ interface TimeExternalizer<T, V> extends Externalizer<T, V> {
 
 	static <T, V> Externalizer<T, V> time(final Field field, final Class<? extends T> clazz) {
 		if (Calendar.class.isAssignableFrom(clazz))
-			return (TimeExternalizer<T, V>) new FieldExternalizer.FieldParentExternalizer<>(field,
+			return (Externalizer<T, V>) new FieldExternalizer.FieldParentExternalizer<>(field,
 					CalendarExternalizer.INSTANCE);
 		if (Date.class.isAssignableFrom(clazz))
 			return (Externalizer<T, V>) new FieldExternalizer.FieldParentExternalizer(field, DateExternalizer.INSTANCE);
@@ -203,6 +203,7 @@ interface TimeExternalizer<T, V> extends Externalizer<T, V> {
 		@Override
 		final public void writeExternal(final LocalDateTime object, final ObjectOutput out) throws IOException {
 			if (object != null) {
+				out.writeBoolean(true);
 				out.writeLong(object.toLocalDate().getLong(ChronoField.EPOCH_DAY));
 				out.writeLong(object.toLocalTime().toNanoOfDay());
 			} else
@@ -212,7 +213,8 @@ interface TimeExternalizer<T, V> extends Externalizer<T, V> {
 		@Override
 		final public LocalDateTime readObject(final ObjectInput in) throws IOException, ClassNotFoundException {
 			return in.readBoolean() ?
-					LocalDateTime.of(LocalDate.ofEpochDay(in.readLong()), LocalTime.ofNanoOfDay(in.readLong())) : null;
+					LocalDateTime.of(LocalDate.ofEpochDay(in.readLong()), LocalTime.ofNanoOfDay(in.readLong())) :
+					null;
 		}
 	}
 

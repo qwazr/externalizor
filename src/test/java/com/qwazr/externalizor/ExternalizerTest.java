@@ -108,8 +108,18 @@ public class ExternalizerTest {
 	}
 
 	@Test
-	public void serialInnerTest() throws IOException, ClassNotFoundException {
-		classTest(new SerialInner());
+	public void simpleTimeTest() throws IOException, ClassNotFoundException {
+		classTest(new SimpleTime());
+	}
+
+	@Test
+	public void simpleCollectionTest() throws IOException, ClassNotFoundException {
+		classTest(new SimpleCollection());
+	}
+
+	@Test
+	public void serialTest() throws IOException, ClassNotFoundException {
+		classTest(new Serial());
 	}
 
 	@Test

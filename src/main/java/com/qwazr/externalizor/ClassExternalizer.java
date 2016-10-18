@@ -1,5 +1,5 @@
 /**
- * Copyright 2015-2016 Emmanuel Keller / QWAZR
+ * Copyright 2016 Emmanuel Keller / QWAZR
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -104,32 +104,6 @@ interface ClassExternalizer<T extends Externalizable> extends Externalizer<T, T>
 				throws IOException, ReflectiveOperationException {
 			if (in.readBoolean())
 				object.readExternal(in);
-		}
-
-		@Override
-		final public T readObject(final ObjectInput in) throws IOException, ReflectiveOperationException {
-			if (!in.readBoolean())
-				return null;
-			final T object = clazz.newInstance();
-			object.readExternal(in);
-			return object;
-		}
-	}
-
-	final class AbleFieldExternalizer<T extends Externalizable> extends FieldExternalizer.FieldObjectExternalizer<T, T>
-			implements ClassExternalizer<T> {
-
-		private final Class<T> clazz;
-
-		AbleFieldExternalizer(final Field field, final Class<T> clazz) {
-			super(field);
-			this.clazz = clazz;
-		}
-
-		@Override
-		final protected void writeValue(final T value, final ObjectOutput out)
-				throws IOException, ReflectiveOperationException {
-			value.writeExternal(out);
 		}
 
 		@Override

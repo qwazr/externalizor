@@ -1,5 +1,5 @@
 /**
- * Copyright 2015-2016 Emmanuel Keller / QWAZR
+ * Copyright 2016 Emmanuel Keller / QWAZR
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,6 +55,33 @@ abstract class FieldExternalizer<T, V> implements Externalizer<T, V> {
 			}
 			out.writeBoolean(true);
 			writeValue(value, out);
+		}
+	}
+
+	static class FieldParentExternalizer<T, V> extends FieldExternalizer<T, V> {
+
+		private final Externalizer<V, V> externalizer;
+
+		protected FieldParentExternalizer(final Field field, final Externalizer<V, V> externalizer) {
+			super(field);
+			this.externalizer = externalizer;
+		}
+
+		@Override
+		final public V readObject(final ObjectInput in) throws IOException, ReflectiveOperationException {
+			return externalizer.readObject(in);
+		}
+
+		@Override
+		final public void readExternal(final T object, final ObjectInput in)
+				throws IOException, ReflectiveOperationException {
+			field.set(object, readObject(in));
+		}
+		
+		@Override
+		final public void writeExternal(final T object, final ObjectOutput out)
+				throws IOException, ReflectiveOperationException {
+			externalizer.writeExternal((V) field.get(object), out);
 		}
 	}
 

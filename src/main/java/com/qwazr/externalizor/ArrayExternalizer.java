@@ -44,7 +44,7 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 			if (Character.TYPE.equals(componentType))
 				return new FieldArrayCharExternalizer(field);
 		}
-		Externalizer externalizer = Externalizer.of(componentType);
+		final Externalizer externalizer = Externalizer.of(componentType);
 		if (externalizer != null) {
 			if (String.class.isAssignableFrom(componentType))
 				return new FieldArrayLangStringExternalizer(field, externalizer);
@@ -119,8 +119,8 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 		}
 
 		@Override
-		protected void writeValue(final int[] value, final ObjectOutput out)
-				throws IOException, ReflectiveOperationException {
+		final protected void writeValue(final int[] value, final ObjectOutput out)
+				throws IOException {
 			writeByteArray(Snappy.compress(value), out);
 		}
 	}
@@ -137,8 +137,7 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 		}
 
 		@Override
-		protected void writeValue(final long[] value, final ObjectOutput out)
-				throws IOException, ReflectiveOperationException {
+		protected void writeValue(final long[] value, final ObjectOutput out) throws IOException {
 			writeByteArray(Snappy.compress(value), out);
 		}
 	}
@@ -155,8 +154,7 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 		}
 
 		@Override
-		protected void writeValue(final short[] value, final ObjectOutput out)
-				throws IOException, ReflectiveOperationException {
+		final protected void writeValue(final short[] value, final ObjectOutput out) throws IOException {
 			writeByteArray(Snappy.compress(value), out);
 		}
 	}
@@ -173,8 +171,7 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 		}
 
 		@Override
-		protected void writeValue(final double[] value, final ObjectOutput out)
-				throws IOException, ReflectiveOperationException {
+		final protected void writeValue(final double[] value, final ObjectOutput out) throws IOException {
 			writeByteArray(Snappy.compress(value), out);
 		}
 	}
@@ -191,8 +188,7 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 		}
 
 		@Override
-		protected void writeValue(final float[] value, final ObjectOutput out)
-				throws IOException, ReflectiveOperationException {
+		final protected void writeValue(final float[] value, final ObjectOutput out) throws IOException {
 			writeByteArray(Snappy.compress(value), out);
 		}
 	}
@@ -209,8 +205,7 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 		}
 
 		@Override
-		protected void writeValue(final byte[] value, final ObjectOutput out)
-				throws IOException, ReflectiveOperationException {
+		final protected void writeValue(final byte[] value, final ObjectOutput out) throws IOException {
 			writeByteArray(Snappy.compress(value), out);
 		}
 	}
@@ -227,8 +222,7 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 		}
 
 		@Override
-		protected void writeValue(final char[] value, final ObjectOutput out)
-				throws IOException, ReflectiveOperationException {
+		final protected void writeValue(final char[] value, final ObjectOutput out) throws IOException {
 			writeByteArray(Snappy.compress(value), out);
 		}
 	}
@@ -249,8 +243,7 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 		}
 
 		@Override
-		protected void writeValue(final boolean[] value, final ObjectOutput out)
-				throws IOException, ReflectiveOperationException {
+		final protected void writeValue(final boolean[] value, final ObjectOutput out) throws IOException {
 			byte[] bytes = new byte[value.length];
 			for (int i = 0; i < value.length; i++)
 				bytes[i] = (byte) (value[i] ? 1 : 0);
@@ -289,7 +282,7 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 		}
 
 		@Override
-		protected void writeValue(final String[] value, final ObjectOutput out)
+		final protected void writeValue(final String[] value, final ObjectOutput out)
 				throws IOException, ReflectiveOperationException {
 			out.writeInt(value.length);
 			for (String item : value)
@@ -337,7 +330,7 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 		}
 
 		@Override
-		protected void writeValue(final Float[] value, final ObjectOutput out)
+		final protected void writeValue(final Float[] value, final ObjectOutput out)
 				throws IOException, ReflectiveOperationException {
 			out.writeInt(value.length);
 			for (Float item : value)
@@ -361,7 +354,7 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 		}
 
 		@Override
-		protected void writeValue(final Long[] value, final ObjectOutput out)
+		final protected void writeValue(final Long[] value, final ObjectOutput out)
 				throws IOException, ReflectiveOperationException {
 			out.writeInt(value.length);
 			for (Long item : value)
@@ -385,7 +378,7 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 		}
 
 		@Override
-		protected void writeValue(final Integer[] value, final ObjectOutput out)
+		final protected void writeValue(final Integer[] value, final ObjectOutput out)
 				throws IOException, ReflectiveOperationException {
 			out.writeInt(value.length);
 			for (Integer item : value)
@@ -409,7 +402,7 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 		}
 
 		@Override
-		protected void writeValue(final Short[] value, final ObjectOutput out)
+		final protected void writeValue(final Short[] value, final ObjectOutput out)
 				throws IOException, ReflectiveOperationException {
 			out.writeInt(value.length);
 			for (Short item : value)
@@ -433,7 +426,7 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 		}
 
 		@Override
-		protected void writeValue(final Character[] value, final ObjectOutput out)
+		final protected void writeValue(final Character[] value, final ObjectOutput out)
 				throws IOException, ReflectiveOperationException {
 			out.writeInt(value.length);
 			for (Character item : value)
@@ -457,7 +450,7 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 		}
 
 		@Override
-		protected void writeValue(final Byte[] value, final ObjectOutput out)
+		final protected void writeValue(final Byte[] value, final ObjectOutput out)
 				throws IOException, ReflectiveOperationException {
 			out.writeInt(value.length);
 			for (Byte item : value)
@@ -481,7 +474,7 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 		}
 
 		@Override
-		protected void writeValue(final Boolean[] value, final ObjectOutput out)
+		final protected void writeValue(final Boolean[] value, final ObjectOutput out)
 				throws IOException, ReflectiveOperationException {
 			out.writeInt(value.length);
 			for (Boolean item : value)

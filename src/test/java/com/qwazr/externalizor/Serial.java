@@ -25,7 +25,7 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.*;
 
-public class Serial extends SerialInner implements Externalizable {
+public class Serial extends SerialInner {
 
 	final private int integerValue;
 	public long longValue;
@@ -76,57 +76,57 @@ public class Serial extends SerialInner implements Externalizable {
 		integerValue = RandomUtils.nextInt(0, Integer.MAX_VALUE);
 		longValue = RandomUtils.nextLong(0, Long.MAX_VALUE);
 		string = RandomStringUtils.randomAscii(64);
-		doubleArray = new double[] { RandomUtils.nextDouble(0, Double.MAX_VALUE),
+		doubleArray = new double[]{RandomUtils.nextDouble(0, Double.MAX_VALUE),
 				RandomUtils.nextDouble(0, Double.MAX_VALUE),
-				RandomUtils.nextDouble(0, Double.MAX_VALUE) };
-		doubleLangArray = new Double[] { RandomUtils.nextDouble(0, Double.MAX_VALUE),
+				RandomUtils.nextDouble(0, Double.MAX_VALUE)};
+		doubleLangArray = new Double[]{RandomUtils.nextDouble(0, Double.MAX_VALUE),
 				RandomUtils.nextDouble(0, Double.MAX_VALUE),
-				RandomUtils.nextDouble(0, Double.MAX_VALUE) };
-		floatArray = new float[] { RandomUtils.nextFloat(0, Float.MAX_VALUE),
+				RandomUtils.nextDouble(0, Double.MAX_VALUE)};
+		floatArray = new float[]{RandomUtils.nextFloat(0, Float.MAX_VALUE),
 				RandomUtils.nextFloat(0, Float.MAX_VALUE),
-				RandomUtils.nextFloat(0, Float.MAX_VALUE) };
-		floatLangArray = new Float[] { RandomUtils.nextFloat(0, Float.MAX_VALUE),
+				RandomUtils.nextFloat(0, Float.MAX_VALUE)};
+		floatLangArray = new Float[]{RandomUtils.nextFloat(0, Float.MAX_VALUE),
 				RandomUtils.nextFloat(0, Float.MAX_VALUE),
-				RandomUtils.nextFloat(0, Float.MAX_VALUE) };
-		intArray = new int[] { RandomUtils.nextInt(0, Integer.MAX_VALUE),
+				RandomUtils.nextFloat(0, Float.MAX_VALUE)};
+		intArray = new int[]{RandomUtils.nextInt(0, Integer.MAX_VALUE),
 				RandomUtils.nextInt(0, Integer.MAX_VALUE),
-				RandomUtils.nextInt(0, Integer.MAX_VALUE) };
-		intLangArray = new Integer[] { RandomUtils.nextInt(0, Integer.MAX_VALUE),
+				RandomUtils.nextInt(0, Integer.MAX_VALUE)};
+		intLangArray = new Integer[]{RandomUtils.nextInt(0, Integer.MAX_VALUE),
 				RandomUtils.nextInt(0, Integer.MAX_VALUE),
-				RandomUtils.nextInt(0, Integer.MAX_VALUE) };
-		shortArray = new short[] { (short) RandomUtils.nextInt(0, Short.MAX_VALUE),
+				RandomUtils.nextInt(0, Integer.MAX_VALUE)};
+		shortArray = new short[]{(short) RandomUtils.nextInt(0, Short.MAX_VALUE),
 				(short) RandomUtils.nextInt(0, Short.MAX_VALUE),
-				(short) RandomUtils.nextInt(0, Short.MAX_VALUE) };
-		shortLangArray = new Short[] { (short) RandomUtils.nextInt(0, Short.MAX_VALUE),
+				(short) RandomUtils.nextInt(0, Short.MAX_VALUE)};
+		shortLangArray = new Short[]{(short) RandomUtils.nextInt(0, Short.MAX_VALUE),
 				(short) RandomUtils.nextInt(0, Short.MAX_VALUE),
-				(short) RandomUtils.nextInt(0, Short.MAX_VALUE) };
-		longArray = new long[] { RandomUtils.nextLong(0, Long.MAX_VALUE),
+				(short) RandomUtils.nextInt(0, Short.MAX_VALUE)};
+		longArray = new long[]{RandomUtils.nextLong(0, Long.MAX_VALUE),
 				RandomUtils.nextLong(0, Long.MAX_VALUE),
-				RandomUtils.nextLong(0, Long.MAX_VALUE) };
-		longLangArray = new Long[] { RandomUtils.nextLong(0, Long.MAX_VALUE),
+				RandomUtils.nextLong(0, Long.MAX_VALUE)};
+		longLangArray = new Long[]{RandomUtils.nextLong(0, Long.MAX_VALUE),
 				RandomUtils.nextLong(0, Long.MAX_VALUE),
-				RandomUtils.nextLong(0, Long.MAX_VALUE) };
-		charArray = new char[] { (char) RandomUtils.nextInt(0, Character.MAX_VALUE),
+				RandomUtils.nextLong(0, Long.MAX_VALUE)};
+		charArray = new char[]{(char) RandomUtils.nextInt(0, Character.MAX_VALUE),
 				(char) RandomUtils.nextInt(0, Character.MAX_VALUE),
-				(char) RandomUtils.nextInt(0, Character.MAX_VALUE) };
-		charLangArray = new Character[] { (char) RandomUtils.nextInt(0, Character.MAX_VALUE),
+				(char) RandomUtils.nextInt(0, Character.MAX_VALUE)};
+		charLangArray = new Character[]{(char) RandomUtils.nextInt(0, Character.MAX_VALUE),
 				(char) RandomUtils.nextInt(0, Character.MAX_VALUE),
-				(char) RandomUtils.nextInt(0, Character.MAX_VALUE) };
-		byteArray = new byte[] { (byte) RandomUtils.nextInt(0, Byte.MAX_VALUE),
+				(char) RandomUtils.nextInt(0, Character.MAX_VALUE)};
+		byteArray = new byte[]{(byte) RandomUtils.nextInt(0, Byte.MAX_VALUE),
 				(byte) RandomUtils.nextInt(0, Byte.MAX_VALUE),
-				(byte) RandomUtils.nextInt(0, Byte.MAX_VALUE) };
-		byteLangArray = new Byte[] { (byte) RandomUtils.nextInt(0, Byte.MAX_VALUE),
+				(byte) RandomUtils.nextInt(0, Byte.MAX_VALUE)};
+		byteLangArray = new Byte[]{(byte) RandomUtils.nextInt(0, Byte.MAX_VALUE),
 				(byte) RandomUtils.nextInt(0, Byte.MAX_VALUE),
-				(byte) RandomUtils.nextInt(0, Byte.MAX_VALUE) };
-		booleanArray = new boolean[] { RandomUtils.nextInt(0, 2) == 1,
+				(byte) RandomUtils.nextInt(0, Byte.MAX_VALUE)};
+		booleanArray = new boolean[]{RandomUtils.nextInt(0, 2) == 1,
 				RandomUtils.nextInt(0, 2) == 1,
-				RandomUtils.nextInt(0, 2) == 1 };
-		booleanLangArray = new Boolean[] { RandomUtils.nextInt(0, 2) == 1,
+				RandomUtils.nextInt(0, 2) == 1};
+		booleanLangArray = new Boolean[]{RandomUtils.nextInt(0, 2) == 1,
 				RandomUtils.nextInt(0, 2) == 1,
-				RandomUtils.nextInt(0, 2) == 1 };
-		stringArray = new String[] { RandomStringUtils.randomAscii(8),
+				RandomUtils.nextInt(0, 2) == 1};
+		stringArray = new String[]{RandomStringUtils.randomAscii(8),
 				RandomStringUtils.randomAscii(8),
-				RandomStringUtils.randomAscii(8) };
+				RandomStringUtils.randomAscii(8)};
 		stringList = new ArrayList<>();
 		for (int i = 0; i < RandomUtils.nextInt(5, 10); i++)
 			stringList.add(RandomStringUtils.randomAscii(8));
@@ -260,18 +260,5 @@ public class Serial extends SerialInner implements Externalizable {
 			return false;
 		return super.equals(s);
 	}
-
-	// The serialization part
-
-	private final static Externalizor<Serial> externalizor = Externalizor.of(Serial.class);
-
-	@Override
-	public void writeExternal(final ObjectOutput out) throws IOException {
-		externalizor.writeExternal(this, out);
-	}
-
-	@Override
-	public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
-		externalizor.readExternal(this, in);
-	}
+	
 }

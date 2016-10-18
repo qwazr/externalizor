@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.lang.reflect.Field;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Handle basic java.lang classes:
@@ -30,50 +31,60 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 
 	static <T, V> LangExternalizer<T, V> lang(final Class<? extends T> clazz) {
 		if (String.class.isAssignableFrom(clazz))
-			return (LangExternalizer<T, V>) new StringExternalizer();
+			return (LangExternalizer<T, V>) StringExternalizer.INSTANCE;
 		if (Long.class.isAssignableFrom(clazz))
-			return (LangExternalizer<T, V>) new LongExternalizer();
+			return (LangExternalizer<T, V>) LongExternalizer.INSTANCE;
 		if (Integer.class.isAssignableFrom(clazz))
-			return (LangExternalizer<T, V>) new IntegerExternalizer();
+			return (LangExternalizer<T, V>) IntegerExternalizer.INSTANCE;
 		if (Short.class.isAssignableFrom(clazz))
-			return (LangExternalizer<T, V>) new ShortExternalizer();
+			return (LangExternalizer<T, V>) ShortExternalizer.INSTANCE;
 		if (Double.class.isAssignableFrom(clazz))
-			return (LangExternalizer<T, V>) new DoubleExternalizer();
+			return (LangExternalizer<T, V>) DoubleExternalizer.INSTANCE;
 		if (Float.class.isAssignableFrom(clazz))
-			return (LangExternalizer<T, V>) new FloatExternalizer();
+			return (LangExternalizer<T, V>) FloatExternalizer.INSTANCE;
 		if (Character.class.isAssignableFrom(clazz))
-			return (LangExternalizer<T, V>) new CharExternalizer();
+			return (LangExternalizer<T, V>) CharExternalizer.INSTANCE;
 		if (Byte.class.isAssignableFrom(clazz))
-			return (LangExternalizer<T, V>) new ByteExternalizer();
+			return (LangExternalizer<T, V>) ByteExternalizer.INSTANCE;
 		if (Boolean.class.isAssignableFrom(clazz))
-			return (LangExternalizer<T, V>) new BooleanExternalizer();
+			return (LangExternalizer<T, V>) BooleanExternalizer.INSTANCE;
 		if (Enum.class.isAssignableFrom(clazz))
-			return (LangExternalizer<T, V>) new EnumExternalizer((Class<? extends Enum<?>>) clazz);
+			return (LangExternalizer<T, V>) EnumExternalizer.get((Class<? extends Enum<?>>) clazz);
 		// Can't handle this class, we return null
 		return null;
 	}
 
-	static <T, V> LangExternalizer<T, V> lang(final Field field, final Class<? extends T> clazz) {
+	static <T, V> FieldExternalizer<T, V> lang(final Field field, final Class<? extends T> clazz) {
 		if (String.class.isAssignableFrom(clazz))
-			return (LangExternalizer<T, V>) new FieldStringExternalizer(field);
+			return (FieldExternalizer<T, V>) new FieldExternalizer.FieldParentExternalizer<>(field,
+					StringExternalizer.INSTANCE);
 		if (Long.class.isAssignableFrom(clazz))
-			return (LangExternalizer<T, V>) new FieldLongExternalizer(field);
+			return (FieldExternalizer<T, V>) new FieldExternalizer.FieldParentExternalizer(field,
+					LongExternalizer.INSTANCE);
 		if (Integer.class.isAssignableFrom(clazz))
-			return (LangExternalizer<T, V>) new FieldIntegerExternalizer(field);
+			return (FieldExternalizer<T, V>) new FieldExternalizer.FieldParentExternalizer(field,
+					IntegerExternalizer.INSTANCE);
 		if (Short.class.isAssignableFrom(clazz))
-			return (LangExternalizer<T, V>) new FieldShortExternalizer(field);
+			return (FieldExternalizer<T, V>) new FieldExternalizer.FieldParentExternalizer(field,
+					ShortExternalizer.INSTANCE);
 		if (Double.class.isAssignableFrom(clazz))
-			return (LangExternalizer<T, V>) new FieldDoubleExternalizer(field);
+			return (FieldExternalizer<T, V>) new FieldExternalizer.FieldParentExternalizer(field,
+					DoubleExternalizer.INSTANCE);
 		if (Float.class.isAssignableFrom(clazz))
-			return (LangExternalizer<T, V>) new FieldFloatExternalizer(field);
+			return (FieldExternalizer<T, V>) new FieldExternalizer.FieldParentExternalizer(field,
+					FloatExternalizer.INSTANCE);
 		if (Character.class.isAssignableFrom(clazz))
-			return (LangExternalizer<T, V>) new FieldCharExternalizer(field);
+			return (FieldExternalizer<T, V>) new FieldExternalizer.FieldParentExternalizer(field,
+					CharExternalizer.INSTANCE);
 		if (Byte.class.isAssignableFrom(clazz))
-			return (LangExternalizer<T, V>) new FieldByteExternalizer(field);
+			return (FieldExternalizer<T, V>) new FieldExternalizer.FieldParentExternalizer(field,
+					ByteExternalizer.INSTANCE);
 		if (Boolean.class.isAssignableFrom(clazz))
-			return (LangExternalizer<T, V>) new FieldBooleanExternalizer(field);
+			return (FieldExternalizer<T, V>) new FieldExternalizer.FieldParentExternalizer(field,
+					BooleanExternalizer.INSTANCE);
 		if (Enum.class.isAssignableFrom(clazz))
-			return (LangExternalizer<T, V>) new FieldEnumExternalizer(field);
+			return (FieldExternalizer<T, V>) new FieldExternalizer.FieldParentExternalizer(field,
+					EnumExternalizer.get((Class<? extends Enum<?>>) clazz));
 		// Can't handle this class, we return null
 		return null;
 	}
@@ -84,6 +95,8 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 	}
 
 	final class StringExternalizer implements LangExternalizer<String, String> {
+
+		private static final StringExternalizer INSTANCE = new StringExternalizer();
 
 		@Override
 		final public void writeExternal(final String object, final ObjectOutput out) throws IOException {
@@ -102,6 +115,8 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 
 	final class LongExternalizer implements LangExternalizer<Long, Long> {
 
+		private static final LongExternalizer INSTANCE = new LongExternalizer();
+
 		@Override
 		final public void writeExternal(final Long object, final ObjectOutput out) throws IOException {
 			if (object != null) {
@@ -118,6 +133,8 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 	}
 
 	final class IntegerExternalizer implements LangExternalizer<Integer, Integer> {
+
+		private static final IntegerExternalizer INSTANCE = new IntegerExternalizer();
 
 		@Override
 		final public void writeExternal(final Integer object, final ObjectOutput out) throws IOException {
@@ -136,6 +153,8 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 
 	final class ShortExternalizer implements LangExternalizer<Short, Short> {
 
+		private static final ShortExternalizer INSTANCE = new ShortExternalizer();
+
 		@Override
 		final public void writeExternal(final Short object, final ObjectOutput out) throws IOException {
 			if (object != null) {
@@ -152,6 +171,8 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 	}
 
 	final class DoubleExternalizer implements LangExternalizer<Double, Double> {
+
+		private static final DoubleExternalizer INSTANCE = new DoubleExternalizer();
 
 		@Override
 		final public void writeExternal(final Double object, final ObjectOutput out) throws IOException {
@@ -170,6 +191,8 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 
 	final class FloatExternalizer implements LangExternalizer<Float, Float> {
 
+		private static final FloatExternalizer INSTANCE = new FloatExternalizer();
+
 		@Override
 		final public void writeExternal(final Float object, final ObjectOutput out) throws IOException {
 			if (object != null) {
@@ -186,6 +209,8 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 	}
 
 	final class ByteExternalizer implements LangExternalizer<Byte, Byte> {
+
+		private static final ByteExternalizer INSTANCE = new ByteExternalizer();
 
 		@Override
 		final public void writeExternal(final Byte object, final ObjectOutput out) throws IOException {
@@ -204,6 +229,8 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 
 	final class CharExternalizer implements LangExternalizer<Character, Character> {
 
+		private static final CharExternalizer INSTANCE = new CharExternalizer();
+
 		@Override
 		final public void writeExternal(final Character object, final ObjectOutput out) throws IOException {
 			if (object != null) {
@@ -221,6 +248,8 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 
 	final class BooleanExternalizer implements LangExternalizer<Boolean, Boolean> {
 
+		private static final BooleanExternalizer INSTANCE = new BooleanExternalizer();
+
 		@Override
 		final public void writeExternal(final Boolean object, final ObjectOutput out) throws IOException {
 			if (object != null) {
@@ -237,6 +266,13 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 	}
 
 	final class EnumExternalizer implements LangExternalizer<Enum<?>, Enum<?>> {
+
+		private final static ConcurrentHashMap<Class<? extends Enum<?>>, EnumExternalizer> externalizers =
+				new ConcurrentHashMap();
+
+		private final static EnumExternalizer get(final Class<? extends Enum<?>> enumType) {
+			return externalizers.computeIfAbsent(enumType, EnumExternalizer::new);
+		}
 
 		private final Class<? extends Enum> enumType;
 
@@ -259,185 +295,4 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 		}
 	}
 
-	abstract class FieldLangExternalizer<T, V> extends FieldExternalizer.FieldObjectExternalizer<T, V>
-			implements LangExternalizer<T, V> {
-
-		protected FieldLangExternalizer(Field field) {
-			super(field);
-		}
-
-	}
-
-	final class FieldStringExternalizer<T> extends FieldLangExternalizer<T, String> {
-
-		private FieldStringExternalizer(final Field field) {
-			super(field);
-		}
-
-		@Override
-		final protected void writeValue(final String value, final ObjectOutput out) throws IOException {
-			out.writeUTF(value);
-		}
-
-		@Override
-		final public String readObject(final ObjectInput in) throws IOException {
-			return in.readBoolean() ? in.readUTF() : null;
-		}
-	}
-
-	final class FieldLongExternalizer<T> extends FieldLangExternalizer<T, Long> {
-
-		private FieldLongExternalizer(final Field field) {
-			super(field);
-		}
-
-		@Override
-		final protected void writeValue(final Long value, final ObjectOutput out) throws IOException {
-			out.writeLong(value);
-		}
-
-		@Override
-		final public Long readObject(final ObjectInput in) throws IOException {
-			return in.readBoolean() ? in.readLong() : null;
-		}
-	}
-
-	final class FieldIntegerExternalizer<T> extends FieldLangExternalizer<T, Integer> {
-
-		private FieldIntegerExternalizer(final Field field) {
-			super(field);
-		}
-
-		@Override
-		final protected void writeValue(final Integer value, final ObjectOutput out) throws IOException {
-			out.writeInt(value);
-		}
-
-		@Override
-		final public Integer readObject(final ObjectInput in) throws IOException {
-			return in.readBoolean() ? in.readInt() : null;
-		}
-	}
-
-	final class FieldShortExternalizer<T> extends FieldLangExternalizer<T, Short> {
-
-		private FieldShortExternalizer(final Field field) {
-			super(field);
-		}
-
-		@Override
-		final protected void writeValue(final Short value, final ObjectOutput out) throws IOException {
-			out.writeShort(value);
-		}
-
-		@Override
-		final public Short readObject(final ObjectInput in) throws IOException {
-			return in.readBoolean() ? in.readShort() : null;
-		}
-	}
-
-	final class FieldDoubleExternalizer<T> extends FieldLangExternalizer<T, Double> {
-
-		private FieldDoubleExternalizer(final Field field) {
-			super(field);
-		}
-
-		@Override
-		final protected void writeValue(final Double value, final ObjectOutput out) throws IOException {
-			out.writeDouble(value);
-		}
-
-		@Override
-		final public Double readObject(final ObjectInput in) throws IOException {
-			return in.readBoolean() ? in.readDouble() : null;
-		}
-	}
-
-	final class FieldFloatExternalizer<T> extends FieldLangExternalizer<T, Float> {
-
-		private FieldFloatExternalizer(final Field field) {
-			super(field);
-		}
-
-		@Override
-		final protected void writeValue(final Float value, final ObjectOutput out) throws IOException {
-			out.writeFloat(value);
-		}
-
-		@Override
-		final public Float readObject(final ObjectInput in) throws IOException {
-			return in.readBoolean() ? in.readFloat() : null;
-		}
-	}
-
-	final class FieldCharExternalizer<T> extends FieldLangExternalizer<T, Character> {
-
-		private FieldCharExternalizer(final Field field) {
-			super(field);
-		}
-
-		@Override
-		final protected void writeValue(final Character value, final ObjectOutput out) throws IOException {
-			out.writeChar(value);
-		}
-
-		@Override
-		final public Character readObject(final ObjectInput in) throws IOException {
-			return in.readBoolean() ? in.readChar() : null;
-		}
-	}
-
-	final class FieldByteExternalizer<T> extends FieldLangExternalizer<T, Byte> {
-
-		private FieldByteExternalizer(final Field field) {
-			super(field);
-		}
-
-		@Override
-		final protected void writeValue(final Byte value, final ObjectOutput out) throws IOException {
-			out.writeByte(value);
-		}
-
-		@Override
-		final public Byte readObject(final ObjectInput in) throws IOException {
-			return in.readBoolean() ? in.readByte() : null;
-		}
-	}
-
-	final class FieldBooleanExternalizer<T> extends FieldLangExternalizer<T, Boolean> {
-
-		private FieldBooleanExternalizer(final Field field) {
-			super(field);
-		}
-
-		@Override
-		final protected void writeValue(final Boolean value, final ObjectOutput out) throws IOException {
-			out.writeBoolean(value);
-		}
-
-		@Override
-		final public Boolean readObject(final ObjectInput in) throws IOException {
-			return in.readBoolean() ? in.readBoolean() : null;
-		}
-	}
-
-	final class FieldEnumExternalizer<T> extends FieldLangExternalizer<T, Enum<?>> {
-
-		private final Class<? extends Enum> enumType;
-
-		private FieldEnumExternalizer(final Field field) {
-			super(field);
-			enumType = (Class<? extends Enum>) field.getType();
-		}
-
-		@Override
-		final protected void writeValue(final Enum<?> value, final ObjectOutput out) throws IOException {
-			out.writeUTF(value.name());
-		}
-
-		@Override
-		final public Enum<?> readObject(final ObjectInput in) throws IOException {
-			return in.readBoolean() ? Enum.valueOf(enumType, in.readUTF()) : null;
-		}
-	}
 }

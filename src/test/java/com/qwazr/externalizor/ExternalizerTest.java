@@ -83,36 +83,39 @@ public class ExternalizerTest {
 		}
 	}
 
-	@Test
-	public void simpleClassTest() throws IOException, ClassNotFoundException {
-
+	private <T> T classTest(T write) throws IOException, ClassNotFoundException {
 		//Write
-		final SerialInner write = new SerialInner();
 		final byte[] byteArray = write(write);
 		Assert.assertNotNull(byteArray);
 
 		//Read
-		final SerialInner read = read(byteArray);
+		final T read = read(byteArray);
 		Assert.assertNotNull(read);
 
 		// Check equals
 		Assert.assertEquals(write, read);
+		return read;
+	}
+
+	@Test
+	public void simpleLangTest() throws IOException, ClassNotFoundException {
+		classTest(new SimpleLang());
+	}
+
+	@Test
+	public void simplePrimitiveTest() throws IOException, ClassNotFoundException {
+		classTest(new SimplePrimitive());
+	}
+
+	@Test
+	public void serialInnerTest() throws IOException, ClassNotFoundException {
+		classTest(new SerialInner());
 	}
 
 	@Test
 	public void serialWithInnerTest() throws IOException, ClassNotFoundException {
-
-		//Write
-		final Serial write = new Serial();
-		final byte[] byteArray = write(write);
-		Assert.assertNotNull(byteArray);
-
-		//Read
-		final Serial read = read(byteArray);
-		Assert.assertNotNull(read);
-
-		// Check equals
-		Assert.assertEquals(write, read);
+		Serial write = new Serial();
+		Serial read = classTest(write);
 		Assert.assertNotEquals(write.transientValue, read.transientValue);
 	}
 }

@@ -18,118 +18,65 @@ package com.qwazr.externalizor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.Year;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.Objects;
 
-public class SerialInner extends AutoExternalizor {
+public class SimpleLang extends AutoExternalizor {
 
 	private final String stringValue;
 	private final String stringNullValue;
-	private final int intValue;
 	private final Integer intLangValue;
 	private final Integer intNullValue;
-	private final short shortValue;
 	private final Short shortLangValue;
 	private final Short shortNullValue;
-	private final long longValue;
 	private final Long longLangValue;
 	private final Long longNullValue;
-	private final float floatValue;
 	private final Float floatLangValue;
 	private final Float floatNullValue;
-	private final double doubleValue;
 	private final Double doubleLangValue;
 	private final Double doubleNullValue;
-	private final boolean booleanValue;
 	private final Boolean booleanLangValue;
 	private final Boolean booleanNullValue;
-	private final byte byteValue;
 	private final Byte byteLangValue;
 	private final Byte byteNullValue;
-	private final char charValue;
 	private final Character charLangValue;
 	private final Character charNullValue;
-	private final Date dateValue;
-	private final LocalTime localTimeValue;
-	private final LocalDate localDateValue;
-	private final LocalDateTime localDateTimeValue;
 
-	public enum Status {
+	public enum EnumType {
 		on, off
 	}
 
-	private final Status nullEnum;
-	private final Status statusEnum;
-	private final HashSet<Status> statusSet;
+	private final EnumType enumNull;
+	private final EnumType enumValue;
 
-	public SerialInner() {
+	public SimpleLang() {
 		stringValue = RandomStringUtils.randomAscii(8);
 		stringNullValue = null;
-		intValue = RandomUtils.nextInt(0, Integer.MAX_VALUE);
 		intLangValue = RandomUtils.nextInt(0, Integer.MAX_VALUE);
 		intNullValue = null;
-		shortValue = (short) RandomUtils.nextInt(0, Short.MAX_VALUE);
 		shortLangValue = (short) RandomUtils.nextInt(0, Short.MAX_VALUE);
 		shortNullValue = null;
-		longValue = RandomUtils.nextLong(0, Long.MAX_VALUE);
 		longLangValue = RandomUtils.nextLong(0, Long.MAX_VALUE);
 		longNullValue = null;
-		floatValue = (float) RandomUtils.nextDouble(0, Float.MAX_VALUE);
 		floatLangValue = (float) RandomUtils.nextDouble(0, Float.MAX_VALUE);
 		floatNullValue = null;
-		doubleValue = RandomUtils.nextDouble(0, Double.MAX_VALUE);
 		doubleLangValue = RandomUtils.nextDouble(0, Double.MAX_VALUE);
 		doubleNullValue = null;
-		booleanValue = RandomUtils.nextInt(0, 1) == 0;
 		booleanLangValue = RandomUtils.nextInt(0, 1) == 0;
 		booleanNullValue = null;
-		byteValue = (byte) RandomUtils.nextInt(0, Byte.MAX_VALUE);
 		byteLangValue = (byte) RandomUtils.nextInt(0, Byte.MAX_VALUE);
 		byteNullValue = null;
-		charValue = (char) RandomUtils.nextInt(0, Character.MAX_VALUE);
 		charLangValue = (char) RandomUtils.nextInt(0, Character.MAX_VALUE);
 		charNullValue = null;
-		nullEnum = null;
-		statusEnum = RandomUtils.nextInt(0, 1) == 0 ? Status.on : Status.off;
-		statusSet = new HashSet<>();
-		for (int i = 0; i < RandomUtils.nextInt(0, 5); i++)
-			statusSet.add(RandomUtils.nextInt(0, 1) == 0 ? Status.on : Status.off);
-		dateValue = new Date(RandomUtils.nextLong(0, System.currentTimeMillis()));
-		localTimeValue = LocalTime.of(RandomUtils.nextInt(0, 24), RandomUtils.nextInt(0, 60));
-		localDateValue =
-				LocalDate.of(RandomUtils.nextInt(0, Year.MAX_VALUE), RandomUtils.nextInt(1, 13),
-						RandomUtils.nextInt(1, 29));
-		localDateTimeValue = LocalDateTime
-				.of(RandomUtils.nextInt(0, Year.MAX_VALUE), RandomUtils.nextInt(1, 13),
-						RandomUtils.nextInt(1, 29), RandomUtils.nextInt(0, 24), RandomUtils.nextInt(0, 60));
+		enumNull = null;
+		enumValue = RandomUtils.nextInt(0, 1) == 0 ? EnumType.on : EnumType.off;
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		if (o == null || !(o instanceof SerialInner))
+		if (o == null || !(o instanceof SimpleLang))
 			return false;
-		final SerialInner s = (SerialInner) o;
-		if (intValue != s.intValue)
-			return false;
-		if (shortValue != s.shortValue)
-			return false;
-		if (longValue != s.longValue)
-			return false;
-		if (floatValue != s.floatValue)
-			return false;
-		if (doubleValue != s.doubleValue)
-			return false;
-		if (booleanValue != s.booleanValue)
-			return false;
-		if (byteValue != s.byteValue)
-			return false;
-		if (charValue != s.charValue)
-			return false;
+		final SimpleLang s = (SimpleLang) o;
+
 		if (!Objects.equals(stringValue, s.stringValue))
 			return false;
 		if (!Objects.equals(stringNullValue, s.stringNullValue))
@@ -166,21 +113,12 @@ public class SerialInner extends AutoExternalizor {
 			return false;
 		if (!Objects.equals(charLangValue, s.charLangValue))
 			return false;
-		if (!Objects.equals(nullEnum, s.nullEnum))
+		if (!Objects.equals(enumNull, s.enumNull))
 			return false;
-		if (!Objects.equals(statusEnum, s.statusEnum))
-			return false;
-		if (!Objects.equals(statusSet, s.statusSet))
-			return false;
-		if (!Objects.equals(dateValue, s.dateValue))
-			return false;
-		if (!Objects.equals(localDateValue, s.localDateValue))
-			return false;
-		if (!Objects.equals(localTimeValue, s.localTimeValue))
-			return false;
-		if (!Objects.equals(localDateTimeValue, s.localDateTimeValue))
+		if (!Objects.equals(enumValue, s.enumValue))
 			return false;
 		return true;
 	}
+
 
 }

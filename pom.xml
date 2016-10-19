@@ -5,7 +5,7 @@
     <groupId>com.qwazr</groupId>
     <name>Externalizor</name>
     <artifactId>externalizor</artifactId>
-    <version>1.1</version>
+    <version>1.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <url>https://github.com/qwazr/externalizor</url>
@@ -38,7 +38,7 @@
         <connection>scm:git:git@github.com:qwazr/externalizor.git</connection>
         <developerConnection>scm:git:git@github.com:qwazr/externalizor.git</developerConnection>
         <url>git@github.com:qwazr/externalizor.git</url>
-        <tag>v1.1</tag>
+        <tag>HEAD</tag>
     </scm>
     <issueManagement>
         <url>https://github.com/qwazr/externalizor/issues</url>

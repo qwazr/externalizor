@@ -119,7 +119,7 @@ Add the following dependency to your pom.xml:
 <dependency>
     <groupId>com.qwazr</groupId>
     <artifactId>externalizor</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
 </dependency>
 ```
 
@@ -129,7 +129,7 @@ To use the last snapshot build:
 <dependency>
     <groupId>com.qwazr</groupId>
     <artifactId>externalizor</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.2-SNAPSHOT</version>
 </dependency>
 
  <distributionManagement>

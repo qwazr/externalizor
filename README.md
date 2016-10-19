@@ -11,12 +11,46 @@ Efficient (fast and small) Java serialization using Externalizable interface.
 - Concrete Collections (Map, Set, Vector)
 - Primitive types: int, long, short, double, float, boolean, char, byte, enum
 - Primitive array: with compression/decompression based on [Snappy](https://github.com/xerial/snappy-java)
+- Time types: Date, LocalDate, LocalTime, LocalDateTime, Instant, Duration, Period, MonthDay, Year
+- Overall serialization with Snappy
 - Smaller by a factor from 50 to 150 compared to default JAVA serialization
 
 ## Usage
 
 The class to serialize should implements
 [Externalizable](https://docs.oracle.com/javase/8/docs/api/java/io/Externalizable.html).
+
+### The easiest way
+
+The classes which are supposed to be serialized can extends AutoExternalizor.
+
+```java
+
+import com.qwazr.externalizor.AutoExternalizor;
+
+public class MyClass extends AutoExternalizor {
+
+	String aStringValue;
+	int anIntValue;
+	double[] anArrayOfDouble;
+
+	enum MyEnum {
+		on, off
+	}
+
+	MyEnum anEnum;
+	HashSet<Status> aSetOfEnum;
+
+	public MyClass() {
+	}
+
+}
+```
+
+### The fastest way
+
+The Externalizor object which is in charge of serializing/deserializing the class is static.
+The class itself implements the Externlizable methods.
 
 ```java
 
@@ -55,25 +89,23 @@ public class MyClass implements Externalizable {
 }
 ```
 
-The typical JAVA code for serialize and unserialize an object:
+### Serialize / deserialize
+
+Now you use the provided static methods to serialize and/or deserialize your object(s). 
 
 ```java
 
 // Serialization
 
 MyClass myClass = new MyClass();
-try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
-    try (ObjectOutputStream oos = new ObjectOutputStream(bos)) {
-        oos.writeObject(myClass);
-    }
+try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
+    Externalizor.serialize(object, output);
 }
 
 // Deserialization
 
-try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes)) {
-    try (ObjectInputStream ois = new ObjectInputStream(bis)) {
-        MyClass myClass = ois.readObject();
-    }
+try (ByteArrayInputStream input = new ByteArrayInputStream(bytes)) {
+    MyClass myClass = Externalizor.deserialize(input);
 }
 ```
 

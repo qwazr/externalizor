@@ -18,24 +18,23 @@ package com.qwazr.externalizor;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.Serializable;
 
 public class ExternalizerTest {
 
-	private <T> byte[] write(T object) throws IOException {
+	private <T extends Serializable> byte[] write(T object) throws IOException {
 		try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
-			try (ObjectOutputStream oos = new ObjectOutputStream(bos)) {
-				oos.writeObject(object);
-			}
+			Externalizor.serialize(object, bos);
 			return bos.toByteArray();
 		}
 	}
 
 	private <T> T read(byte[] bytes) throws IOException, ClassNotFoundException {
 		try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes)) {
-			try (ObjectInputStream ois = new ObjectInputStream(bis)) {
-				return (T) ois.readObject();
-			}
+			return Externalizor.deserialize(bis);
 		}
 	}
 
@@ -83,7 +82,7 @@ public class ExternalizerTest {
 		}
 	}
 
-	private <T> T classTest(T write) throws IOException, ClassNotFoundException {
+	private <T extends Serializable> T classTest(T write) throws IOException, ClassNotFoundException {
 		//Write
 		final byte[] byteArray = write(write);
 		Assert.assertNotNull(byteArray);

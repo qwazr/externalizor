@@ -86,6 +86,7 @@ interface CollectionExternalizer<T, V> extends Externalizer<T, V> {
 			}
 			nullBitmap.writeExternal(out);
 			ArrayExternalizer.writeBytes(array.compress(), out);
+			out.flush();
 		}
 
 		abstract protected void fillCollection(final ObjectInput in, final RoaringBitmap nullBitmap,
@@ -263,8 +264,7 @@ interface CollectionExternalizer<T, V> extends Externalizer<T, V> {
 
 	final class FieldCollectionFloatExternalizer<T> extends FieldCollectionSnappyExternalizer<T, Float> {
 
-		protected FieldCollectionFloatExternalizer(final Field field,
-				final Class<? extends Collection<Float>> clazz) {
+		protected FieldCollectionFloatExternalizer(final Field field, final Class<? extends Collection<Float>> clazz) {
 			super(field, clazz);
 		}
 
@@ -343,8 +343,7 @@ interface CollectionExternalizer<T, V> extends Externalizer<T, V> {
 
 	final class FieldCollectionByteExternalizer<T> extends FieldCollectionSnappyExternalizer<T, Byte> {
 
-		protected FieldCollectionByteExternalizer(final Field field,
-				final Class<? extends Collection<Byte>> clazz) {
+		protected FieldCollectionByteExternalizer(final Field field, final Class<? extends Collection<Byte>> clazz) {
 			super(field, clazz);
 		}
 
@@ -404,6 +403,7 @@ interface CollectionExternalizer<T, V> extends Externalizer<T, V> {
 					nullBitmap.add(i);
 				i++;
 			}
+			out.writeInt(collection.size());
 			nullBitmap.writeExternal(out);
 			booleanBitmap.writeExternal(out);
 		}
@@ -413,6 +413,19 @@ interface CollectionExternalizer<T, V> extends Externalizer<T, V> {
 				throws IOException, ReflectiveOperationException {
 			if (!in.readBoolean())
 				return null;
+			final Collection<Boolean> collection = constructor.newInstance();
+			final boolean[] array = new boolean[in.readInt()];
+			final RoaringBitmap nullBitmap = new RoaringBitmap();
+			final RoaringBitmap booleanBitmap = new RoaringBitmap();
+			nullBitmap.readExternal(in);
+			booleanBitmap.readExternal(in);
+			for (int i = 0; i < array.length; i++) {
+				if (nullBitmap.contains(i))
+					collection.add(null);
+				else
+					collection.add(booleanBitmap.contains(i));
+			}
+			return collection;
 		}
 	}
 

@@ -262,7 +262,7 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 		final protected void writeValue(final Object[] value, final ObjectOutput out)
 				throws IOException, ReflectiveOperationException {
 			out.writeInt(value.length);
-			for (Object item : value)
+			for (final Object item : value)
 				componentExternalizer.writeExternal(item, out);
 		}
 	}

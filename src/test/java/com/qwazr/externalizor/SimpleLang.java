@@ -87,53 +87,83 @@ public class SimpleLang implements Serializable {
 
 		stringValue = RandomStringUtils.randomAscii(8);
 		stringNullValue = null;
-		stringArray = new String[] { stringNullValue, stringValue };
-		stringList = new ArrayList(Arrays.asList(stringValue, stringNullValue));
+		stringArray = new String[RandomUtils.nextInt(5, 20)];
+		stringArray[0] = null;
+		for (int i = 1; i < stringArray.length; i++)
+			stringArray[i] = RandomStringUtils.randomAscii(5);
+		stringList = new ArrayList(Arrays.asList(stringArray));
 
-		intLangValue = RandomUtils.nextInt(0, Integer.MAX_VALUE);
+		intLangValue = RandomUtils.nextInt();
 		intNullValue = null;
-		intArray = new Integer[] { intNullValue, intLangValue };
-		intList = new ArrayList(Arrays.asList(intLangValue, intNullValue));
+		intArray = new Integer[RandomUtils.nextInt(5, 20)];
+		intArray[0] = null;
+		for (int i = 1; i < intArray.length; i++)
+			intArray[i] = RandomUtils.nextInt();
+		intList = new ArrayList(Arrays.asList(intArray));
 
 		shortLangValue = (short) RandomUtils.nextInt(0, Short.MAX_VALUE);
 		shortNullValue = null;
-		shortArray = new Short[] { shortNullValue, shortLangValue };
-		shortList = new ArrayList(Arrays.asList(shortLangValue, shortNullValue));
+		shortArray = new Short[RandomUtils.nextInt(5, 20)];
+		shortArray[0] = null;
+		for (int i = 1; i < shortArray.length; i++)
+			shortArray[i] = (short) RandomUtils.nextInt(0, Short.MAX_VALUE);
+		shortList = new ArrayList(Arrays.asList(shortArray));
 
-		longLangValue = RandomUtils.nextLong(0, Long.MAX_VALUE);
+		longLangValue = RandomUtils.nextLong();
 		longNullValue = null;
-		longArray = new Long[] { longNullValue, longLangValue };
-		longList = new ArrayList(Arrays.asList(longLangValue, longNullValue));
+		longArray = new Long[RandomUtils.nextInt(5, 20)];
+		longArray[0] = null;
+		for (int i = 1; i < longArray.length; i++)
+			longArray[i] = RandomUtils.nextLong();
+		longList = new ArrayList(Arrays.asList(longArray));
 
-		floatLangValue = (float) RandomUtils.nextDouble(0, Float.MAX_VALUE);
+		floatLangValue = (float) RandomUtils.nextFloat();
 		floatNullValue = null;
-		floatArray = new Float[] { floatLangValue, floatNullValue };
-		floatList = new ArrayList(Arrays.asList(floatNullValue, floatLangValue));
+		floatArray = new Float[RandomUtils.nextInt(5, 20)];
+		floatArray[0] = null;
+		for (int i = 1; i < floatArray.length; i++)
+			floatArray[i] = RandomUtils.nextFloat();
+		floatList = new ArrayList(Arrays.asList(floatArray));
 
-		doubleLangValue = RandomUtils.nextDouble(0, Double.MAX_VALUE);
+		doubleLangValue = RandomUtils.nextDouble();
 		doubleNullValue = null;
-		doubleArray = new Double[] { doubleLangValue, doubleNullValue };
-		doubleList = new ArrayList(Arrays.asList(doubleNullValue, doubleLangValue));
+		doubleArray = new Double[RandomUtils.nextInt(5, 20)];
+		doubleArray[0] = null;
+		for (int i = 1; i < doubleArray.length; i++)
+			doubleArray[i] = RandomUtils.nextDouble();
+		doubleList = new ArrayList(Arrays.asList(doubleArray));
 
 		booleanLangValue = RandomUtils.nextInt(0, 1) == 0;
 		booleanNullValue = null;
-		booleanArray = new Boolean[] { booleanLangValue, booleanNullValue };
-		booleanList = new ArrayList(Arrays.asList(booleanNullValue, booleanLangValue));
+		booleanArray = new Boolean[RandomUtils.nextInt(5, 20)];
+		booleanArray[0] = null;
+		for (int i = 1; i < booleanArray.length; i++)
+			booleanArray[i] = RandomUtils.nextBoolean();
+		booleanList = new ArrayList(Arrays.asList(booleanArray));
 
 		byteLangValue = (byte) RandomUtils.nextInt(0, Byte.MAX_VALUE);
 		byteNullValue = null;
-		byteArray = new Byte[] { byteLangValue, byteNullValue };
-		byteList = new ArrayList(Arrays.asList(byteNullValue, byteLangValue));
+		byteArray = new Byte[RandomUtils.nextInt(5, 20)];
+		byteArray[0] = null;
+		for (int i = 1; i < byteArray.length; i++)
+			byteArray[i] = (byte) RandomUtils.nextInt(0, Byte.MAX_VALUE);
+		byteList = new ArrayList(Arrays.asList(byteArray));
 
 		charLangValue = (char) RandomUtils.nextInt(0, Character.MAX_VALUE);
 		charNullValue = null;
-		charArray = new Character[] { charLangValue, charNullValue };
-		charList = new ArrayList(Arrays.asList(charNullValue, charLangValue));
+		charArray = new Character[RandomUtils.nextInt(5, 20)];
+		charArray[0] = null;
+		for (int i = 1; i < charArray.length; i++)
+			charArray[i] = (char) RandomUtils.nextInt(0, Character.MAX_VALUE);
+		charList = new ArrayList(Arrays.asList(charArray));
 
 		enumNull = null;
 		enumValue = RandomUtils.nextInt(0, 1) == 0 ? EnumType.on : EnumType.off;
-		enumArray = new EnumType[] { enumNull, enumValue };
-		enumList = new ArrayList(Arrays.asList(enumValue, enumNull));
+		enumArray = new EnumType[RandomUtils.nextInt(5, 20)];
+		enumArray[0] = null;
+		for (int i = 1; i < enumArray.length; i++)
+			enumArray[i] = RandomUtils.nextInt(0, 1) == 0 ? EnumType.on : EnumType.off;
+		enumList = new ArrayList(Arrays.asList(enumArray));
 	}
 
 	@Override
@@ -252,5 +282,5 @@ public class SimpleLang implements Serializable {
 
 		}
 	}
-	
+
 }

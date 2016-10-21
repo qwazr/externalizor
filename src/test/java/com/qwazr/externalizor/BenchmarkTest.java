@@ -25,6 +25,8 @@ import java.util.function.Function;
 
 public class BenchmarkTest {
 
+	private final int TIME = 10;
+
 	public class BenchResult {
 
 		final String name;
@@ -42,6 +44,10 @@ public class BenchmarkTest {
 		final public String toString() {
 			return name + " - " + clazz.getSimpleName() + " - Avg. size: " + avgSize + " Rate: " + rate;
 		}
+	}
+
+	public String compare(BenchResult r1, BenchResult r2) {
+		return "Size X : " + (r2.avgSize / r1.avgSize) * 100 + " Rate X : " + (r2.rate / r1.rate);
 	}
 
 	public BenchResult benchmark(String name, Duration duration, Callable<Serializable> callNewObject,
@@ -85,24 +91,26 @@ public class BenchmarkTest {
 
 		// COmpress benchmark
 		final BenchResult compress1 =
-				benchmark("Compress", Duration.ofSeconds(5), callNewObject1, ExternalizerTest::write,
+				benchmark("Compress", Duration.ofSeconds(TIME), callNewObject1, ExternalizerTest::write,
 						ExternalizerTest::read);
 		final BenchResult compress2 =
-				benchmark("Compress", Duration.ofSeconds(5), callNewObject2, ExternalizerTest::write,
+				benchmark("Compress", Duration.ofSeconds(TIME), callNewObject2, ExternalizerTest::write,
 						ExternalizerTest::read);
 
 		System.out.println(compress1);
 		System.out.println(compress2);
+		System.out.println(compare(compress1, compress2));
 		System.out.println();
 
 		// Raw benchmark
-		final BenchResult raw1 = benchmark("Raw ", Duration.ofSeconds(5), callNewObject1, ExternalizerTest::writeRaw,
+		final BenchResult raw1 = benchmark("Raw ", Duration.ofSeconds(TIME), callNewObject1, ExternalizerTest::writeRaw,
 				ExternalizerTest::readRaw);
-		final BenchResult raw2 = benchmark("Raw", Duration.ofSeconds(5), callNewObject2, ExternalizerTest::writeRaw,
+		final BenchResult raw2 = benchmark("Raw", Duration.ofSeconds(TIME), callNewObject2, ExternalizerTest::writeRaw,
 				ExternalizerTest::readRaw);
 
 		System.out.println(raw1);
 		System.out.println(raw2);
+		System.out.println(compare(raw1, raw2));
 		System.out.println();
 	}
 

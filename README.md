@@ -139,6 +139,11 @@ To use the last snapshot build:
         </snapshotRepository>
 </distributionManagement>
 ```
+## Benchmark
+
+![Byte size](byte_size.png)
+
+![Rate](rate.png)
 
 
 ## Issues

@@ -30,6 +30,11 @@ abstract class FieldExternalizer<T, V> implements Externalizer<T, V> {
 		this.field = field;
 	}
 
+	final static Class<?> getGenericClass(final Field field, final int pos) {
+		final ParameterizedType paramTypes = (ParameterizedType) field.getGenericType();
+		return (Class<?>) paramTypes.getActualTypeArguments()[pos];
+	}
+
 	static abstract class FieldObjectExternalizer<T, V> extends FieldExternalizer<T, V> {
 
 		protected FieldObjectExternalizer(final Field field) {
@@ -94,8 +99,7 @@ abstract class FieldExternalizer<T, V> implements Externalizer<T, V> {
 		}
 
 		final protected Externalizer<Object, ?> getGeneric(final int pos) {
-			final ParameterizedType paramTypes = (ParameterizedType) field.getGenericType();
-			return Externalizer.of((Class<?>) paramTypes.getActualTypeArguments()[pos]);
+			return Externalizer.of(getGenericClass(field, pos));
 		}
 	}
 

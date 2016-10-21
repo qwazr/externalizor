@@ -47,6 +47,8 @@ public class BenchmarkTest {
 	public BenchResult benchmark(String name, Duration duration, Callable<Serializable> callNewObject,
 			Function<Serializable, byte[]> serialize, Function<byte[], Serializable> deserialize) throws Exception {
 
+		System.gc();
+
 		// Compute the final time
 		long endTime = System.currentTimeMillis() + duration.toMillis();
 		int counter = 0;
@@ -94,13 +96,10 @@ public class BenchmarkTest {
 		System.out.println();
 
 		// Raw benchmark
-		final BenchResult raw1 =
-				benchmark("Raw ", Duration.ofSeconds(5), callNewObject1, ExternalizerTest::writeRaw,
-						ExternalizerTest::readRaw);
-		final BenchResult raw2 =
-				benchmark("Raw", Duration.ofSeconds(5), callNewObject2, ExternalizerTest::writeRaw,
-						ExternalizerTest::readRaw);
-
+		final BenchResult raw1 = benchmark("Raw ", Duration.ofSeconds(5), callNewObject1, ExternalizerTest::writeRaw,
+				ExternalizerTest::readRaw);
+		final BenchResult raw2 = benchmark("Raw", Duration.ofSeconds(5), callNewObject2, ExternalizerTest::writeRaw,
+				ExternalizerTest::readRaw);
 
 		System.out.println(raw1);
 		System.out.println(raw2);
@@ -108,14 +107,28 @@ public class BenchmarkTest {
 	}
 
 	@Test
-	public void ExternalTest() throws Exception {
-
+	public void benchmarkTime() throws Exception {
 		benchmarkCompare(SimpleTime::new, SimpleTime.External::new);
-		benchmarkCompare(SimpleLang::new, SimpleLang.External::new);
-		benchmarkCompare(SimplePrimitive::new, SimplePrimitive.External::new);
-		benchmarkCompare(SimpleCollection::new, SimpleCollection.External::new);
-		benchmarkCompare(ComplexSerial::new, ComplexExternal::new);
+	}
 
+	@Test
+	public void benchmarkLang() throws Exception {
+		benchmarkCompare(SimpleLang::new, SimpleLang.External::new);
+	}
+
+	@Test
+	public void benchmarkPrimitive() throws Exception {
+		benchmarkCompare(SimplePrimitive::new, SimplePrimitive.External::new);
+	}
+
+	@Test
+	public void benchmarkCollection() throws Exception {
+		benchmarkCompare(SimpleCollection::new, SimpleCollection.External::new);
+	}
+
+	@Test
+	public void benchmarkComplex() throws Exception {
+		benchmarkCompare(ComplexSerial::new, ComplexExternal::new);
 	}
 
 }

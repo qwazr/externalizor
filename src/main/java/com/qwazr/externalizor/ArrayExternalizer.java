@@ -52,6 +52,17 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 		return null;
 	}
 
+	static void writeBytes(final byte[] bytes, final ObjectOutput out) throws IOException {
+		out.writeInt(bytes.length);
+		out.write(bytes, 0, bytes.length);
+	}
+
+	static byte[] readBytes(final ObjectInput in) throws IOException {
+		final byte[] bytes = new byte[in.readInt()];
+		in.read(bytes, 0, bytes.length);
+		return bytes;
+	}
+
 	abstract class FieldArraySnappyExternalizer<T, V> extends FieldExternalizer.FieldObjectExternalizer<T, V> {
 
 		protected FieldArraySnappyExternalizer(final Field field) {
@@ -64,18 +75,14 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 
 		final protected void writeValue(final V value, final ObjectOutput out)
 				throws IOException, ReflectiveOperationException {
-			final byte[] bytes = compress(value);
-			out.writeInt(bytes.length);
-			out.write(bytes, 0, bytes.length);
+			writeBytes(compress(value), out);
 		}
 
 		@Override
 		final public V readObject(final ObjectInput in) throws IOException, ReflectiveOperationException {
 			if (!in.readBoolean())
 				return null;
-			final byte[] bytes = new byte[in.readInt()];
-			in.read(bytes, 0, bytes.length);
-			return uncompress(bytes);
+			return uncompress(readBytes(in));
 		}
 
 	}
@@ -255,7 +262,7 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 		final protected void writeValue(final Object[] value, final ObjectOutput out)
 				throws IOException, ReflectiveOperationException {
 			out.writeInt(value.length);
-			for (Object item : value)
+			for (final Object item : value)
 				componentExternalizer.writeExternal(item, out);
 		}
 	}

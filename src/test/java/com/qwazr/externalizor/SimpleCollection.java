@@ -38,21 +38,21 @@ public class SimpleCollection implements Serializable {
 
 		nullList = null;
 		stringList = new ArrayList<>();
-		for (int i = 0; i < RandomUtils.nextInt(5, 10); i++)
+		for (int i = 0; i < RandomUtils.nextInt(5, 50); i++)
 			stringList.add(RandomStringUtils.randomAscii(8));
 
 		nullSet = null;
 		integerSet = new LinkedHashSet<>();
-		for (int i = 0; i < RandomUtils.nextInt(5, 10); i++)
+		for (int i = 0; i < RandomUtils.nextInt(5,50); i++)
 			integerSet.add(RandomUtils.nextInt());
 
 		byteList = new Vector<>();
-		for (int i = 0; i < RandomUtils.nextInt(5, 10); i++)
+		for (int i = 0; i < RandomUtils.nextInt(5, 50); i++)
 			byteList.add((byte) RandomUtils.nextInt(0, 128));
 
 		nullMap = null;
 		mapShortLong = new HashMap<>();
-		for (int i = 0; i < RandomUtils.nextInt(5, 10); i++)
+		for (int i = 0; i < RandomUtils.nextInt(5, 50); i++)
 			mapShortLong.put((short) RandomUtils.nextInt(0, Short.MAX_VALUE), RandomUtils.nextLong());
 
 	}

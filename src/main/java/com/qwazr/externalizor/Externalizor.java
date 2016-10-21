@@ -35,6 +35,7 @@ public class Externalizor<T> {
 	public void writeExternal(final T object, final ObjectOutput out) throws IOException {
 		try {
 			externalizer.writeExternal(object, out);
+			out.flush();
 		} catch (ReflectiveOperationException e) {
 			throw new ExternalizorException("Error while serializing the class " + clazz, e);
 		}
@@ -55,7 +56,7 @@ public class Externalizor<T> {
 	}
 
 	/**
-	 * Serializes an Object to the specified stream.
+	 * Serializes an Object to the specified stream using compression.
 	 * <p>
 	 * The stream passed in is not closed within this method. This is the responsibility of your application.
 	 *
@@ -73,6 +74,27 @@ public class Externalizor<T> {
 				try (final ObjectOutputStream objected = new ObjectOutputStream(compressed)) {
 					objected.writeObject(object);
 				}
+			}
+		}
+	}
+
+	/**
+	 * Serializes an Object to the specified stream without compression.
+	 * <p>
+	 * The stream passed in is not closed within this method. This is the responsibility of your application.
+	 *
+	 * @param object the object to serialize to bytes, must not be null
+	 * @param output the stream to write to, must not be null
+	 * @return
+	 * @throws IOException          if the serialization fails
+	 * @throws NullPointerException if object or output is null
+	 */
+	public static final void serializeRaw(final Serializable object, final OutputStream output) throws IOException {
+		Objects.requireNonNull(object, "The serializable object is null");
+		Objects.requireNonNull(output, "The output stream is null");
+		try (final BufferedOutputStream buffered = new BufferedOutputStream(output)) {
+			try (final ObjectOutputStream objected = new ObjectOutputStream(buffered)) {
+				objected.writeObject(object);
 			}
 		}
 	}
@@ -97,6 +119,28 @@ public class Externalizor<T> {
 				try (final ObjectInputStream objected = new ObjectInputStream(compressed)) {
 					return (T) objected.readObject();
 				}
+			}
+		}
+	}
+
+	/**
+	 * Deserializes an Object from the specified stream without compression.
+	 * <p>
+	 * The stream passed in is not closed within this method. This is the responsibility of your application.
+	 *
+	 * @param input the serialized object input stream, must not be null
+	 * @param <T>   the object type to be deserialized
+	 * @return
+	 * @throws IOException            if the deserialization fails
+	 * @throws ClassNotFoundException if the class instantiation fails
+	 * @throws NullPointerException   if object or output is null
+	 */
+	public static final <T extends Serializable> T deserializeRaw(final InputStream input)
+			throws IOException, ClassNotFoundException {
+		Objects.requireNonNull(input, "The input stream is null");
+		try (final BufferedInputStream buffered = new BufferedInputStream(input)) {
+			try (final ObjectInputStream objected = new ObjectInputStream(buffered)) {
+				return (T) objected.readObject();
 			}
 		}
 	}

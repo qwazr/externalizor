@@ -97,7 +97,7 @@ interface TimeExternalizer<T, V> extends Externalizer<T, V> {
 
 	final class DateExternalizer implements TimeExternalizer<Date, Date> {
 
-		private final static DateExternalizer INSTANCE = new DateExternalizer();
+		final static DateExternalizer INSTANCE = new DateExternalizer();
 
 		@Override
 		final public void writeExternal(final Date object, final ObjectOutput out) throws IOException {
@@ -116,7 +116,7 @@ interface TimeExternalizer<T, V> extends Externalizer<T, V> {
 
 	final class CalendarExternalizer implements TimeExternalizer<Calendar, Calendar> {
 
-		private final static CalendarExternalizer INSTANCE = new CalendarExternalizer();
+		final static CalendarExternalizer INSTANCE = new CalendarExternalizer();
 
 		@Override
 		final public void writeExternal(final Calendar object, final ObjectOutput out) throws IOException {
@@ -139,7 +139,7 @@ interface TimeExternalizer<T, V> extends Externalizer<T, V> {
 
 	final class DurationExternalizer implements TimeExternalizer<Duration, Duration> {
 
-		private final static DurationExternalizer INSTANCE = new DurationExternalizer();
+		final static DurationExternalizer INSTANCE = new DurationExternalizer();
 
 		@Override
 		final public void writeExternal(final Duration object, final ObjectOutput out) throws IOException {
@@ -159,7 +159,7 @@ interface TimeExternalizer<T, V> extends Externalizer<T, V> {
 
 	final class InstantExternalizer implements TimeExternalizer<Instant, Instant> {
 
-		private final static InstantExternalizer INSTANCE = new InstantExternalizer();
+		final static InstantExternalizer INSTANCE = new InstantExternalizer();
 
 		@Override
 		final public void writeExternal(final Instant object, final ObjectOutput out) throws IOException {
@@ -179,7 +179,7 @@ interface TimeExternalizer<T, V> extends Externalizer<T, V> {
 
 	final class LocalDateExternalizer implements TimeExternalizer<LocalDate, LocalDate> {
 
-		private final static LocalDateExternalizer INSTANCE = new LocalDateExternalizer();
+		final static LocalDateExternalizer INSTANCE = new LocalDateExternalizer();
 
 		@Override
 		final public void writeExternal(final LocalDate object, final ObjectOutput out) throws IOException {
@@ -198,7 +198,7 @@ interface TimeExternalizer<T, V> extends Externalizer<T, V> {
 
 	final class LocalDateTimeExternalizer implements TimeExternalizer<LocalDateTime, LocalDateTime> {
 
-		private final static LocalDateTimeExternalizer INSTANCE = new LocalDateTimeExternalizer();
+		final static LocalDateTimeExternalizer INSTANCE = new LocalDateTimeExternalizer();
 
 		@Override
 		final public void writeExternal(final LocalDateTime object, final ObjectOutput out) throws IOException {
@@ -220,7 +220,7 @@ interface TimeExternalizer<T, V> extends Externalizer<T, V> {
 
 	final class LocalTimeExternalizer implements TimeExternalizer<LocalTime, LocalTime> {
 
-		private final static LocalTimeExternalizer INSTANCE = new LocalTimeExternalizer();
+		final static LocalTimeExternalizer INSTANCE = new LocalTimeExternalizer();
 
 		@Override
 		final public void writeExternal(final LocalTime object, final ObjectOutput out) throws IOException {
@@ -239,7 +239,7 @@ interface TimeExternalizer<T, V> extends Externalizer<T, V> {
 
 	final class MonthDayExternalizer implements TimeExternalizer<MonthDay, MonthDay> {
 
-		private final static MonthDayExternalizer INSTANCE = new MonthDayExternalizer();
+		final static MonthDayExternalizer INSTANCE = new MonthDayExternalizer();
 
 		@Override
 		final public void writeExternal(final MonthDay object, final ObjectOutput out) throws IOException {
@@ -259,7 +259,7 @@ interface TimeExternalizer<T, V> extends Externalizer<T, V> {
 
 	final class PeriodExternalizer implements TimeExternalizer<Period, Period> {
 
-		private final static PeriodExternalizer INSTANCE = new PeriodExternalizer();
+		final static PeriodExternalizer INSTANCE = new PeriodExternalizer();
 
 		@Override
 		final public void writeExternal(final Period object, final ObjectOutput out) throws IOException {
@@ -280,7 +280,7 @@ interface TimeExternalizer<T, V> extends Externalizer<T, V> {
 
 	final class YearExternalizer implements TimeExternalizer<Year, Year> {
 
-		private final static YearExternalizer INSTANCE = new YearExternalizer();
+		final static YearExternalizer INSTANCE = new YearExternalizer();
 
 		@Override
 		final public void writeExternal(final Year object, final ObjectOutput out) throws IOException {

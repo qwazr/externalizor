@@ -38,8 +38,7 @@ interface ClassExternalizer<T extends Externalizable> extends Externalizer<T, T>
 			} catch (NoSuchMethodException e) {
 				throw new ExternalizorException("The clazz does not have a public empty constructor: " + clazz, e);
 			}
-			final Field[] fields = clazz.getDeclaredFields();
-			externalizers = new ArrayList<>(fields.length);
+			externalizers = new ArrayList<>();
 			detectFields(clazz);
 		}
 
@@ -53,7 +52,8 @@ interface ClassExternalizer<T extends Externalizable> extends Externalizer<T, T>
 				if (Modifier.isStatic(modifier) || Modifier.isTransient(modifier))
 					continue;
 				field.setAccessible(true);
-				externalizers.add(Externalizer.of(field, cl));
+				final Externalizer fieldExt = Externalizer.of(field, cl);
+				externalizers.add(fieldExt);
 			}
 			detectFields(clazz.getSuperclass());
 		}
@@ -63,6 +63,7 @@ interface ClassExternalizer<T extends Externalizable> extends Externalizer<T, T>
 				throws IOException, ReflectiveOperationException {
 			for (final Externalizer externalizer : externalizers)
 				externalizer.writeExternal(object, out);
+			out.flush();
 		}
 
 		@Override
@@ -93,10 +94,11 @@ interface ClassExternalizer<T extends Externalizable> extends Externalizer<T, T>
 				throws IOException, ReflectiveOperationException {
 			if (object == null) {
 				out.writeBoolean(false);
-				return;
+			} else {
+				out.writeBoolean(true);
+				object.writeExternal(out);
 			}
-			out.writeBoolean(true);
-			object.writeExternal(out);
+			out.flush();
 		}
 
 		@Override

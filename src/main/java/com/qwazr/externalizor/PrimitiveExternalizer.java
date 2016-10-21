@@ -212,7 +212,7 @@ interface PrimitiveExternalizer<T, V> extends Externalizer<T, V> {
 				throws IOException, ReflectiveOperationException {
 			field.setBoolean(object, in.readBoolean());
 		}
-		
+
 	}
 
 }

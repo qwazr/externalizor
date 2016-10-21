@@ -17,9 +17,10 @@ package com.qwazr.externalizor;
 
 import org.apache.commons.lang3.RandomUtils;
 
+import java.io.*;
 import java.util.Arrays;
 
-public class SimplePrimitive extends AutoExternalizor {
+public class SimplePrimitive implements Serializable {
 
 	private final int intValue;
 	public int[] intArray;
@@ -35,7 +36,7 @@ public class SimplePrimitive extends AutoExternalizor {
 
 	private final double doubleValue;
 	public double[] doubleArray;
-	public double[] emptyDoubleArray;
+	final public double[] emptyDoubleArray;
 
 	private final boolean booleanValue;
 	public boolean[] booleanArray;
@@ -46,40 +47,42 @@ public class SimplePrimitive extends AutoExternalizor {
 	private final char charValue;
 	public char[] charArray;
 
+
 	public SimplePrimitive() {
 
 		intValue = RandomUtils.nextInt();
-		intArray = new int[] { RandomUtils.nextInt(), RandomUtils.nextInt(), RandomUtils.nextInt() };
+		intArray = new int[]{RandomUtils.nextInt(), RandomUtils.nextInt(), RandomUtils.nextInt()};
 
 		shortValue = (short) RandomUtils.nextInt(0, Short.MAX_VALUE);
-		shortArray = new short[] { (short) RandomUtils.nextInt(0, Short.MAX_VALUE),
+		shortArray = new short[]{(short) RandomUtils.nextInt(0, Short.MAX_VALUE),
 				(short) RandomUtils.nextInt(0, Short.MAX_VALUE),
-				(short) RandomUtils.nextInt(0, Short.MAX_VALUE) };
+				(short) RandomUtils.nextInt(0, Short.MAX_VALUE)};
 
 		longValue = RandomUtils.nextLong();
-		longArray = new long[] { RandomUtils.nextLong(), RandomUtils.nextLong(), RandomUtils.nextLong() };
+		longArray = new long[]{RandomUtils.nextLong(), RandomUtils.nextLong(), RandomUtils.nextLong()};
 
 		floatValue = RandomUtils.nextFloat();
-		floatArray = new float[] { RandomUtils.nextFloat(), RandomUtils.nextFloat(), RandomUtils.nextFloat() };
+		floatArray = new float[]{RandomUtils.nextFloat(), RandomUtils.nextFloat(), RandomUtils.nextFloat()};
 
 		doubleValue = RandomUtils.nextDouble();
-		doubleArray = new double[] { RandomUtils.nextDouble(), RandomUtils.nextDouble(), RandomUtils.nextDouble() };
+		doubleArray = new double[]{RandomUtils.nextDouble(), RandomUtils.nextDouble(), RandomUtils.nextDouble()};
 		emptyDoubleArray = new double[0];
 
 		booleanValue = RandomUtils.nextInt(0, 2) == 0;
-		booleanArray = new boolean[] { RandomUtils.nextInt(0, 2) == 1,
-				RandomUtils.nextInt(0, 2) == 1,
-				RandomUtils.nextInt(0, 2) == 1 };
+		booleanArray = new boolean[RandomUtils.nextInt(0, 5)];
+		for (int i = 0; i < booleanArray.length; i++)
+			booleanArray[i] = RandomUtils.nextInt(0, 2) == 1;
 
 		byteValue = (byte) RandomUtils.nextInt(0, Byte.MAX_VALUE);
-		byteArray = new byte[] { (byte) RandomUtils.nextInt(0, Byte.MAX_VALUE),
+		byteArray = new byte[]{(byte) RandomUtils.nextInt(0, Byte.MAX_VALUE),
 				(byte) RandomUtils.nextInt(0, Byte.MAX_VALUE),
-				(byte) RandomUtils.nextInt(0, Byte.MAX_VALUE) };
+				(byte) RandomUtils.nextInt(0, Byte.MAX_VALUE)};
 
 		charValue = (char) RandomUtils.nextInt(0, Character.MAX_VALUE);
-		charArray = new char[] { (char) RandomUtils.nextInt(0, Character.MAX_VALUE),
+		charArray = new char[]{(char) RandomUtils.nextInt(0, Character.MAX_VALUE),
 				(char) RandomUtils.nextInt(0, Character.MAX_VALUE),
-				(char) RandomUtils.nextInt(0, Character.MAX_VALUE) };
+				(char) RandomUtils.nextInt(0, Character.MAX_VALUE)};
+
 
 	}
 
@@ -88,6 +91,7 @@ public class SimplePrimitive extends AutoExternalizor {
 		if (o == null || !(o instanceof SimplePrimitive))
 			return false;
 		final SimplePrimitive s = (SimplePrimitive) o;
+
 		if (intValue != s.intValue)
 			return false;
 		if (!Arrays.equals(intArray, s.intArray))
@@ -112,6 +116,8 @@ public class SimplePrimitive extends AutoExternalizor {
 			return false;
 		if (!Arrays.equals(doubleArray, s.doubleArray))
 			return false;
+		if (!Arrays.equals(emptyDoubleArray, s.emptyDoubleArray))
+			return false;
 
 		if (booleanValue != s.booleanValue)
 			return false;
@@ -129,6 +135,22 @@ public class SimplePrimitive extends AutoExternalizor {
 			return false;
 
 		return true;
+	}
+
+	public static class External extends SimplePrimitive implements Externalizable {
+
+		private final static Externalizor<External> externalizor = Externalizor.of(External.class);
+
+		@Override
+		public void writeExternal(final ObjectOutput out) throws IOException {
+			externalizor.writeExternal(this, out);
+		}
+
+		@Override
+		public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
+			externalizor.readExternal(this, in);
+
+		}
 	}
 
 }

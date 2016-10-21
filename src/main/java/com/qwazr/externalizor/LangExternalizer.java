@@ -96,7 +96,7 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 
 	final class StringExternalizer implements LangExternalizer<String, String> {
 
-		private static final StringExternalizer INSTANCE = new StringExternalizer();
+		static final StringExternalizer INSTANCE = new StringExternalizer();
 
 		@Override
 		final public void writeExternal(final String object, final ObjectOutput out) throws IOException {
@@ -115,7 +115,7 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 
 	final class LongExternalizer implements LangExternalizer<Long, Long> {
 
-		private static final LongExternalizer INSTANCE = new LongExternalizer();
+		static final LongExternalizer INSTANCE = new LongExternalizer();
 
 		@Override
 		final public void writeExternal(final Long object, final ObjectOutput out) throws IOException {
@@ -134,7 +134,7 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 
 	final class IntegerExternalizer implements LangExternalizer<Integer, Integer> {
 
-		private static final IntegerExternalizer INSTANCE = new IntegerExternalizer();
+		static final IntegerExternalizer INSTANCE = new IntegerExternalizer();
 
 		@Override
 		final public void writeExternal(final Integer object, final ObjectOutput out) throws IOException {
@@ -153,7 +153,7 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 
 	final class ShortExternalizer implements LangExternalizer<Short, Short> {
 
-		private static final ShortExternalizer INSTANCE = new ShortExternalizer();
+		static final ShortExternalizer INSTANCE = new ShortExternalizer();
 
 		@Override
 		final public void writeExternal(final Short object, final ObjectOutput out) throws IOException {
@@ -172,7 +172,7 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 
 	final class DoubleExternalizer implements LangExternalizer<Double, Double> {
 
-		private static final DoubleExternalizer INSTANCE = new DoubleExternalizer();
+		static final DoubleExternalizer INSTANCE = new DoubleExternalizer();
 
 		@Override
 		final public void writeExternal(final Double object, final ObjectOutput out) throws IOException {
@@ -191,7 +191,7 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 
 	final class FloatExternalizer implements LangExternalizer<Float, Float> {
 
-		private static final FloatExternalizer INSTANCE = new FloatExternalizer();
+		static final FloatExternalizer INSTANCE = new FloatExternalizer();
 
 		@Override
 		final public void writeExternal(final Float object, final ObjectOutput out) throws IOException {
@@ -210,7 +210,7 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 
 	final class ByteExternalizer implements LangExternalizer<Byte, Byte> {
 
-		private static final ByteExternalizer INSTANCE = new ByteExternalizer();
+		static final ByteExternalizer INSTANCE = new ByteExternalizer();
 
 		@Override
 		final public void writeExternal(final Byte object, final ObjectOutput out) throws IOException {
@@ -229,7 +229,7 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 
 	final class CharExternalizer implements LangExternalizer<Character, Character> {
 
-		private static final CharExternalizer INSTANCE = new CharExternalizer();
+		static final CharExternalizer INSTANCE = new CharExternalizer();
 
 		@Override
 		final public void writeExternal(final Character object, final ObjectOutput out) throws IOException {
@@ -248,7 +248,7 @@ interface LangExternalizer<T, V> extends Externalizer<T, V> {
 
 	final class BooleanExternalizer implements LangExternalizer<Boolean, Boolean> {
 
-		private static final BooleanExternalizer INSTANCE = new BooleanExternalizer();
+		static final BooleanExternalizer INSTANCE = new BooleanExternalizer();
 
 		@Override
 		final public void writeExternal(final Boolean object, final ObjectOutput out) throws IOException {

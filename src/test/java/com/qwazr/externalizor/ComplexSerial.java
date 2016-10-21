@@ -18,17 +18,18 @@ package com.qwazr.externalizor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 
+import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Objects;
 
-public class Serial extends SimpleLang {
+public class ComplexSerial extends SimpleLang implements ComplexInterface, Serializable {
 
 	final public SimpleCollection collection;
 	final public SimpleCollection nullObject;
 	final public HashMap<String, SimplePrimitive> mapObject;
+	final private SimpleTime timeObject;
 	transient String transientValue;
 
-	public Serial() {
+	public ComplexSerial() {
 
 		nullObject = null;
 
@@ -38,25 +39,38 @@ public class Serial extends SimpleLang {
 		for (int i = 0; i < RandomUtils.nextInt(2, 5); i++)
 			mapObject.put(RandomStringUtils.randomAscii(5), new SimplePrimitive());
 
+		timeObject = new SimpleTime();
+
 		transientValue = RandomStringUtils.randomAscii(12);
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		if (o == null || !(o instanceof Serial))
+		if (o == null || !(o instanceof ComplexSerial))
 			return false;
-		final Serial s = (Serial) o;
-
-		if (nullObject != s.nullObject)
+		if (!ComplexInterface.equals(this, (ComplexInterface) o))
 			return false;
+		return super.equals(o);
+	}
 
-		if (!Objects.equals(collection, s.collection))
-			return false;
+	@Override
+	public SimpleCollection getNullObject() {
+		return nullObject;
+	}
 
-		if (!Objects.deepEquals(mapObject, s.mapObject))
-			return false;
+	@Override
+	public SimpleCollection getCollection() {
+		return collection;
+	}
 
-		return super.equals(s);
+	@Override
+	public HashMap<String, ? extends SimplePrimitive> getMapObject() {
+		return mapObject;
+	}
+
+	@Override
+	public SimpleTime getTimeObject() {
+		return timeObject;
 	}
 
 }

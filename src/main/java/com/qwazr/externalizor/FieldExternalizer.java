@@ -55,10 +55,11 @@ abstract class FieldExternalizer<T, V> implements Externalizer<T, V> {
 			}
 			out.writeBoolean(true);
 			writeValue(value, out);
+			out.flush();
 		}
 	}
 
-	static class FieldParentExternalizer<T, V> extends FieldExternalizer<T, V> {
+	static class FieldParentExternalizer<T, V> extends FieldObjectExternalizer<T, V> {
 
 		private final Externalizer<V, V> externalizer;
 
@@ -69,19 +70,13 @@ abstract class FieldExternalizer<T, V> implements Externalizer<T, V> {
 
 		@Override
 		final public V readObject(final ObjectInput in) throws IOException, ReflectiveOperationException {
-			return externalizer.readObject(in);
+			return in.readBoolean() ? externalizer.readObject(in) : null;
 		}
 
 		@Override
-		final public void readExternal(final T object, final ObjectInput in)
+		final protected void writeValue(final V value, final ObjectOutput out)
 				throws IOException, ReflectiveOperationException {
-			field.set(object, readObject(in));
-		}
-		
-		@Override
-		final public void writeExternal(final T object, final ObjectOutput out)
-				throws IOException, ReflectiveOperationException {
-			externalizer.writeExternal((V) field.get(object), out);
+			externalizer.writeExternal(value, out);
 		}
 	}
 

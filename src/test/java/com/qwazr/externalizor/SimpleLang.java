@@ -19,11 +19,12 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class SimpleLang extends AutoExternalizor {
+public class SimpleLang implements Serializable {
 
 	final public String emptyString;
 	private final String stringValue;
@@ -236,4 +237,20 @@ public class SimpleLang extends AutoExternalizor {
 		return true;
 	}
 
+	public static class External extends SimpleLang implements Externalizable {
+
+		private final static Externalizor<External> externalizor = Externalizor.of(External.class);
+
+		@Override
+		public void writeExternal(final ObjectOutput out) throws IOException {
+			externalizor.writeExternal(this, out);
+		}
+
+		@Override
+		public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
+			externalizor.readExternal(this, in);
+
+		}
+	}
+	
 }

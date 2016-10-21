@@ -18,9 +18,10 @@ package com.qwazr.externalizor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 
+import java.io.*;
 import java.util.*;
 
-public class SimpleCollection extends AutoExternalizor {
+public class SimpleCollection implements Serializable {
 
 	final public ArrayList<String> stringList;
 	final public ArrayList<String> nullList;
@@ -43,7 +44,7 @@ public class SimpleCollection extends AutoExternalizor {
 		nullSet = null;
 		integerSet = new LinkedHashSet<>();
 		for (int i = 0; i < RandomUtils.nextInt(5, 10); i++)
-			integerSet.add(RandomUtils.nextInt(0, Integer.MAX_VALUE));
+			integerSet.add(RandomUtils.nextInt());
 
 		byteList = new Vector<>();
 		for (int i = 0; i < RandomUtils.nextInt(5, 10); i++)
@@ -52,7 +53,7 @@ public class SimpleCollection extends AutoExternalizor {
 		nullMap = null;
 		mapShortLong = new HashMap<>();
 		for (int i = 0; i < RandomUtils.nextInt(5, 10); i++)
-			mapShortLong.put((short) RandomUtils.nextInt(0, Short.MAX_VALUE), RandomUtils.nextLong(0, Long.MAX_VALUE));
+			mapShortLong.put((short) RandomUtils.nextInt(0, Short.MAX_VALUE), RandomUtils.nextLong());
 
 	}
 
@@ -82,6 +83,21 @@ public class SimpleCollection extends AutoExternalizor {
 			return false;
 
 		return true;
+	}
+
+	public static class External extends SimpleCollection implements Externalizable {
+
+		private final static Externalizor<External> externalizor = Externalizor.of(External.class);
+
+		@Override
+		public void writeExternal(final ObjectOutput out) throws IOException {
+			externalizor.writeExternal(this, out);
+		}
+
+		@Override
+		public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
+			externalizor.readExternal(this, in);
+		}
 	}
 
 }

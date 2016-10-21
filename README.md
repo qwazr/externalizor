@@ -7,20 +7,19 @@
 
 Efficient (fast and small) Java serialization using Externalizable interface.
 
-- Support of inner Externalizable objects
-- Concrete Collections (Map, Set, Vector)
+- Support of Externalizable objects
+- Concrete Collections (Map, Set, Vector, List) with compression/decompression based on [Snappy](https://github.com/xerial/snappy-java)
 - Primitive types: int, long, short, double, float, boolean, char, byte, enum
 - Primitive array: with compression/decompression based on [Snappy](https://github.com/xerial/snappy-java)
 - Time types: Date, LocalDate, LocalTime, LocalDateTime, Instant, Duration, Period, MonthDay, Year
 - Overall serialization with Snappy
-- Smaller by a factor from 50 to 150 compared to default JAVA serialization
 
 ## Usage
 
 The class to serialize should implements
 [Externalizable](https://docs.oracle.com/javase/8/docs/api/java/io/Externalizable.html).
 
-### The easiest way
+### The simplest way
 
 The classes which are supposed to be serialized can extends AutoExternalizor.
 
@@ -47,10 +46,10 @@ public class MyClass extends AutoExternalizor {
 }
 ```
 
-### The fastest way
+### The more efficient way
 
 The Externalizor object which is in charge of serializing/deserializing the class is static.
-The class itself implements the Externlizable methods.
+The class itself implements the Externalizable methods using the static externalizor instance.
 
 ```java
 
@@ -91,27 +90,41 @@ public class MyClass implements Externalizable {
 
 ### Serialize / deserialize
 
-Now you use the provided static methods to serialize and/or deserialize your object(s). 
+Use the provided static methods to serialize and/or deserialize your object(s). 
 
 ```java
 
-// Serialization
+// Serialization with compression
 
 MyClass myClass = new MyClass();
 try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
     Externalizor.serialize(object, output);
 }
 
-// Deserialization
+// Deserialization with compression
 
 try (ByteArrayInputStream input = new ByteArrayInputStream(bytes)) {
     MyClass myClass = Externalizor.deserialize(input);
+}
+
+// Serialization without compression
+
+MyClass myClass = new MyClass();
+try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
+    Externalizor.serializeRaw(object, output);
+}
+
+// Deserialization without compression
+
+try (ByteArrayInputStream input = new ByteArrayInputStream(bytes)) {
+    MyClass myClass = Externalizor.deserializeRaw(input);
 }
 ```
 
 ## Maven dependency
 
-Available from Maven's central repository: http://central.maven.org/maven2/com/qwazr/externalizor.
+In Maven's central repository:
+[central.maven.org/maven2/com/qwazr/externalizor](http://central.maven.org/maven2/com/qwazr/externalizor)
 
 Add the following dependency to your pom.xml:
 
@@ -119,26 +132,10 @@ Add the following dependency to your pom.xml:
 <dependency>
     <groupId>com.qwazr</groupId>
     <artifactId>externalizor</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
 </dependency>
 ```
 
-To use the last snapshot build:
-
-```xml
-<dependency>
-    <groupId>com.qwazr</groupId>
-    <artifactId>externalizor</artifactId>
-    <version>1.2-SNAPSHOT</version>
-</dependency>
-
- <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-</distributionManagement>
-```
 ## Benchmark
 
 The code of the benchmark is here:

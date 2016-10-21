@@ -15,16 +15,10 @@
  */
 package com.qwazr.externalizor;
 
-import org.apache.commons.lang3.tuple.Pair;
-
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WithAbstract implements Externalizable {
+public class WithAbstract extends AutoExternalizor {
 
 	/**
 	 * This type is an extract
@@ -35,15 +29,4 @@ public class WithAbstract implements Externalizable {
 		this.abstractMap = new HashMap<>();
 	}
 
-	final static Externalizor<WithAbstract> externalizor = Externalizor.of(WithAbstract.class);
-
-	@Override
-	public void writeExternal(final ObjectOutput out) throws IOException {
-		externalizor.writeExternal(this, out);
-	}
-
-	@Override
-	public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
-		externalizor.readExternal(this, in);
-	}
 }

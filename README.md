@@ -142,7 +142,7 @@ To use the last snapshot build:
 ## Benchmark
 
 The code of the benchmark is here:
-[BenchmarkTest](src/test/java/com/qwazr/externalizor/BenchmarkTest)
+[BenchmarkTest](src/test/java/com/qwazr/externalizor/BenchmarkTest.java)
 
 - Serialization raw: Default Java serialization without compression.
 - Serialization compressed: Default Java serialization with Snappy compression.

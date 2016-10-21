@@ -44,7 +44,7 @@ public class SimpleCollection implements Serializable {
 		nullSet = null;
 		integerSet = new LinkedHashSet<>();
 		for (int i = 0; i < RandomUtils.nextInt(5, 10); i++)
-			integerSet.add(RandomUtils.nextInt(0, Integer.MAX_VALUE));
+			integerSet.add(RandomUtils.nextInt());
 
 		byteList = new Vector<>();
 		for (int i = 0; i < RandomUtils.nextInt(5, 10); i++)
@@ -53,7 +53,7 @@ public class SimpleCollection implements Serializable {
 		nullMap = null;
 		mapShortLong = new HashMap<>();
 		for (int i = 0; i < RandomUtils.nextInt(5, 10); i++)
-			mapShortLong.put((short) RandomUtils.nextInt(0, Short.MAX_VALUE), RandomUtils.nextLong(0, Long.MAX_VALUE));
+			mapShortLong.put((short) RandomUtils.nextInt(0, Short.MAX_VALUE), RandomUtils.nextLong());
 
 	}
 
@@ -97,7 +97,6 @@ public class SimpleCollection implements Serializable {
 		@Override
 		public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
 			externalizor.readExternal(this, in);
-
 		}
 	}
 

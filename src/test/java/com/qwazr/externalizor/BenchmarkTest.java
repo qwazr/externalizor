@@ -25,7 +25,26 @@ import java.util.function.Function;
 
 public class BenchmarkTest {
 
-	public void benchmark(Duration duration, Callable<Serializable> callNewObject,
+	public class BenchResult {
+
+		final String name;
+		final Class<?> clazz;
+		final float rate;
+		final float avgSize;
+
+		BenchResult(String name, Class<?> clazz, int counter, long totalSize, long totalTime) {
+			this.name = name;
+			this.clazz = clazz;
+			this.avgSize = totalSize / counter;
+			this.rate = counter * 1000 / totalTime;
+		}
+
+		final public String toString() {
+			return name + " - " + clazz.getSimpleName() + " - Avg. size: " + avgSize + " Rate: " + rate;
+		}
+	}
+
+	public BenchResult benchmark(String name, Duration duration, Callable<Serializable> callNewObject,
 			Function<Serializable, byte[]> serialize, Function<byte[], Serializable> deserialize) throws Exception {
 
 		// Compute the final time
@@ -33,6 +52,7 @@ public class BenchmarkTest {
 		int counter = 0;
 		long totalSize = 0;
 
+		final long startTime = System.currentTimeMillis();
 		while (System.currentTimeMillis() < endTime) {
 
 			// Create a new object
@@ -52,39 +72,50 @@ public class BenchmarkTest {
 			totalSize += byteArray.length;
 			counter++;
 		}
+		final long totalTime = System.currentTimeMillis() - startTime;
 
-		System.out.println(
-				"Counter: " + callNewObject.call().getClass() + " " + counter + " Avg. size: " + totalSize / counter);
+		return new BenchResult(name, callNewObject.call().getClass(), counter, totalSize, totalTime);
+
+	}
+
+	public void benchmarkCompare(Callable<Serializable> callNewObject1, Callable<Serializable> callNewObject2)
+			throws Exception {
+
+		// COmpress benchmark
+		final BenchResult compress1 =
+				benchmark("Compress", Duration.ofSeconds(5), callNewObject1, ExternalizerTest::write,
+						ExternalizerTest::read);
+		final BenchResult compress2 =
+				benchmark("Compress", Duration.ofSeconds(5), callNewObject2, ExternalizerTest::write,
+						ExternalizerTest::read);
+
+		System.out.println(compress1);
+		System.out.println(compress2);
+		System.out.println();
+
+		// Raw benchmark
+		final BenchResult raw1 =
+				benchmark("Raw ", Duration.ofSeconds(5), callNewObject1, ExternalizerTest::writeRaw,
+						ExternalizerTest::readRaw);
+		final BenchResult raw2 =
+				benchmark("Raw", Duration.ofSeconds(5), callNewObject2, ExternalizerTest::writeRaw,
+						ExternalizerTest::readRaw);
+
+
+		System.out.println(raw1);
+		System.out.println(raw2);
+		System.out.println();
 	}
 
 	@Test
 	public void ExternalTest() throws Exception {
 
-		/*
-		benchmark(Duration.ofSeconds(5), SimpleTime::new, object -> ExternalizerTest.write(object),
-				bytes -> ExternalizerTest.read(bytes));
-		benchmark(Duration.ofSeconds(5), SimpleTime.External::new, object -> ExternalizerTest.write(object),
-				bytes -> ExternalizerTest.read(bytes));
+		benchmarkCompare(SimpleTime::new, SimpleTime.External::new);
+		benchmarkCompare(SimpleLang::new, SimpleLang.External::new);
+		benchmarkCompare(SimplePrimitive::new, SimplePrimitive.External::new);
+		benchmarkCompare(SimpleCollection::new, SimpleCollection.External::new);
+		benchmarkCompare(ComplexSerial::new, ComplexExternal::new);
 
-		benchmark(Duration.ofSeconds(5), SimpleLang::new, object -> ExternalizerTest.write(object),
-				bytes -> ExternalizerTest.read(bytes));
-		benchmark(Duration.ofSeconds(5), SimpleLang.External::new, object -> ExternalizerTest.write(object),
-				bytes -> ExternalizerTest.read(bytes));
-
-		benchmark(Duration.ofSeconds(5), SimplePrimitive::new, object -> ExternalizerTest.write(object),
-				bytes -> ExternalizerTest.read(bytes));
-		benchmark(Duration.ofSeconds(5), SimplePrimitive.External::new, object -> ExternalizerTest.write(object),
-				bytes -> ExternalizerTest.read(bytes));
-
-		benchmark(Duration.ofSeconds(5), SimpleCollection::new, object -> ExternalizerTest.write(object),
-				bytes -> ExternalizerTest.read(bytes));
-		benchmark(Duration.ofSeconds(5), SimpleCollection.External::new, object -> ExternalizerTest.write(object),
-				bytes -> ExternalizerTest.read(bytes));
-
-		benchmark(Duration.ofSeconds(5), ComplexSerial::new, object -> ExternalizerTest.write(object),
-				bytes -> ExternalizerTest.read(bytes));
-				*/
-		benchmark(Duration.ofSeconds(10), ComplexExternal::new, object -> ExternalizerTest.write(object),
-				bytes -> ExternalizerTest.read(bytes));
 	}
+
 }

@@ -42,6 +42,24 @@ public class ExternalizerTest {
 		}
 	}
 
+	final static <T extends Serializable> byte[] writeRaw(final T object) {
+		try (final ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+			Externalizor.serializeRaw(object, bos);
+			return bos.toByteArray();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	final static <T> T readRaw(final byte[] bytes) {
+		try (final ByteArrayInputStream bis = new ByteArrayInputStream(bytes)) {
+			return Externalizor.deserializeRaw(bis);
+		} catch (IOException | ClassNotFoundException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+
 	@Test
 	public void errorMissingExternalizableTest() throws IOException, ClassNotFoundException {
 		try {

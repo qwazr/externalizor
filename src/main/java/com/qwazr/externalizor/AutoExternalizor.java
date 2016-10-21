@@ -47,6 +47,7 @@ public class AutoExternalizor implements Externalizable {
 	@Override
 	final public void writeExternal(final ObjectOutput out) throws IOException {
 		externalizor.writeExternal(object, out);
+		out.flush();
 	}
 
 	@Override

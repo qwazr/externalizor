@@ -24,7 +24,7 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.HashMap;
 
-public class ComplexExternal extends SimpleLang.External implements ComplexInterface, Externalizable {
+public class ComplexExternal extends SimpleLang implements ComplexInterface, Externalizable {
 
 	final public SimpleCollection.External collection;
 	final public SimpleCollection.External nullObject;

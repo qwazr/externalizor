@@ -23,19 +23,35 @@ import java.io.ObjectOutput;
 public class AutoExternalizor implements Externalizable {
 
 	private transient final Externalizor externalizor;
+	private transient final Object object;
 
+	/**
+	 * Use this constructor to decorate an existing object
+	 *
+	 * @param object the instance to decorate
+	 */
+	protected AutoExternalizor(final Object object) {
+		this.externalizor = Externalizor.of(object.getClass());
+		this.object = object;
+	}
+
+	/**
+	 * Empty constructor used to extend a class
+	 */
 	protected AutoExternalizor() {
-		externalizor = Externalizor.of(this.getClass());
+		this.externalizor = Externalizor.of(this.getClass());
+		this.object = this;
 	}
 
 	// The serialization part
 	@Override
-	public void writeExternal(final ObjectOutput out) throws IOException {
-		externalizor.writeExternal(this, out);
+	final public void writeExternal(final ObjectOutput out) throws IOException {
+		externalizor.writeExternal(object, out);
 	}
 
 	@Override
-	public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
-		externalizor.readExternal(this, in);
+	final public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
+		externalizor.readExternal(object, in);
 	}
+
 }

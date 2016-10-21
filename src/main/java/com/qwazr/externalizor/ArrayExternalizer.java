@@ -248,7 +248,7 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 		@Override
 		final public Object[] readArray(final int size, final ObjectInput in)
 				throws IOException, ReflectiveOperationException {
-			Object[] array = (Object[]) java.lang.reflect.Array.newInstance(componentType, size);
+			final Object[] array = (Object[]) java.lang.reflect.Array.newInstance(componentType, size);
 			for (int i = 0; i < array.length; i++)
 				array[i] = componentExternalizer.readObject(in);
 			return array;

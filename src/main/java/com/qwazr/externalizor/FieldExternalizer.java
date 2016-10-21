@@ -77,7 +77,7 @@ abstract class FieldExternalizer<T, V> implements Externalizer<T, V> {
 				throws IOException, ReflectiveOperationException {
 			field.set(object, readObject(in));
 		}
-		
+
 		@Override
 		final public void writeExternal(final T object, final ObjectOutput out)
 				throws IOException, ReflectiveOperationException {

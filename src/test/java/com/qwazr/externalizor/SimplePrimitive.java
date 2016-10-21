@@ -17,9 +17,10 @@ package com.qwazr.externalizor;
 
 import org.apache.commons.lang3.RandomUtils;
 
+import java.io.*;
 import java.util.Arrays;
 
-public class SimplePrimitive extends AutoExternalizor {
+public class SimplePrimitive implements Serializable {
 
 	private final int intValue;
 	public int[] intArray;
@@ -129,6 +130,22 @@ public class SimplePrimitive extends AutoExternalizor {
 			return false;
 
 		return true;
+	}
+
+	public static class External extends SimplePrimitive implements Externalizable {
+
+		private final static Externalizor<External> externalizor = Externalizor.of(External.class);
+
+		@Override
+		public void writeExternal(final ObjectOutput out) throws IOException {
+			externalizor.writeExternal(this, out);
+		}
+
+		@Override
+		public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
+			externalizor.readExternal(this, in);
+
+		}
 	}
 
 }

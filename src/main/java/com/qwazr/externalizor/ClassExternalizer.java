@@ -86,6 +86,7 @@ interface ClassExternalizer<T extends Externalizable> extends Externalizer<T, T>
 
 		AbleExternalizer(final Class<T> clazz) {
 			this.clazz = clazz;
+			System.out.println("CLAZZ: " + clazz);
 		}
 
 		@Override

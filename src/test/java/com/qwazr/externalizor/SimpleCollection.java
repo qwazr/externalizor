@@ -18,9 +18,10 @@ package com.qwazr.externalizor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 
+import java.io.*;
 import java.util.*;
 
-public class SimpleCollection extends AutoExternalizor {
+public class SimpleCollection implements Serializable {
 
 	final public ArrayList<String> stringList;
 	final public ArrayList<String> nullList;
@@ -82,6 +83,22 @@ public class SimpleCollection extends AutoExternalizor {
 			return false;
 
 		return true;
+	}
+
+	public static class External extends SimpleCollection implements Externalizable {
+
+		private final static Externalizor<External> externalizor = Externalizor.of(External.class);
+
+		@Override
+		public void writeExternal(final ObjectOutput out) throws IOException {
+			externalizor.writeExternal(this, out);
+		}
+
+		@Override
+		public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
+			externalizor.readExternal(this, in);
+
+		}
 	}
 
 }

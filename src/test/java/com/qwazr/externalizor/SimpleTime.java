@@ -17,10 +17,11 @@ package com.qwazr.externalizor;
 
 import org.apache.commons.lang3.RandomUtils;
 
+import java.io.*;
 import java.time.*;
 import java.util.*;
 
-public class SimpleTime extends AutoExternalizor {
+public class SimpleTime implements Serializable {
 
 	private final Calendar calNullValue;
 	private final Calendar calValue;
@@ -231,4 +232,19 @@ public class SimpleTime extends AutoExternalizor {
 		return true;
 	}
 
+	public static class External extends SimpleTime implements Externalizable {
+
+		private final static Externalizor<External> externalizor = Externalizor.of(External.class);
+
+		@Override
+		public void writeExternal(final ObjectOutput out) throws IOException {
+			externalizor.writeExternal(this, out);
+		}
+
+		@Override
+		public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
+			externalizor.readExternal(this, in);
+		}
+	}
+	
 }

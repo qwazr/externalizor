@@ -141,10 +141,25 @@ To use the last snapshot build:
 ```
 ## Benchmark
 
+The code of the benchmark is here:
+[BenchmarkTest](src/test/java/com/qwazr/externalizor/BenchmarkTest)
+
+- Serialization raw: Default Java serialization without compression.
+- Serialization compressed: Default Java serialization with Snappy compression.
+- Externalizor raw: Using Externalizor without compression.
+- Externalizor compressed: Using Externalizor with Snappy compression.
+
+### Average size of the serialized objects
+
+Bytes sizes. Smaller is better.
+
 ![Byte size](byte_size.png)
 
-![Rate](rate.png)
+### Serialization/Deserialization rate
 
+Number of serialization and deserialization per seconds. Bigger is better.
+
+![Rate](rate.png)
 
 ## Issues
 

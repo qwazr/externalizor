@@ -18,9 +18,10 @@ package com.qwazr.externalizor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class AbstractCollection {
+public class AbstractCollection implements Serializable {
 
 	private final Map<String, String> abstractMap;
 	private final Set<String> abstractSet;

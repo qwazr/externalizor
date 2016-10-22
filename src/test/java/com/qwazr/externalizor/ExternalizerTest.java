@@ -137,7 +137,6 @@ public class ExternalizerTest {
 			try (final ObjectOutputStream objected = new ObjectOutputStream(bos)) {
 				externalizer.writeExternal(object, objected);
 			}
-			bos.flush();
 			return bos.toByteArray();
 		} catch (IOException | ReflectiveOperationException e) {
 			throw new RuntimeException(e);

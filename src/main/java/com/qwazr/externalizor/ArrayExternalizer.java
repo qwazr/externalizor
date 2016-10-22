@@ -54,12 +54,12 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 
 	static void writeBytes(final byte[] bytes, final ObjectOutput out) throws IOException {
 		out.writeInt(bytes.length);
-		out.write(bytes, 0, bytes.length);
+		out.write(bytes);
 	}
 
 	static byte[] readBytes(final ObjectInput in) throws IOException {
 		final byte[] bytes = new byte[in.readInt()];
-		in.read(bytes, 0, bytes.length);
+		in.readFully(bytes);
 		return bytes;
 	}
 
@@ -222,7 +222,6 @@ interface ArrayExternalizer<T, V> extends Externalizer<T, V> {
 			bitmap.forEach((IntConsumer) i -> array[i] = true);
 			return array;
 		}
-
 
 		@Override
 		final protected void writeValue(final boolean[] value, final ObjectOutput out) throws IOException {

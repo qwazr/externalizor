@@ -19,13 +19,13 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.junit.*;
 import org.junit.runners.MethodSorters;
-import org.xerial.snappy.SnappyInputStream;
-import org.xerial.snappy.SnappyOutputStream;
 
 import java.io.*;
 import java.time.Duration;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class BenchmarkTest {
@@ -97,12 +97,9 @@ public class BenchmarkTest {
 
 	final static <T> byte[] write(final T object) {
 		try (final ByteArrayOutputStream output = new ByteArrayOutputStream()) {
-			try (final BufferedOutputStream buffered = new BufferedOutputStream(output)) {
-				try (final SnappyOutputStream compressed = new SnappyOutputStream(buffered)) {
-					try (final ObjectOutputStream objected = new ObjectOutputStream(compressed)) {
-						objected.writeObject(object);
-						objected.flush();
-					}
+			try (final GZIPOutputStream compressed = new GZIPOutputStream(output)) {
+				try (final ObjectOutputStream objected = new ObjectOutputStream(compressed)) {
+					objected.writeObject(object);
 				}
 			}
 			return output.toByteArray();
@@ -113,11 +110,9 @@ public class BenchmarkTest {
 
 	final static <T> T read(final byte[] bytes) {
 		try (final ByteArrayInputStream input = new ByteArrayInputStream(bytes)) {
-			try (final BufferedInputStream buffered = new BufferedInputStream(input)) {
-				try (final SnappyInputStream compressed = new SnappyInputStream(buffered)) {
-					try (final ObjectInputStream objected = new ObjectInputStream(compressed)) {
-						return (T) objected.readObject();
-					}
+			try (final GZIPInputStream compressed = new GZIPInputStream(input)) {
+				try (final ObjectInputStream objected = new ObjectInputStream(compressed)) {
+					return (T) objected.readObject();
 				}
 			}
 		} catch (IOException | ReflectiveOperationException e) {
@@ -127,11 +122,8 @@ public class BenchmarkTest {
 
 	final static <T> byte[] writeRaw(final T object) {
 		try (final ByteArrayOutputStream output = new ByteArrayOutputStream()) {
-			try (final BufferedOutputStream buffered = new BufferedOutputStream(output)) {
-				try (final ObjectOutputStream objected = new ObjectOutputStream(buffered)) {
-					objected.writeObject(object);
-					objected.flush();
-				}
+			try (final ObjectOutputStream objected = new ObjectOutputStream(output)) {
+				objected.writeObject(object);
 			}
 			return output.toByteArray();
 		} catch (IOException e) {
@@ -141,10 +133,8 @@ public class BenchmarkTest {
 
 	final static <T> T readRaw(final byte[] bytes) {
 		try (final ByteArrayInputStream input = new ByteArrayInputStream(bytes)) {
-			try (final BufferedInputStream buffered = new BufferedInputStream(input)) {
-				try (final ObjectInputStream objected = new ObjectInputStream(buffered)) {
-					return (T) objected.readObject();
-				}
+			try (final ObjectInputStream objected = new ObjectInputStream(input)) {
+				return (T) objected.readObject();
 			}
 		} catch (IOException | ReflectiveOperationException e) {
 			throw new RuntimeException(e);

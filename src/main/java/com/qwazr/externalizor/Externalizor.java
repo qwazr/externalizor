@@ -15,12 +15,11 @@
  */
 package com.qwazr.externalizor;
 
-import org.xerial.snappy.SnappyInputStream;
-import org.xerial.snappy.SnappyOutputStream;
-
 import java.io.*;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 public class Externalizor<T> {
 
@@ -35,7 +34,6 @@ public class Externalizor<T> {
 	public void writeExternal(final T object, final ObjectOutput out) throws IOException {
 		try {
 			externalizer.writeExternal(object, out);
-			out.flush();
 		} catch (ReflectiveOperationException e) {
 			throw new ExternalizorException("Error while serializing the class " + clazz, e);
 		}
@@ -70,11 +68,9 @@ public class Externalizor<T> {
 		Objects.requireNonNull(object, "The serializable object is null");
 		Objects.requireNonNull(output, "The output stream is null");
 		final Externalizor externalizor = of(object.getClass());
-		try (final BufferedOutputStream buffered = new BufferedOutputStream(output)) {
-			try (final SnappyOutputStream compressed = new SnappyOutputStream(buffered)) {
-				try (final ObjectOutputStream objected = new ObjectOutputStream(compressed)) {
-					externalizor.writeExternal(object, objected);
-				}
+		try (final GZIPOutputStream compressed = new GZIPOutputStream(output)) {
+			try (final ObjectOutputStream objected = new ObjectOutputStream(compressed)) {
+				externalizor.writeExternal(object, objected);
 			}
 		}
 	}
@@ -94,10 +90,8 @@ public class Externalizor<T> {
 		Objects.requireNonNull(object, "The serializable object is null");
 		Objects.requireNonNull(output, "The output stream is null");
 		final Externalizor externalizor = of(object.getClass());
-		try (final BufferedOutputStream buffered = new BufferedOutputStream(output)) {
-			try (final ObjectOutputStream objected = new ObjectOutputStream(buffered)) {
-				externalizor.writeExternal(object, objected);
-			}
+		try (final ObjectOutputStream objected = new ObjectOutputStream(output)) {
+			externalizor.writeExternal(object, objected);
 		}
 	}
 
@@ -118,13 +112,11 @@ public class Externalizor<T> {
 		Objects.requireNonNull(input, "The input stream is null");
 		Objects.requireNonNull(input, "The class is null");
 		final Externalizor externalizor = of(clazz);
-		try (final BufferedInputStream buffered = new BufferedInputStream(input)) {
-			try (final SnappyInputStream compressed = new SnappyInputStream(buffered)) {
-				try (final ObjectInputStream objected = new ObjectInputStream(compressed)) {
-					final T object = clazz.newInstance();
-					externalizor.readExternal(object, objected);
-					return object;
-				}
+		try (final GZIPInputStream compressed = new GZIPInputStream(input)) {
+			try (final ObjectInputStream objected = new ObjectInputStream(compressed)) {
+				final T object = clazz.newInstance();
+				externalizor.readExternal(object, objected);
+				return object;
 			}
 		}
 	}
@@ -141,17 +133,16 @@ public class Externalizor<T> {
 	 * @throws ReflectiveOperationException if the class instantiation fails
 	 * @throws NullPointerException         if object or output is null
 	 */
+
 	public static final <T> T deserializeRaw(final InputStream input, final Class<T> clazz)
 			throws IOException, ReflectiveOperationException {
 		Objects.requireNonNull(input, "The input stream is null");
 		Objects.requireNonNull(input, "The class is null");
 		final Externalizor externalizor = of(clazz);
-		try (final BufferedInputStream buffered = new BufferedInputStream(input)) {
-			try (final ObjectInputStream objected = new ObjectInputStream(buffered)) {
-				final T object = clazz.newInstance();
-				externalizor.readExternal(object, objected);
-				return object;
-			}
+		try (final ObjectInputStream objected = new ObjectInputStream(input)) {
+			final T object = clazz.newInstance();
+			externalizor.readExternal(object, objected);
+			return object;
 		}
 	}
 }

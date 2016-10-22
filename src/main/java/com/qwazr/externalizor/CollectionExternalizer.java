@@ -86,7 +86,6 @@ interface CollectionExternalizer<T, V> extends Externalizer<T, V> {
 			}
 			nullBitmap.writeExternal(out);
 			ArrayExternalizer.writeBytes(array.compress(), out);
-			out.flush();
 		}
 
 		abstract protected void fillCollection(final ObjectInput in, final RoaringBitmap nullBitmap,

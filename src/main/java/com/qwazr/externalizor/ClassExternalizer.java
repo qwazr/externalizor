@@ -62,7 +62,6 @@ interface ClassExternalizer<T> extends Externalizer<T, T> {
 				throws IOException, ReflectiveOperationException {
 			for (final Externalizer externalizer : externalizers)
 				externalizer.writeExternal(object, out);
-			out.flush();
 		}
 
 		@Override
@@ -97,7 +96,6 @@ interface ClassExternalizer<T> extends Externalizer<T, T> {
 				out.writeBoolean(true);
 				Externalizor.of(clazz).writeExternal(object, out);
 			}
-			out.flush();
 		}
 
 		@Override

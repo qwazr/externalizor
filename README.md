@@ -16,80 +16,6 @@ Efficient (fast and small) Java serialization using Externalizable interface.
 
 ## Usage
 
-The class to serialize should implements
-[Externalizable](https://docs.oracle.com/javase/8/docs/api/java/io/Externalizable.html).
-
-### The simplest way
-
-The classes which are supposed to be serialized can extends AutoExternalizor.
-
-```java
-
-import com.qwazr.externalizor.AutoExternalizor;
-
-public class MyClass extends AutoExternalizor {
-
-	String aStringValue;
-	int anIntValue;
-	double[] anArrayOfDouble;
-
-	enum MyEnum {
-		on, off
-	}
-
-	MyEnum anEnum;
-	HashSet<Status> aSetOfEnum;
-
-	public MyClass() {
-	}
-
-}
-```
-
-### The more efficient way
-
-The Externalizor object which is in charge of serializing/deserializing the class is static.
-The class itself implements the Externalizable methods using the static externalizor instance.
-
-```java
-
-import java.io.Externalizable;
-import com.qwazr.externalizor.Externalizor;
-
-public class MyClass implements Externalizable {
-
-	String aStringValue;
-	int anIntValue;
-	double[] anArrayOfDouble;
-
-	enum MyEnum {
-		on, off
-	}
-
-	MyEnum anEnum;
-	HashSet<Status> aSetOfEnum;
-
-	public MyClass() {
-	}
-
-	// Here is the serialization part:
-    // Create the serialization handler for this class. 
-	private final static Externalizor<MyClass> externalizor = Externalizor.of(MyClass.class);
-
-	@Override
-	public void writeExternal(final ObjectOutput out) throws IOException {
-		externalizor.writeExternal(this, out);
-	}
-
-	@Override
-	public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
-		externalizor.readExternal(this, in);
-	}
-}
-```
-
-### Serialize / deserialize
-
 Use the provided static methods to serialize and/or deserialize your object(s). 
 
 ```java
@@ -132,7 +58,7 @@ Add the following dependency to your pom.xml:
 <dependency>
     <groupId>com.qwazr</groupId>
     <artifactId>externalizor</artifactId>
-    <version>1.2</version>
+    <version>1.3</version>
 </dependency>
 ```
 

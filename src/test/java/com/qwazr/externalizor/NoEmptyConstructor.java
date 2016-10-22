@@ -15,12 +15,10 @@
  */
 package com.qwazr.externalizor;
 
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
+import java.io.Serializable;
+import java.util.Objects;
 
-public class NoEmptyConstructor implements Externalizable {
+public class NoEmptyConstructor implements Serializable {
 
 	private final String test;
 
@@ -31,15 +29,9 @@ public class NoEmptyConstructor implements Externalizable {
 		this.test = test;
 	}
 
-	final static Externalizor<NoEmptyConstructor> externalizor = Externalizor.of(NoEmptyConstructor.class);
-
 	@Override
-	public void writeExternal(final ObjectOutput out) throws IOException {
-		externalizor.writeExternal(this, out);
+	public boolean equals(Object o) {
+		return o != null && Objects.equals(test, ((NoEmptyConstructor) o).test);
 	}
 
-	@Override
-	public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
-		externalizor.readExternal(this, in);
-	}
 }

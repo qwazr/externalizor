@@ -26,6 +26,7 @@ public class ComplexExample extends SimpleLang implements Serializable {
 
 	final public SimpleCollection collection;
 	final public SimpleCollection nullObject;
+	final public AbstractCollection abstractCollection;
 	final public HashMap<String, SimplePrimitive> mapObject;
 	final private SimpleTime timeObject;
 	transient String transientValue;
@@ -35,6 +36,7 @@ public class ComplexExample extends SimpleLang implements Serializable {
 		nullObject = null;
 
 		collection = new SimpleCollection();
+		abstractCollection = new AbstractCollection();
 
 		mapObject = new HashMap<>();
 		for (int i = 0; i < RandomUtils.nextInt(2, 5); i++)
@@ -56,6 +58,9 @@ public class ComplexExample extends SimpleLang implements Serializable {
 			return false;
 
 		if (!Objects.equals(collection, s.collection))
+			return false;
+
+		if (!Objects.equals(abstractCollection, s.abstractCollection))
 			return false;
 
 		if (!Objects.deepEquals(mapObject, s.mapObject))

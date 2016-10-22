@@ -7,12 +7,10 @@
 
 Efficient (fast and small) Java serialization using Externalizable interface.
 
-- Support of Externalizable objects
 - Concrete Collections (Map, Set, Vector, List) with compression/decompression based on [Snappy](https://github.com/xerial/snappy-java)
 - Primitive types: int, long, short, double, float, boolean, char, byte, enum
 - Primitive array: with compression/decompression based on [Snappy](https://github.com/xerial/snappy-java)
 - Time types: Date, LocalDate, LocalTime, LocalDateTime, Instant, Duration, Period, MonthDay, Year
-- Overall serialization with Snappy
 
 ## Usage
 
@@ -68,9 +66,9 @@ The code of the benchmark is here:
 [BenchmarkTest](src/test/java/com/qwazr/externalizor/BenchmarkTest.java)
 
 - Serialization raw: Default Java serialization without compression.
-- Serialization compressed: Default Java serialization with Snappy compression.
+- Serialization compressed: Default Java serialization with Gzip compression.
 - Externalizor raw: Using Externalizor without compression.
-- Externalizor compressed: Using Externalizor with Snappy compression.
+- Externalizor compressed: Using Externalizor with Gzip compression.
 
 ### Average size of the serialized objects
 

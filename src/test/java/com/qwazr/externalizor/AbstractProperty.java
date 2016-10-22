@@ -15,18 +15,33 @@
  */
 package com.qwazr.externalizor;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.apache.commons.lang3.tuple.Pair;
 
-public class WithAbstract {
+import java.io.Serializable;
+import java.util.Objects;
+
+public class AbstractProperty implements Serializable {
+
+	private final String test;
 
 	/**
-	 * This type is an extract
+	 * This type is not natively supported
 	 */
-	private final Map<String, String> abstractMap;
+	private final Pair pair = Pair.of("Key", "Value");
 
-	public WithAbstract() {
-		this.abstractMap = new HashMap<>();
+	public AbstractProperty(String test) {
+		this.test = test;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (o == null || !(o instanceof AbstractProperty))
+			return false;
+		AbstractProperty p = (AbstractProperty) o;
+		if (!Objects.equals(test, p.test))
+			return false;
+		if (!Objects.equals(pair, p.pair))
+			return false;
+		return true;
+	}
 }

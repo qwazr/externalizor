@@ -28,7 +28,7 @@ interface Externalizer<T, V> {
 			return externalizer;
 		if ((externalizer = TimeExternalizer.time(clazz)) != null)
 			return externalizer;
-		return new ClassExternalizer.AbleExternalizer(clazz);
+		return (Externalizer<T, V>) ClassExternalizer.of(clazz);
 	}
 
 	static <T, V> Externalizer<T, V> of(final Field field, final Class<? extends T> clazz) {
@@ -45,7 +45,7 @@ interface Externalizer<T, V> {
 			return externalizer;
 		if ((externalizer = (Externalizer<T, V>) TimeExternalizer.time(field, clazz)) != null)
 			return externalizer;
-		return new FieldExternalizer.FieldParentExternalizer(field, new ClassExternalizer.AbleExternalizer(clazz));
+		return new FieldExternalizer.FieldParentExternalizer(field, ClassExternalizer.of(clazz));
 	}
 
 	void writeExternal(final T object, final ObjectOutput out) throws IOException, ReflectiveOperationException;

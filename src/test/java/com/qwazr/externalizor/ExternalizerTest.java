@@ -29,7 +29,7 @@ public class ExternalizerTest {
 		try (final ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
 			Externalizor.serialize(object, bos);
 			return bos.toByteArray();
-		} catch (IOException e) {
+		} catch (IOException | ReflectiveOperationException e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -46,7 +46,7 @@ public class ExternalizerTest {
 		try (final ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
 			Externalizor.serializeRaw(object, bos);
 			return bos.toByteArray();
-		} catch (IOException e) {
+		} catch (IOException | ReflectiveOperationException e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -60,33 +60,18 @@ public class ExternalizerTest {
 	}
 
 	@Test
-	public void errorMissingExternalizableTest() throws IOException, ClassNotFoundException {
-		try {
-			new MissingExternalizable("Test");
-			Assert.fail("The exception has not been thrown");
-		} catch (ExceptionInInitializerError e) {
-			Assert.assertTrue(e.getCause() instanceof ExternalizorException);
-		}
+	public void abstractPropertyTest() throws IOException, ClassNotFoundException {
+		classTest(new AbstractProperty("Test"));
 	}
 
 	@Test
-	public void errorWithAbstractTest() throws IOException, ClassNotFoundException {
-		try {
-			classTest(new WithAbstract());
-			Assert.fail("The exception has not been thrown");
-		} catch (Exception e) {
-			Assert.assertTrue(e instanceof ExternalizorException || e.getCause() instanceof ExternalizorException);
-		}
+	public void abstractCollectionTest() throws IOException, ClassNotFoundException {
+		classTest(new AbstractCollection());
 	}
 
 	@Test
-	public void errorNoEmptyConstructorTest() throws IOException, ClassNotFoundException {
-		try {
-			new NoEmptyConstructor("Test");
-			Assert.fail("The exception has not been thrown");
-		} catch (ExceptionInInitializerError e) {
-			Assert.assertTrue(e.getCause() instanceof ExternalizorException);
-		}
+	public void noEmptyConstructorTest() throws IOException, ClassNotFoundException {
+		classTest(new NoEmptyConstructor("Test"));
 	}
 
 	private <T> T classTest(T write) {
@@ -137,7 +122,6 @@ public class ExternalizerTest {
 			try (final ObjectOutputStream objected = new ObjectOutputStream(bos)) {
 				externalizer.writeExternal(object, objected);
 			}
-			bos.flush();
 			return bos.toByteArray();
 		} catch (IOException | ReflectiveOperationException e) {
 			throw new RuntimeException(e);
@@ -189,7 +173,7 @@ public class ExternalizerTest {
 		testExternalizer(TimeExternalizer.YearExternalizer.INSTANCE, Year.now());
 
 		// Class
-		testExternalizer(new ClassExternalizer.RootExternalizer(ComplexExample.class), new ComplexExample());
+		testExternalizer(ClassExternalizer.of(ComplexExample.class), new ComplexExample());
 
 	}
 }

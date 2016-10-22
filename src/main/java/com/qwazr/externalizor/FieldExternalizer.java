@@ -60,7 +60,6 @@ abstract class FieldExternalizer<T, V> implements Externalizer<T, V> {
 			}
 			out.writeBoolean(true);
 			writeValue(value, out);
-			out.flush();
 		}
 	}
 

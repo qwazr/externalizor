@@ -22,8 +22,8 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.Map;
+import java.lang.reflect.Modifier;
+import java.util.*;
 
 interface CollectionExternalizer<T, V> extends Externalizer<T, V> {
 
@@ -54,12 +54,24 @@ interface CollectionExternalizer<T, V> extends Externalizer<T, V> {
 		return null;
 	}
 
+	static Class<?> collectionClass(final Class<?> clazz) {
+		if (!Modifier.isAbstract(clazz.getModifiers()))
+			return clazz;
+		if (Set.class.isAssignableFrom(clazz))
+			return LinkedHashSet.class;
+		if (List.class.isAssignableFrom(clazz))
+			return ArrayList.class;
+		if (Map.class.isAssignableFrom(clazz))
+			return LinkedHashMap.class;
+		throw new ExternalizorException("Collection not supported: " + clazz);
+	}
+
 	abstract class FieldCollectionSnappyExternalizer<T, V>
 			extends FieldExternalizer.FieldConstructorExternalizer<T, Collection<V>>
 			implements CollectionExternalizer<T, Collection<V>> {
 
 		protected FieldCollectionSnappyExternalizer(final Field field, final Class<? extends Collection<V>> clazz) {
-			super(field, clazz);
+			super(field, (Class<? extends Collection<V>>) collectionClass(clazz));
 		}
 
 		protected interface NullableArray<V> {
@@ -86,7 +98,6 @@ interface CollectionExternalizer<T, V> extends Externalizer<T, V> {
 			}
 			nullBitmap.writeExternal(out);
 			ArrayExternalizer.writeBytes(array.compress(), out);
-			out.flush();
 		}
 
 		abstract protected void fillCollection(final ObjectInput in, final RoaringBitmap nullBitmap,
@@ -435,7 +446,7 @@ interface CollectionExternalizer<T, V> extends Externalizer<T, V> {
 		protected final Externalizer<Object, ?> componentExternalizer;
 
 		protected FieldCollectionExternalizer(final Field field, Class<? extends Collection<?>> clazz) {
-			super(field, clazz);
+			super(field, (Class<? extends Collection<?>>) collectionClass(clazz));
 			componentExternalizer = getGeneric(0);
 		}
 
@@ -466,7 +477,7 @@ interface CollectionExternalizer<T, V> extends Externalizer<T, V> {
 		private final Externalizer<Object, ?> valueExternalizer;
 
 		private FieldMapExternalizer(final Field field, Class<? extends Map<?, ?>> clazz) {
-			super(field, clazz);
+			super(field, (Class<? extends Map<?, ?>>) collectionClass(clazz));
 			keyExternalizer = getGeneric(0);
 			valueExternalizer = getGeneric(1);
 		}

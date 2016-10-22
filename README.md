@@ -7,88 +7,12 @@
 
 Efficient (fast and small) Java serialization using Externalizable interface.
 
-- Support of Externalizable objects
 - Concrete Collections (Map, Set, Vector, List) with compression/decompression based on [Snappy](https://github.com/xerial/snappy-java)
 - Primitive types: int, long, short, double, float, boolean, char, byte, enum
 - Primitive array: with compression/decompression based on [Snappy](https://github.com/xerial/snappy-java)
 - Time types: Date, LocalDate, LocalTime, LocalDateTime, Instant, Duration, Period, MonthDay, Year
-- Overall serialization with Snappy
 
 ## Usage
-
-The class to serialize should implements
-[Externalizable](https://docs.oracle.com/javase/8/docs/api/java/io/Externalizable.html).
-
-### The simplest way
-
-The classes which are supposed to be serialized can extends AutoExternalizor.
-
-```java
-
-import com.qwazr.externalizor.AutoExternalizor;
-
-public class MyClass extends AutoExternalizor {
-
-	String aStringValue;
-	int anIntValue;
-	double[] anArrayOfDouble;
-
-	enum MyEnum {
-		on, off
-	}
-
-	MyEnum anEnum;
-	HashSet<Status> aSetOfEnum;
-
-	public MyClass() {
-	}
-
-}
-```
-
-### The more efficient way
-
-The Externalizor object which is in charge of serializing/deserializing the class is static.
-The class itself implements the Externalizable methods using the static externalizor instance.
-
-```java
-
-import java.io.Externalizable;
-import com.qwazr.externalizor.Externalizor;
-
-public class MyClass implements Externalizable {
-
-	String aStringValue;
-	int anIntValue;
-	double[] anArrayOfDouble;
-
-	enum MyEnum {
-		on, off
-	}
-
-	MyEnum anEnum;
-	HashSet<Status> aSetOfEnum;
-
-	public MyClass() {
-	}
-
-	// Here is the serialization part:
-    // Create the serialization handler for this class. 
-	private final static Externalizor<MyClass> externalizor = Externalizor.of(MyClass.class);
-
-	@Override
-	public void writeExternal(final ObjectOutput out) throws IOException {
-		externalizor.writeExternal(this, out);
-	}
-
-	@Override
-	public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
-		externalizor.readExternal(this, in);
-	}
-}
-```
-
-### Serialize / deserialize
 
 Use the provided static methods to serialize and/or deserialize your object(s). 
 
@@ -132,7 +56,7 @@ Add the following dependency to your pom.xml:
 <dependency>
     <groupId>com.qwazr</groupId>
     <artifactId>externalizor</artifactId>
-    <version>1.2</version>
+    <version>1.3</version>
 </dependency>
 ```
 
@@ -142,9 +66,9 @@ The code of the benchmark is here:
 [BenchmarkTest](src/test/java/com/qwazr/externalizor/BenchmarkTest.java)
 
 - Serialization raw: Default Java serialization without compression.
-- Serialization compressed: Default Java serialization with Snappy compression.
+- Serialization compressed: Default Java serialization with Gzip compression.
 - Externalizor raw: Using Externalizor without compression.
-- Externalizor compressed: Using Externalizor with Snappy compression.
+- Externalizor compressed: Using Externalizor with Gzip compression.
 
 ### Average size of the serialized objects
 

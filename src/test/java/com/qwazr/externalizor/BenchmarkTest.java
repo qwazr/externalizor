@@ -66,7 +66,7 @@ public class BenchmarkTest {
 	}
 
 	@AfterClass
-	public static void afterCass() throws IOException {
+	public static void afterClass() throws IOException {
 		try (FileOutputStream output = new FileOutputStream("target/benchmark.xls")) {
 			workbook.write(output);
 		}

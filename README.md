@@ -7,9 +7,9 @@
 
 Efficient (fast and small) Java serialization using Externalizable interface.
 
-- Concrete Collections (Map, Set, Vector, List) with compression/decompression based on [Snappy](https://github.com/xerial/snappy-java)
+- Concrete Collections (Map, Set, Vector, List) with compression/decompression using [Snappy](https://github.com/xerial/snappy-java)
 - Primitive types: int, long, short, double, float, boolean, char, byte, enum
-- Primitive array: with compression/decompression based on [Snappy](https://github.com/xerial/snappy-java)
+- Primitive array: with compression/decompression using [Snappy](https://github.com/xerial/snappy-java)
 - Time types: Date, LocalDate, LocalTime, LocalDateTime, Instant, Duration, Period, MonthDay, Year
 
 ## Usage

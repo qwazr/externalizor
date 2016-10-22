@@ -17,31 +17,42 @@ Efficient (fast and small) Java serialization using Externalizable interface.
 Use the provided static methods to serialize and/or deserialize your object(s). 
 
 ```java
+import java.io.*;
+import com.qwazr.externalizor.Externalizor;
 
-// Serialization with compression
+public class Test {
 
-MyClass myClass = new MyClass();
-try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
-    Externalizor.serialize(object, output);
-}
+    public Test() {
 
-// Deserialization with compression
-
-try (ByteArrayInputStream input = new ByteArrayInputStream(bytes)) {
-    MyClass myClass = Externalizor.deserialize(input);
-}
-
-// Serialization without compression
-
-MyClass myClass = new MyClass();
-try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
-    Externalizor.serializeRaw(object, output);
-}
-
-// Deserialization without compression
-
-try (ByteArrayInputStream input = new ByteArrayInputStream(bytes)) {
-    MyClass myClass = Externalizor.deserializeRaw(input);
+        MyClass object = new MyClass();
+        byte[] bytes;
+        
+        // Serialization with compression
+        
+        try (ByteArrayOutputStream input = new ByteArrayOutputStream()) {
+            Externalizor.serialize(object, output);
+            bytes = output.toByteArray();
+        }
+        
+        // Deserialization with compression
+        
+        try (ByteArrayInputStream input = new ByteArrayInputStream(bytes)) {
+            object = Externalizor.deserialize(input);
+        }
+        
+        // Serialization without compression
+        
+        try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
+            Externalizor.serializeRaw(object, output);
+            bytes = output.toByteArray();
+        }
+        
+        // Deserialization without compression
+        
+        try (ByteArrayInputStream input = new ByteArrayInputStream(bytes)) {
+            MyClass object = Externalizor.deserializeRaw(input);
+        }
+    }
 }
 ```
 

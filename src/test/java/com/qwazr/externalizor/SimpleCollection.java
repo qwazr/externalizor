@@ -43,7 +43,7 @@ public class SimpleCollection implements Serializable {
 
 		nullSet = null;
 		integerSet = new LinkedHashSet<>();
-		for (int i = 0; i < RandomUtils.nextInt(5,50); i++)
+		for (int i = 0; i < RandomUtils.nextInt(5, 50); i++)
 			integerSet.add(RandomUtils.nextInt());
 
 		byteList = new Vector<>();
@@ -83,21 +83,6 @@ public class SimpleCollection implements Serializable {
 			return false;
 
 		return true;
-	}
-
-	public static class External extends SimpleCollection implements Externalizable {
-
-		private final static Externalizor<External> externalizor = Externalizor.of(External.class);
-
-		@Override
-		public void writeExternal(final ObjectOutput out) throws IOException {
-			externalizor.writeExternal(this, out);
-		}
-
-		@Override
-		public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
-			externalizor.readExternal(this, in);
-		}
 	}
 
 }

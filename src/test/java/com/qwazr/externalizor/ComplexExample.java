@@ -20,8 +20,9 @@ import org.apache.commons.lang3.RandomUtils;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Objects;
 
-public class ComplexSerial extends SimpleLang implements ComplexInterface, Serializable {
+public class ComplexExample extends SimpleLang implements Serializable {
 
 	final public SimpleCollection collection;
 	final public SimpleCollection nullObject;
@@ -29,7 +30,7 @@ public class ComplexSerial extends SimpleLang implements ComplexInterface, Seria
 	final private SimpleTime timeObject;
 	transient String transientValue;
 
-	public ComplexSerial() {
+	public ComplexExample() {
 
 		nullObject = null;
 
@@ -46,31 +47,24 @@ public class ComplexSerial extends SimpleLang implements ComplexInterface, Seria
 
 	@Override
 	public boolean equals(Object o) {
-		if (o == null || !(o instanceof ComplexSerial))
+		if (o == null || !(o instanceof ComplexExample))
 			return false;
-		if (!ComplexInterface.equals(this, (ComplexInterface) o))
+
+		final ComplexExample s = (ComplexExample) o;
+
+		if (nullObject != s.nullObject)
 			return false;
+
+		if (!Objects.equals(collection, s.collection))
+			return false;
+
+		if (!Objects.deepEquals(mapObject, s.mapObject))
+			return false;
+
+		if (!Objects.equals(timeObject, s.timeObject))
+			return false;
+
 		return super.equals(o);
-	}
-
-	@Override
-	public SimpleCollection getNullObject() {
-		return nullObject;
-	}
-
-	@Override
-	public SimpleCollection getCollection() {
-		return collection;
-	}
-
-	@Override
-	public HashMap<String, ? extends SimplePrimitive> getMapObject() {
-		return mapObject;
-	}
-
-	@Override
-	public SimpleTime getTimeObject() {
-		return timeObject;
 	}
 
 }

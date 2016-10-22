@@ -66,13 +66,14 @@ public class Externalizor<T> {
 	 * @throws IOException          if the serialization fails
 	 * @throws NullPointerException if object or output is null
 	 */
-	public static final void serialize(final Serializable object, final OutputStream output) throws IOException {
+	public static final void serialize(final Object object, final OutputStream output) throws IOException {
 		Objects.requireNonNull(object, "The serializable object is null");
 		Objects.requireNonNull(output, "The output stream is null");
+		final Externalizor externalizor = of(object.getClass());
 		try (final BufferedOutputStream buffered = new BufferedOutputStream(output)) {
 			try (final SnappyOutputStream compressed = new SnappyOutputStream(buffered)) {
 				try (final ObjectOutputStream objected = new ObjectOutputStream(compressed)) {
-					objected.writeObject(object);
+					externalizor.writeExternal(object, objected);
 				}
 			}
 		}
@@ -89,12 +90,13 @@ public class Externalizor<T> {
 	 * @throws IOException          if the serialization fails
 	 * @throws NullPointerException if object or output is null
 	 */
-	public static final void serializeRaw(final Serializable object, final OutputStream output) throws IOException {
+	public static final void serializeRaw(final Object object, final OutputStream output) throws IOException {
 		Objects.requireNonNull(object, "The serializable object is null");
 		Objects.requireNonNull(output, "The output stream is null");
+		final Externalizor externalizor = of(object.getClass());
 		try (final BufferedOutputStream buffered = new BufferedOutputStream(output)) {
 			try (final ObjectOutputStream objected = new ObjectOutputStream(buffered)) {
-				objected.writeObject(object);
+				externalizor.writeExternal(object, objected);
 			}
 		}
 	}
@@ -107,17 +109,21 @@ public class Externalizor<T> {
 	 * @param input the serialized object input stream, must not be null
 	 * @param <T>   the object type to be deserialized
 	 * @return
-	 * @throws IOException            if the deserialization fails
-	 * @throws ClassNotFoundException if the class instantiation fails
-	 * @throws NullPointerException   if object or output is null
+	 * @throws IOException                  if the deserialization fails
+	 * @throws ReflectiveOperationException if the class instantiation fails
+	 * @throws NullPointerException         if object or output is null
 	 */
-	public static final <T extends Serializable> T deserialize(final InputStream input)
-			throws IOException, ClassNotFoundException {
+	public static final <T> T deserialize(final InputStream input, final Class<T> clazz)
+			throws IOException, ReflectiveOperationException {
 		Objects.requireNonNull(input, "The input stream is null");
+		Objects.requireNonNull(input, "The class is null");
+		final Externalizor externalizor = of(clazz);
 		try (final BufferedInputStream buffered = new BufferedInputStream(input)) {
 			try (final SnappyInputStream compressed = new SnappyInputStream(buffered)) {
 				try (final ObjectInputStream objected = new ObjectInputStream(compressed)) {
-					return (T) objected.readObject();
+					final T object = clazz.newInstance();
+					externalizor.readExternal(object, objected);
+					return object;
 				}
 			}
 		}
@@ -131,16 +137,20 @@ public class Externalizor<T> {
 	 * @param input the serialized object input stream, must not be null
 	 * @param <T>   the object type to be deserialized
 	 * @return
-	 * @throws IOException            if the deserialization fails
-	 * @throws ClassNotFoundException if the class instantiation fails
-	 * @throws NullPointerException   if object or output is null
+	 * @throws IOException                  if the deserialization fails
+	 * @throws ReflectiveOperationException if the class instantiation fails
+	 * @throws NullPointerException         if object or output is null
 	 */
-	public static final <T extends Serializable> T deserializeRaw(final InputStream input)
-			throws IOException, ClassNotFoundException {
+	public static final <T> T deserializeRaw(final InputStream input, final Class<T> clazz)
+			throws IOException, ReflectiveOperationException {
 		Objects.requireNonNull(input, "The input stream is null");
+		Objects.requireNonNull(input, "The class is null");
+		final Externalizor externalizor = of(clazz);
 		try (final BufferedInputStream buffered = new BufferedInputStream(input)) {
 			try (final ObjectInputStream objected = new ObjectInputStream(buffered)) {
-				return (T) objected.readObject();
+				final T object = clazz.newInstance();
+				externalizor.readExternal(object, objected);
+				return object;
 			}
 		}
 	}

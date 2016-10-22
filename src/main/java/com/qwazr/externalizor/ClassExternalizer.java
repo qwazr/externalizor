@@ -15,7 +15,6 @@
  */
 package com.qwazr.externalizor;
 
-import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
@@ -25,9 +24,9 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 
-interface ClassExternalizer<T extends Externalizable> extends Externalizer<T, T> {
+interface ClassExternalizer<T> extends Externalizer<T, T> {
 
-	final class RootExternalizer<T extends Externalizable> implements ClassExternalizer<T> {
+	final class RootExternalizer<T> implements ClassExternalizer<T> {
 
 		private final Constructor<T> constructor;
 		private final Collection<Externalizer> externalizers;
@@ -59,7 +58,7 @@ interface ClassExternalizer<T extends Externalizable> extends Externalizer<T, T>
 		}
 
 		@Override
-		final public void writeExternal(final Externalizable object, final ObjectOutput out)
+		final public void writeExternal(final T object, final ObjectOutput out)
 				throws IOException, ReflectiveOperationException {
 			for (final Externalizer externalizer : externalizers)
 				externalizer.writeExternal(object, out);
@@ -67,7 +66,7 @@ interface ClassExternalizer<T extends Externalizable> extends Externalizer<T, T>
 		}
 
 		@Override
-		final public void readExternal(final Externalizable object, final ObjectInput in)
+		final public void readExternal(final T object, final ObjectInput in)
 				throws IOException, ReflectiveOperationException {
 			for (final Externalizer externalizer : externalizers)
 				externalizer.readExternal(object, in);
@@ -81,7 +80,7 @@ interface ClassExternalizer<T extends Externalizable> extends Externalizer<T, T>
 		}
 	}
 
-	final class AbleExternalizer<T extends Externalizable> implements ClassExternalizer<T> {
+	final class AbleExternalizer<T> implements ClassExternalizer<T> {
 
 		private final Class<T> clazz;
 
@@ -96,7 +95,7 @@ interface ClassExternalizer<T extends Externalizable> extends Externalizer<T, T>
 				out.writeBoolean(false);
 			} else {
 				out.writeBoolean(true);
-				object.writeExternal(out);
+				Externalizor.of(clazz).writeExternal(object, out);
 			}
 			out.flush();
 		}
@@ -105,7 +104,7 @@ interface ClassExternalizer<T extends Externalizable> extends Externalizer<T, T>
 		public void readExternal(final T object, final ObjectInput in)
 				throws IOException, ReflectiveOperationException {
 			if (in.readBoolean())
-				object.readExternal(in);
+				Externalizor.of(clazz).readExternal(object, in);
 		}
 
 		@Override
@@ -113,7 +112,7 @@ interface ClassExternalizer<T extends Externalizable> extends Externalizer<T, T>
 			if (!in.readBoolean())
 				return null;
 			final T object = clazz.newInstance();
-			object.readExternal(in);
+			Externalizor.of(clazz).readExternal(object, in);
 			return object;
 		}
 	}

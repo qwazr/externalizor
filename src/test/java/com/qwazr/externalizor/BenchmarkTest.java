@@ -17,15 +17,17 @@ package com.qwazr.externalizor;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.xerial.snappy.SnappyInputStream;
+import org.xerial.snappy.SnappyOutputStream;
 
-import java.io.Serializable;
+import java.io.*;
 import java.time.Duration;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
 
 public class BenchmarkTest {
 
-	private final int TIME = 10;
+	private final int TIME = 3;
 
 	public class BenchResult {
 
@@ -50,8 +52,64 @@ public class BenchmarkTest {
 		return "Size X : " + (r2.avgSize / r1.avgSize) * 100 + " Rate X : " + (r2.rate / r1.rate);
 	}
 
-	public BenchResult benchmark(String name, Duration duration, Callable<Serializable> callNewObject,
-			Function<Serializable, byte[]> serialize, Function<byte[], Serializable> deserialize) throws Exception {
+	final static <T> byte[] write(final T object) {
+		try (final ByteArrayOutputStream output = new ByteArrayOutputStream()) {
+			try (final BufferedOutputStream buffered = new BufferedOutputStream(output)) {
+				try (final SnappyOutputStream compressed = new SnappyOutputStream(buffered)) {
+					try (final ObjectOutputStream objected = new ObjectOutputStream(compressed)) {
+						objected.writeObject(object);
+						objected.flush();
+					}
+				}
+			}
+			return output.toByteArray();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	final static <T> T read(final byte[] bytes) {
+		try (final ByteArrayInputStream input = new ByteArrayInputStream(bytes)) {
+			try (final BufferedInputStream buffered = new BufferedInputStream(input)) {
+				try (final SnappyInputStream compressed = new SnappyInputStream(buffered)) {
+					try (final ObjectInputStream objected = new ObjectInputStream(compressed)) {
+						return (T) objected.readObject();
+					}
+				}
+			}
+		} catch (IOException | ReflectiveOperationException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	final static <T> byte[] writeRaw(final T object) {
+		try (final ByteArrayOutputStream output = new ByteArrayOutputStream()) {
+			try (final BufferedOutputStream buffered = new BufferedOutputStream(output)) {
+				try (final ObjectOutputStream objected = new ObjectOutputStream(buffered)) {
+					objected.writeObject(object);
+					objected.flush();
+				}
+			}
+			return output.toByteArray();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	final static <T> T readRaw(final byte[] bytes) {
+		try (final ByteArrayInputStream input = new ByteArrayInputStream(bytes)) {
+			try (final BufferedInputStream buffered = new BufferedInputStream(input)) {
+				try (final ObjectInputStream objected = new ObjectInputStream(buffered)) {
+					return (T) objected.readObject();
+				}
+			}
+		} catch (IOException | ReflectiveOperationException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public <T> BenchResult benchmark(String name, Duration duration, Callable<T> callNewObject,
+			Function<T, byte[]> serialize, Function<byte[], T> deserialize) throws Exception {
 
 		System.gc();
 
@@ -64,14 +122,14 @@ public class BenchmarkTest {
 		while (System.currentTimeMillis() < endTime) {
 
 			// Create a new object
-			final Serializable write = callNewObject.call();
+			final T write = callNewObject.call();
 
 			// Serialize
 			final byte[] byteArray = serialize.apply(write);
 			Assert.assertNotNull(byteArray);
 
 			//Deserialize
-			final Serializable read = deserialize.apply(byteArray);
+			final T read = deserialize.apply(byteArray);
 			Assert.assertNotNull(read);
 
 			// Check equals
@@ -86,16 +144,15 @@ public class BenchmarkTest {
 
 	}
 
-	public void benchmarkCompare(Callable<Serializable> callNewObject1, Callable<Serializable> callNewObject2)
-			throws Exception {
+	public <T> void benchmarkCompare(Callable<T> callNewObject, Class<T> clazz) throws Exception {
 
-		// COmpress benchmark
+		// Compress benchmark
 		final BenchResult compress1 =
-				benchmark("Compress", Duration.ofSeconds(TIME), callNewObject1, ExternalizerTest::write,
-						ExternalizerTest::read);
+				benchmark("Default Java - Compress", Duration.ofSeconds(TIME), callNewObject, BenchmarkTest::write,
+						BenchmarkTest::read);
 		final BenchResult compress2 =
-				benchmark("Compress", Duration.ofSeconds(TIME), callNewObject2, ExternalizerTest::write,
-						ExternalizerTest::read);
+				benchmark("Externalizor - Compress", Duration.ofSeconds(TIME), callNewObject, ExternalizerTest::write,
+						bytes -> ExternalizerTest.read(bytes, clazz));
 
 		System.out.println(compress1);
 		System.out.println(compress2);
@@ -103,10 +160,12 @@ public class BenchmarkTest {
 		System.out.println();
 
 		// Raw benchmark
-		final BenchResult raw1 = benchmark("Raw ", Duration.ofSeconds(TIME), callNewObject1, ExternalizerTest::writeRaw,
-				ExternalizerTest::readRaw);
-		final BenchResult raw2 = benchmark("Raw", Duration.ofSeconds(TIME), callNewObject2, ExternalizerTest::writeRaw,
-				ExternalizerTest::readRaw);
+		final BenchResult raw1 =
+				benchmark("Default Java - Raw", Duration.ofSeconds(TIME), callNewObject, BenchmarkTest::writeRaw,
+						BenchmarkTest::readRaw);
+		final BenchResult raw2 =
+				benchmark("Externalizor - Raw", Duration.ofSeconds(TIME), callNewObject, ExternalizerTest::writeRaw,
+						bytes -> ExternalizerTest.readRaw(bytes, clazz));
 
 		System.out.println(raw1);
 		System.out.println(raw2);
@@ -116,27 +175,27 @@ public class BenchmarkTest {
 
 	@Test
 	public void benchmarkTime() throws Exception {
-		benchmarkCompare(SimpleTime::new, SimpleTime.External::new);
+		benchmarkCompare(SimpleTime::new, SimpleTime.class);
 	}
 
 	@Test
 	public void benchmarkLang() throws Exception {
-		benchmarkCompare(SimpleLang::new, SimpleLang.External::new);
+		benchmarkCompare(SimpleLang::new, SimpleLang.class);
 	}
 
 	@Test
 	public void benchmarkPrimitive() throws Exception {
-		benchmarkCompare(SimplePrimitive::new, SimplePrimitive.External::new);
+		benchmarkCompare(SimplePrimitive::new, SimplePrimitive.class);
 	}
 
 	@Test
 	public void benchmarkCollection() throws Exception {
-		benchmarkCompare(SimpleCollection::new, SimpleCollection.External::new);
+		benchmarkCompare(SimpleCollection::new, SimpleCollection.class);
 	}
 
 	@Test
 	public void benchmarkComplex() throws Exception {
-		benchmarkCompare(ComplexSerial::new, ComplexExternal::new);
+		benchmarkCompare(ComplexExample::new, ComplexExample.class);
 	}
 
 }

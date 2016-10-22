@@ -18,7 +18,7 @@ package com.qwazr.externalizor;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WithAbstract extends AutoExternalizor {
+public class WithAbstract {
 
 	/**
 	 * This type is an extract

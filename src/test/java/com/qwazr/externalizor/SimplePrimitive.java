@@ -47,25 +47,24 @@ public class SimplePrimitive implements Serializable {
 	private final char charValue;
 	public char[] charArray;
 
-
 	public SimplePrimitive() {
 
 		intValue = RandomUtils.nextInt();
-		intArray = new int[]{RandomUtils.nextInt(), RandomUtils.nextInt(), RandomUtils.nextInt()};
+		intArray = new int[] { RandomUtils.nextInt(), RandomUtils.nextInt(), RandomUtils.nextInt() };
 
 		shortValue = (short) RandomUtils.nextInt(0, Short.MAX_VALUE);
-		shortArray = new short[]{(short) RandomUtils.nextInt(0, Short.MAX_VALUE),
+		shortArray = new short[] { (short) RandomUtils.nextInt(0, Short.MAX_VALUE),
 				(short) RandomUtils.nextInt(0, Short.MAX_VALUE),
-				(short) RandomUtils.nextInt(0, Short.MAX_VALUE)};
+				(short) RandomUtils.nextInt(0, Short.MAX_VALUE) };
 
 		longValue = RandomUtils.nextLong();
-		longArray = new long[]{RandomUtils.nextLong(), RandomUtils.nextLong(), RandomUtils.nextLong()};
+		longArray = new long[] { RandomUtils.nextLong(), RandomUtils.nextLong(), RandomUtils.nextLong() };
 
 		floatValue = RandomUtils.nextFloat();
-		floatArray = new float[]{RandomUtils.nextFloat(), RandomUtils.nextFloat(), RandomUtils.nextFloat()};
+		floatArray = new float[] { RandomUtils.nextFloat(), RandomUtils.nextFloat(), RandomUtils.nextFloat() };
 
 		doubleValue = RandomUtils.nextDouble();
-		doubleArray = new double[]{RandomUtils.nextDouble(), RandomUtils.nextDouble(), RandomUtils.nextDouble()};
+		doubleArray = new double[] { RandomUtils.nextDouble(), RandomUtils.nextDouble(), RandomUtils.nextDouble() };
 		emptyDoubleArray = new double[0];
 
 		booleanValue = RandomUtils.nextInt(0, 2) == 0;
@@ -74,15 +73,14 @@ public class SimplePrimitive implements Serializable {
 			booleanArray[i] = RandomUtils.nextInt(0, 2) == 1;
 
 		byteValue = (byte) RandomUtils.nextInt(0, Byte.MAX_VALUE);
-		byteArray = new byte[]{(byte) RandomUtils.nextInt(0, Byte.MAX_VALUE),
+		byteArray = new byte[] { (byte) RandomUtils.nextInt(0, Byte.MAX_VALUE),
 				(byte) RandomUtils.nextInt(0, Byte.MAX_VALUE),
-				(byte) RandomUtils.nextInt(0, Byte.MAX_VALUE)};
+				(byte) RandomUtils.nextInt(0, Byte.MAX_VALUE) };
 
 		charValue = (char) RandomUtils.nextInt(0, Character.MAX_VALUE);
-		charArray = new char[]{(char) RandomUtils.nextInt(0, Character.MAX_VALUE),
+		charArray = new char[] { (char) RandomUtils.nextInt(0, Character.MAX_VALUE),
 				(char) RandomUtils.nextInt(0, Character.MAX_VALUE),
-				(char) RandomUtils.nextInt(0, Character.MAX_VALUE)};
-
+				(char) RandomUtils.nextInt(0, Character.MAX_VALUE) };
 
 	}
 
@@ -135,22 +133,6 @@ public class SimplePrimitive implements Serializable {
 			return false;
 
 		return true;
-	}
-
-	public static class External extends SimplePrimitive implements Externalizable {
-
-		private final static Externalizor<External> externalizor = Externalizor.of(External.class);
-
-		@Override
-		public void writeExternal(final ObjectOutput out) throws IOException {
-			externalizor.writeExternal(this, out);
-		}
-
-		@Override
-		public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
-			externalizor.readExternal(this, in);
-
-		}
 	}
 
 }

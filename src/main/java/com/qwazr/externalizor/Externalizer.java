@@ -15,7 +15,6 @@
  */
 package com.qwazr.externalizor;
 
-import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
@@ -29,9 +28,7 @@ interface Externalizer<T, V> {
 			return externalizer;
 		if ((externalizer = TimeExternalizer.time(clazz)) != null)
 			return externalizer;
-		if (Externalizable.class.isAssignableFrom(clazz))
-			return new ClassExternalizer.AbleExternalizer(clazz);
-		throw new ExternalizorException("Type not supported: " + clazz);
+		return new ClassExternalizer.AbleExternalizer(clazz);
 	}
 
 	static <T, V> Externalizer<T, V> of(final Field field, final Class<? extends T> clazz) {
@@ -48,10 +45,7 @@ interface Externalizer<T, V> {
 			return externalizer;
 		if ((externalizer = (Externalizer<T, V>) TimeExternalizer.time(field, clazz)) != null)
 			return externalizer;
-		if (Externalizable.class.isAssignableFrom(clazz))
-			return new FieldExternalizer.FieldParentExternalizer(field, new ClassExternalizer.AbleExternalizer(clazz));
-		throw new ExternalizorException(
-				"Type not supported: " + clazz + " - This class should implements Externalizable.");
+		return new FieldExternalizer.FieldParentExternalizer(field, new ClassExternalizer.AbleExternalizer(clazz));
 	}
 
 	void writeExternal(final T object, final ObjectOutput out) throws IOException, ReflectiveOperationException;

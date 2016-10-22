@@ -267,20 +267,4 @@ public class SimpleLang implements Serializable {
 		return true;
 	}
 
-	public static class External extends SimpleLang implements Externalizable {
-
-		private final static Externalizor<External> externalizor = Externalizor.of(External.class);
-
-		@Override
-		public void writeExternal(final ObjectOutput out) throws IOException {
-			externalizor.writeExternal(this, out);
-		}
-
-		@Override
-		public void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
-			externalizor.readExternal(this, in);
-
-		}
-	}
-
 }

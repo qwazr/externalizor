@@ -25,7 +25,7 @@ import java.util.Date;
 
 public class ExternalizerTest {
 
-	final static <T extends Serializable> byte[] write(final T object) {
+	final static <T> byte[] write(final T object) {
 		try (final ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
 			Externalizor.serialize(object, bos);
 			return bos.toByteArray();
@@ -34,15 +34,15 @@ public class ExternalizerTest {
 		}
 	}
 
-	final static <T> T read(final byte[] bytes) {
+	final static <T> T read(final byte[] bytes, final Class<T> clazz) {
 		try (final ByteArrayInputStream bis = new ByteArrayInputStream(bytes)) {
-			return Externalizor.deserialize(bis);
-		} catch (IOException | ClassNotFoundException e) {
+			return Externalizor.deserialize(bis, clazz);
+		} catch (IOException | ReflectiveOperationException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	final static <T extends Serializable> byte[] writeRaw(final T object) {
+	final static <T> byte[] writeRaw(final T object) {
 		try (final ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
 			Externalizor.serializeRaw(object, bos);
 			return bos.toByteArray();
@@ -51,10 +51,10 @@ public class ExternalizerTest {
 		}
 	}
 
-	final static <T> T readRaw(final byte[] bytes) {
+	final static <T> T readRaw(final byte[] bytes, final Class<T> clazz) {
 		try (final ByteArrayInputStream bis = new ByteArrayInputStream(bytes)) {
-			return Externalizor.deserializeRaw(bis);
-		} catch (IOException | ClassNotFoundException e) {
+			return Externalizor.deserializeRaw(bis, clazz);
+		} catch (IOException | ReflectiveOperationException e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -72,7 +72,7 @@ public class ExternalizerTest {
 	@Test
 	public void errorWithAbstractTest() throws IOException, ClassNotFoundException {
 		try {
-			new WithAbstract();
+			classTest(new WithAbstract());
 			Assert.fail("The exception has not been thrown");
 		} catch (Exception e) {
 			Assert.assertTrue(e instanceof ExternalizorException || e.getCause() instanceof ExternalizorException);
@@ -89,27 +89,13 @@ public class ExternalizerTest {
 		}
 	}
 
-	@Test
-	public void errorReadBuggyTest() throws IOException, ClassNotFoundException {
-
-		final ReadBuggyExternalizer write = new ReadBuggyExternalizer();
-		final byte[] byteArray = write(write);
-		Assert.assertNotNull(byteArray);
-
-		try {
-			read(byteArray);
-			Assert.fail("The exception has not been thrown");
-		} catch (ExternalizorException e) {
-		}
-	}
-
-	private <T extends Serializable> T classTest(T write) {
+	private <T> T classTest(T write) {
 		//Write
 		final byte[] byteArray = write(write);
 		Assert.assertNotNull(byteArray);
 
 		//Read
-		final T read = read(byteArray);
+		final T read = read(byteArray, (Class<T>) write.getClass());
 		Assert.assertNotNull(read);
 
 		// Check equals
@@ -119,29 +105,29 @@ public class ExternalizerTest {
 
 	@Test
 	public void simpleLangTest() {
-		classTest(new SimpleLang.External());
+		classTest(new SimpleLang());
 	}
 
 	@Test
 	public void simplePrimitiveTest() {
-		classTest(new SimplePrimitive.External());
+		classTest(new SimplePrimitive());
 	}
 
 	@Test
 	public void simpleTimeTest() {
-		classTest(new SimpleTime.External());
+		classTest(new SimpleTime());
 	}
 
 	@Test
 	public void simpleCollectionTest() {
-		classTest(new SimpleCollection.External());
+		classTest(new SimpleCollection());
 	}
 
 	@Test
 	public void complexWithInnerTest() {
 		for (int i = 0; i < 100; i++) {
-			final ComplexExternal write = new ComplexExternal();
-			final ComplexExternal read = classTest(write);
+			final ComplexExample write = new ComplexExample();
+			final ComplexExample read = classTest(write);
 			Assert.assertNotEquals(write.transientValue, read.transientValue);
 		}
 	}
@@ -203,7 +189,7 @@ public class ExternalizerTest {
 		testExternalizer(TimeExternalizer.YearExternalizer.INSTANCE, Year.now());
 
 		// Class
-		testExternalizer(new ClassExternalizer.RootExternalizer<>(ComplexExternal.class), new ComplexExternal());
+		testExternalizer(new ClassExternalizer.RootExternalizer(ComplexExample.class), new ComplexExample());
 
 	}
 }

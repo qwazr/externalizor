@@ -28,6 +28,8 @@ public class ComplexExample extends SimpleLang implements Serializable {
 	final public SimpleCollection nullObject;
 	final public AbstractCollection abstractCollection;
 	final public HashMap<String, SimplePrimitive> mapObject;
+	final public NoEmptyConstructorSerial noEmptyConstructor;
+	final public NoEmptyConstructorSerial noEmptyConstructorNull;
 	final private SimpleTime timeObject;
 	transient String transientValue;
 
@@ -41,6 +43,9 @@ public class ComplexExample extends SimpleLang implements Serializable {
 		mapObject = new HashMap<>();
 		for (int i = 0; i < RandomUtils.nextInt(2, 5); i++)
 			mapObject.put(RandomStringUtils.randomAscii(5), new SimplePrimitive());
+
+		noEmptyConstructor = new NoEmptyConstructorSerial(RandomStringUtils.randomAscii(5));
+		noEmptyConstructorNull = null;
 
 		timeObject = new SimpleTime();
 
@@ -64,6 +69,11 @@ public class ComplexExample extends SimpleLang implements Serializable {
 			return false;
 
 		if (!Objects.deepEquals(mapObject, s.mapObject))
+			return false;
+
+		if (!Objects.equals(noEmptyConstructor, s.noEmptyConstructor))
+			return false;
+		if (!Objects.equals(noEmptyConstructorNull, s.noEmptyConstructorNull))
 			return false;
 
 		if (!Objects.equals(timeObject, s.timeObject))

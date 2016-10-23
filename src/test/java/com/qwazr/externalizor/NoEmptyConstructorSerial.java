@@ -15,10 +15,23 @@
  */
 package com.qwazr.externalizor;
 
-public class ExternalizorException extends RuntimeException {
+import java.io.Serializable;
+import java.util.Objects;
 
-	ExternalizorException(final String message) {
-		super(message);
+public class NoEmptyConstructorSerial implements Serializable {
+
+	private final String test;
+
+	/**
+	 * This class don't have an empty constructor
+	 */
+	public NoEmptyConstructorSerial(String test) {
+		this.test = test;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		return o != null && Objects.equals(test, ((NoEmptyConstructorSerial) o).test);
 	}
 
 }

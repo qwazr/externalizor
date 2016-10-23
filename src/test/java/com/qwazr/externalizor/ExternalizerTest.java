@@ -22,10 +22,11 @@ import java.io.*;
 import java.time.*;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.function.Function;
 
 public class ExternalizerTest {
 
-	final static <T> byte[] write(final T object) {
+	final static <T> byte[] writeCompressed(final T object) {
 		try (final ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
 			Externalizor.serialize(object, bos);
 			return bos.toByteArray();
@@ -34,7 +35,7 @@ public class ExternalizerTest {
 		}
 	}
 
-	final static <T> T read(final byte[] bytes, final Class<T> clazz) {
+	final static <T> T readCompressed(final byte[] bytes, final Class<T> clazz) {
 		try (final ByteArrayInputStream bis = new ByteArrayInputStream(bytes)) {
 			return Externalizor.deserialize(bis, clazz);
 		} catch (IOException | ReflectiveOperationException e) {
@@ -71,21 +72,59 @@ public class ExternalizerTest {
 
 	@Test
 	public void noEmptyConstructorTest() throws IOException, ClassNotFoundException {
-		classTest(new NoEmptyConstructor("Test"));
+		classTest(new NoEmptyConstructorSerial("Test"));
 	}
 
-	private <T> T classTest(T write) {
+	private void checkError(Object object, Function<ExternalizorException, Boolean> checker) {
+		try {
+			classTest(object);
+			Assert.fail("The exception is not thrown");
+		} catch (ExternalizorException e) {
+			Assert.assertTrue(checker.apply(e));
+		}
+	}
+
+	@Test
+	public void errorEmptyConstructorTest() throws IOException, ClassNotFoundException {
+		checkError(new NoEmptyConstructor("Test"), e -> e.getMessage().contains(NoEmptyConstructor.class.getName()));
+	}
+
+	@Test
+	public void errorEmptyConstructorAsFieldTest() throws IOException, ClassNotFoundException {
+		checkError(new NoEmptyConstructor.AsField(), e -> e.getMessage().contains(NoEmptyConstructor.class.getName()));
+	}
+
+	private <T> T classRawTest(T write) {
 		//Write
-		final byte[] byteArray = write(write);
+		final byte[] byteArray = writeRaw(write);
 		Assert.assertNotNull(byteArray);
 
 		//Read
-		final T read = read(byteArray, (Class<T>) write.getClass());
+		final T read = readRaw(byteArray, (Class<T>) write.getClass());
 		Assert.assertNotNull(read);
 
 		// Check equals
 		Assert.assertEquals(write, read);
 		return read;
+	}
+
+	private <T> T classCompressedTest(T write) {
+		//Write
+		final byte[] byteArray = writeCompressed(write);
+		Assert.assertNotNull(byteArray);
+
+		//Read
+		final T read = readCompressed(byteArray, (Class<T>) write.getClass());
+		Assert.assertNotNull(read);
+
+		// Check equals
+		Assert.assertEquals(write, read);
+		return read;
+	}
+
+	private <T> T classTest(T write) {
+		classRawTest(write);
+		return classCompressedTest(write);
 	}
 
 	@Test

@@ -15,10 +15,9 @@
  */
 package com.qwazr.externalizor;
 
-import java.io.Serializable;
 import java.util.Objects;
 
-public class NoEmptyConstructor implements Serializable {
+public class NoEmptyConstructor {
 
 	private final String test;
 
@@ -34,4 +33,8 @@ public class NoEmptyConstructor implements Serializable {
 		return o != null && Objects.equals(test, ((NoEmptyConstructor) o).test);
 	}
 
+	public static class AsField {
+
+		public NoEmptyConstructor empty;
+	}
 }

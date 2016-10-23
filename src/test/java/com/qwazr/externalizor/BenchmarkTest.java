@@ -30,7 +30,7 @@ import java.util.zip.GZIPOutputStream;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class BenchmarkTest {
 
-	private final int TIME = 10;
+	private final int TIME = 2;
 
 	private static Workbook workbook;
 	private static Sheet sheet;
@@ -184,9 +184,8 @@ public class BenchmarkTest {
 				benchmark("Default Java - Compress", Duration.ofSeconds(TIME), callNewObject, BenchmarkTest::write,
 						BenchmarkTest::read);
 
-		final BenchResult compress2 =
-				benchmark("Externalizor - Compress", Duration.ofSeconds(TIME), callNewObject, ExternalizerTest::write,
-						bytes -> ExternalizerTest.read(bytes, clazz));
+		final BenchResult compress2 = benchmark("Externalizor - Compress", Duration.ofSeconds(TIME), callNewObject,
+				ExternalizerTest::writeCompressed, bytes -> ExternalizerTest.readCompressed(bytes, clazz));
 
 		System.out.println(compress1);
 		System.out.println(compress2);

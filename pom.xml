@@ -73,7 +73,7 @@
         <dependency>
             <groupId>org.roaringbitmap</groupId>
             <artifactId>RoaringBitmap</artifactId>
-            <version>0.6.47</version>
+            <version>0.6.51</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -89,7 +89,7 @@
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
-            <version>3.16</version>
+            <version>3.17</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
